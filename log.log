@@ -1,0 +1,124 @@
+memory profiling: sample.interval=20000
+:2293073:5572560:197444968:92:
+:2293073:5572560:197444968:0:
+:2293073:5572560:197444968:0:
+:2293073:5572560:197445080:0:
+:2293073:5572560:197445080:0:
+:2293073:5572560:197445080:0:
+:2293073:5572560:197445192:0:
+:2293073:5572560:197445192:0:
+:2293073:5572560:197445192:0:
+:2293073:5572560:197445304:0:
+:2293073:5572560:197445304:0:
+:2293073:5572560:197445416:0:
+:2293073:5572560:197445416:0:
+:2293073:5572560:197445416:0:
+:2293073:5572560:197445528:0:
+:2293073:5572560:197445528:0:
+:2293073:5572560:197445528:0:
+:2293073:5572560:197445640:0:
+:2293073:5572560:197445640:0:
+:2293073:5572560:197445752:0:
+:2293073:5572560:197445752:0:
+:2293073:5572560:197445752:0:
+:2293073:5572560:197445864:0:
+:2293073:5572560:197445864:0:
+:2293073:5572560:197445976:0:
+:2293073:5572560:197445976:0:
+:2293073:5572560:197445976:0:
+:2293073:5572560:197446088:0:
+:2293073:5572560:197446088:0:
+:2293073:5572560:197446088:0:
+:2293073:5572560:197446200:0:
+:2293073:5572560:197446200:0:
+:2293073:5572560:197446312:0:
+:2293073:5572560:197446312:0:
+:2293073:5572560:197446312:0:
+:2293073:5572560:197446424:0:
+:2293073:5572560:197446424:0:
+:2293073:5572560:197446536:0:
+:2293073:5572560:197446536:0:
+:2293073:5572560:197446536:0:
+:2293073:5572560:197446648:0:
+:2293073:5572560:197446648:0:
+:2293073:5572560:197446648:0:
+:2293073:5572560:197446760:0:
+:2293073:5572560:197446760:0:
+:2293073:5572560:197446872:0:
+:2293073:5572560:197446872:0:
+:2293073:5572560:197446872:0:
+:2293073:5572560:197446984:0:
+:2293073:5572560:197447096:0:
+:2293075:5572560:197447152:0:
+:2293075:5572560:197447152:0:
+:2293075:5572560:197447152:0:
+:2293075:5572560:197447264:0:
+:2293075:5572560:197447264:0:
+:2293075:5572560:197447264:0:
+:2293075:5572560:197447376:0:
+:2293075:5572560:197447376:0:
+:2293075:5572560:197447488:0:
+:2293075:5572560:197447488:0:
+:2293075:5572560:197447488:0:
+:2293075:5572560:197447600:0:
+:2293075:5572560:197447600:0:
+:2293075:5572560:197447600:0:
+:2293075:5572560:197447712:0:
+:2293075:5572560:197447712:0:
+:2293075:5572560:197447824:0:
+:2293075:5572560:197447824:0:
+:2293075:5572560:197447824:0:
+:2293075:5572560:197447936:0:
+:2293075:5572560:197447936:0:
+:2293075:5572560:197448048:0:
+:2293075:5572560:197448048:0:
+:2293075:5572560:197448048:0:
+:2293075:5572560:197448160:0:
+:2293075:5572560:197448160:0:
+:2293075:5572560:197448160:0:
+:2293075:5572560:197448272:0:
+:2293075:5572560:197448272:0:
+:2293075:5572560:197448384:0:
+:2293075:5572560:197448384:0:
+:2293075:5572560:197448384:0:
+:2293075:5572560:197448496:0:
+:2293075:5572560:197448496:0:
+:2293075:5572560:197448608:0:
+:2293075:5572560:197448608:0:
+:2293075:5572560:197448608:0:
+:2293075:5572560:197448720:0:
+:2293075:5572560:197448720:0:
+:2293075:5572560:197448720:0:
+:2293078:5572710:197450680:2:
+:2294595:5576779:197789872:200:"CPL_crs_parameters" "crs_parameters" "$.crs" "$" "masterSampleSelect" "xmasterSample" 
+:2298242:5782485:198742040:395:"CPL_transform" "structure" "st_sfc" "st_transform.sfc" "st_transform" "st_transform.sf" "st_transform" "masterSampleSelect" "xmasterSample" 
+:2298242:5784415:198744224:0:"CPL_transform" "structure" "st_sfc" "st_transform.sfc" "st_transform" "st_transform.sf" "st_transform" "masterSampleSelect" "xmasterSample" 
+:2298242:5784415:198744224:0:"CPL_transform" "structure" "st_sfc" "st_transform.sfc" "st_transform" "st_transform.sf" "st_transform" "masterSampleSelect" "xmasterSample" 
+:2298242:5784415:198744224:0:"CPL_transform" "structure" "st_sfc" "st_transform.sfc" "st_transform" "st_transform.sf" "st_transform" "masterSampleSelect" "xmasterSample" 
+:2298242:5784415:198744224:0:"CPL_transform" "structure" "st_sfc" "st_transform.sfc" "st_transform" "st_transform.sf" "st_transform" "masterSampleSelect" "xmasterSample" 
+:2298242:5784415:198744224:0:"CPL_transform" "structure" "st_sfc" "st_transform.sfc" "st_transform" "st_transform.sf" "st_transform" "masterSampleSelect" "xmasterSample" 
+:2298242:5784415:198744224:0:"CPL_transform" "structure" "st_sfc" "st_transform.sfc" "st_transform" "st_transform.sf" "st_transform" "masterSampleSelect" "xmasterSample" 
+:2303674:6183590:199781400:278:"sub" "mysub" "is.factor" "sub" "mysub" "trimws" "are_exponents_implicit" "as_units.character" "as_units" "crs_parameters" "$.crs" "$" "is.factor" "grepl" "st_transform.sfc" "st_transform" "st_transform.sf" "st_transform" "rotate.shp" "masterSampleSelect" "xmasterSample" 
+:2307356:6775542:200519480:65:"CPL_get_bbox" "...elt" "stopifnot" "bb_wrap" "bbox.MtrxSetSetSet" "...elt" "stopifnot" "bb_wrap" "compute_bbox" "st_sfc" "st_transform.sfc" "st_transform" "st_transform.sf" "st_transform" "rotate.shp" "masterSampleSelect" "xmasterSample" 
+:2316415:7149293:202661704:1222:"t" "conform" "if_pt" "structure" "<Anonymous>" "rapply" "Ops.sfg" "<Anonymous>" "mapply" "Ops.sfc" "rotate.shp" "masterSampleSelect" "xmasterSample" 
+:2355792:7493602:212054696:6268:"opp_sfc" "Ops.sfc" "rotate.shp" "masterSampleSelect" "xmasterSample" 
+:2190687:5947706:177949520:1476:"CPL_geos_is_empty" "st_is_empty" "Ops.sfg" "<Anonymous>" "mapply" "Ops.sfc" "rotate.shp" "masterSampleSelect" "xmasterSample" 
+:2211844:6212137:183774192:4273:"t" "conform" "if_pt" "structure" "<Anonymous>" "rapply" "Ops.sfg" "<Anonymous>" "mapply" "Ops.sfc" "rotate.shp" "masterSampleSelect" "xmasterSample" 
+:2231692:6404442:189460936:4962:"CPL_crs_parameters" "crs_parameters" "$.crs" "$" "shape2Frame" "masterSampleSelect" "xmasterSample" 
+:2235804:6610461:190539888:435:"CPL_transform" "structure" "st_sfc" "st_transform.sfc" "st_transform" "rotate.shp" "shape2Frame" "masterSampleSelect" "xmasterSample" 
+:2241469:7209955:191843680:329:"CPL_geos_is_empty" "st_is_empty" "Ops.sfg" "<Anonymous>" "mapply" "Ops.sfc" "rotate.shp" "shape2Frame" "masterSampleSelect" "xmasterSample" 
+:2265006:7459308:197319808:3717:"any" "structure" "<Anonymous>" "rapply" "Ops.sfg" "<Anonymous>" "mapply" "Ops.sfc" "rotate.shp" "shape2Frame" "masterSampleSelect" "xmasterSample" 
+:2292677:7844350:203479528:4896:"CPL_geos_is_empty" "st_is_empty" "Ops.sfg" "<Anonymous>" "mapply" "Ops.sfc" "rotate.shp" "shape2Frame" "masterSampleSelect" "xmasterSample" 
+:2292677:7844350:203479528:0:"CPL_geos_is_empty" "st_is_empty" "Ops.sfg" "<Anonymous>" "mapply" "Ops.sfc" "rotate.shp" "shape2Frame" "masterSampleSelect" "xmasterSample" 
+:2292677:7844350:203479528:0:"CPL_geos_is_empty" "st_is_empty" "Ops.sfg" "<Anonymous>" "mapply" "Ops.sfc" "rotate.shp" "shape2Frame" "masterSampleSelect" "xmasterSample" 
+:2292677:7844350:203479528:0:"CPL_geos_is_empty" "st_is_empty" "Ops.sfg" "<Anonymous>" "mapply" "Ops.sfc" "rotate.shp" "shape2Frame" "masterSampleSelect" "xmasterSample" 
+:2292677:7844350:203479528:0:"CPL_geos_is_empty" "st_is_empty" "Ops.sfg" "<Anonymous>" "mapply" "Ops.sfc" "rotate.shp" "shape2Frame" "masterSampleSelect" "xmasterSample" 
+:2292677:7844350:203479528:0:"CPL_geos_is_empty" "st_is_empty" "Ops.sfg" "<Anonymous>" "mapply" "Ops.sfc" "rotate.shp" "shape2Frame" "masterSampleSelect" "xmasterSample" 
+:2292677:7844350:203479528:0:"CPL_geos_is_empty" "st_is_empty" "Ops.sfg" "<Anonymous>" "mapply" "Ops.sfc" "rotate.shp" "shape2Frame" "masterSampleSelect" "xmasterSample" 
+:2292677:7844350:203479528:0:"CPL_geos_is_empty" "st_is_empty" "Ops.sfg" "<Anonymous>" "mapply" "Ops.sfc" "rotate.shp" "shape2Frame" "masterSampleSelect" "xmasterSample" 
+:2292677:7844350:203479528:0:"CPL_geos_is_empty" "st_is_empty" "Ops.sfg" "<Anonymous>" "mapply" "Ops.sfc" "rotate.shp" "shape2Frame" "masterSampleSelect" "xmasterSample" 
+:2292677:7844350:203479528:0:"CPL_geos_is_empty" "st_is_empty" "Ops.sfg" "<Anonymous>" "mapply" "Ops.sfc" "rotate.shp" "shape2Frame" "masterSampleSelect" "xmasterSample" 
+:2292677:7844350:203479528:0:"CPL_geos_is_empty" "st_is_empty" "Ops.sfg" "<Anonymous>" "mapply" "Ops.sfc" "rotate.shp" "shape2Frame" "masterSampleSelect" "xmasterSample" 
+:2292677:7844350:203479528:0:"CPL_geos_is_empty" "st_is_empty" "Ops.sfg" "<Anonymous>" "mapply" "Ops.sfc" "rotate.shp" "shape2Frame" "masterSampleSelect" "xmasterSample" 
+:2292677:7844350:203479528:0:"CPL_geos_is_empty" "st_is_empty" "Ops.sfg" "<Anonymous>" "mapply" "Ops.sfc" "rotate.shp" "shape2Frame" "masterSampleSelect" "xmasterSample" 
+:2131001:3469430:17
