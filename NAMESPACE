@@ -1,0 +1,3 @@
+#exportPattern("^[[:alpha:]]+")
+export(xmasterSample)
+useDynLib(uc511, .registration = TRUE)
