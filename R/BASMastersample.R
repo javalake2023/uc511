@@ -1,4 +1,4 @@
-# BASMastersample.R
+#' BASMastersample.R
 
 #' Do something useful.
 #'
