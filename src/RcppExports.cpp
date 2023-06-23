@@ -82,6 +82,40 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cppSumPoweredElements
+int cppSumPoweredElements(NumericVector& J, NumericVector& bases, int numElements);
+RcppExport SEXP _uc511_cppSumPoweredElements(SEXP JSEXP, SEXP basesSEXP, SEXP numElementsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< NumericVector& >::type J(JSEXP);
+    Rcpp::traits::input_parameter< NumericVector& >::type bases(basesSEXP);
+    Rcpp::traits::input_parameter< int >::type numElements(numElementsSEXP);
+    rcpp_result_gen = Rcpp::wrap(cppSumPoweredElements(J, bases, numElements));
+    return rcpp_result_gen;
+END_RCPP
+}
+// vectorMod
+NumericVector vectorMod(NumericVector k, int b);
+RcppExport SEXP _uc511_vectorMod(SEXP kSEXP, SEXP bSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type k(kSEXP);
+    Rcpp::traits::input_parameter< int >::type b(bSEXP);
+    rcpp_result_gen = Rcpp::wrap(vectorMod(k, b));
+    return rcpp_result_gen;
+END_RCPP
+}
+// log_a_to_base_b
+double log_a_to_base_b(int a, int b);
+RcppExport SEXP _uc511_log_a_to_base_b(SEXP aSEXP, SEXP bSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< int >::type a(aSEXP);
+    Rcpp::traits::input_parameter< int >::type b(bSEXP);
+    rcpp_result_gen = Rcpp::wrap(log_a_to_base_b(a, b));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cppRSHalton
 NumericVector cppRSHalton(int& n, IntegerVector& seeds, NumericVector& bases, NumericVector& boxes, NumericVector& J);
 RcppExport SEXP _uc511_cppRSHalton(SEXP nSEXP, SEXP seedsSEXP, SEXP basesSEXP, SEXP boxesSEXP, SEXP JSEXP) {
@@ -104,6 +138,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_uc511_cppHaltonSeq", (DL_FUNC) &_uc511_cppHaltonSeq, 3},
     {"_uc511_compareBoxesBoxInit", (DL_FUNC) &_uc511_compareBoxesBoxInit, 3},
     {"_uc511_cppWhere2Start", (DL_FUNC) &_uc511_cppWhere2Start, 4},
+    {"_uc511_cppSumPoweredElements", (DL_FUNC) &_uc511_cppSumPoweredElements, 3},
+    {"_uc511_vectorMod", (DL_FUNC) &_uc511_vectorMod, 2},
+    {"_uc511_log_a_to_base_b", (DL_FUNC) &_uc511_log_a_to_base_b, 2},
     {"_uc511_cppRSHalton", (DL_FUNC) &_uc511_cppRSHalton, 5},
     {NULL, NULL, 0}
 };

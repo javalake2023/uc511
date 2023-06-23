@@ -51,19 +51,49 @@ RSHalton <- function(n = 10, seeds = c(0,0), bases = c(2,3), boxes = 0, J = c(0,
 
   B <- prod(bases[1:2]^J)
 
+  print("length(boxes):")
+  print(length(boxes))
   print("n/length(boxes):")
-  print(n/length(boxes))
-  print("stuffs:")
+  print(n / length(boxes))
+  print("length stuffs:")
   stuffs <- rep(seq(0, ceiling(n/length(boxes)) - 1)*B, each = length(boxes))
   print(length(stuffs))
+
+  print("ceiling(n/length(boxes)):")
+  print(ceiling(n/length(boxes)))
 
   ########### Main Loop #########################################
   for (i in 1:d) {
     b <- bases[i];
     u <- seeds[i];
+    print("boxes:")
+    print(boxes)
+    print("u:")
+    print(u)
+    print("u + boxes:")
+    print(u + boxes)
+
+    stuffs2 <- rep(u + boxes, ceiling(n/length(boxes)))
+    print("length stuffs2:")
+    print(length(stuffs2))
+
     k <- (rep(u + boxes, ceiling(n/length(boxes))) + rep(seq(0, ceiling(n/length(boxes)) - 1)*B, each = length(boxes)))[1:n]
-    xk <- (k %% b)/b;
+    xk <- (k %% b) / b;
+    #print("k[1]:")
+    #print(k[1])
+    #print("b:")
+    #print(b)
+    #print("xk[1]:")
+    #print(xk[1])
+    print("u:")
+    print(u)
+    print("n")
+    print(n)
+    print("(ceiling(logb(u+n,b)) + 2)")
+    print((ceiling(logb(u+n,b)) + 2))
     for (j in 1:(ceiling(logb(u+n,b)) + 2)) {
+      print("j:")
+      print(j)
       xk <- xk + (floor(k/(b^j)) %% b)/(b^(j+1));
     }
     pts[,i] <- cbind(xk)

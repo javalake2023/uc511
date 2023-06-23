@@ -111,7 +111,7 @@ NumericMatrix GetBoxIndices(NumericMatrix& lxy, IntegerVector& base, IntegerVect
 }
 
 //' Draw Halton Sequence values for a single dimension.
-//' Note that this was borrowed from the Internet and is not my implmementation.
+//' Note that this was borrowed from the Internet and is not my implementation.
 //'
 //'
 //' @param x An integer for the starting index k >= 0.
@@ -176,31 +176,78 @@ NumericVector cppWhere2Start(NumericVector& J, IntegerVector& seeds, NumericVect
 
   //#### calc L
   num_elements = seeds.length();
-  RcppThread::Rcout << "cppWhere2Start() num_elements : " << num_elements << std::endl;
+  //RcppThread::Rcout << "cppWhere2Start() num_elements : " << num_elements << std::endl;
   IntegerVector L(num_elements);
   for (int i = 0; i < num_elements; i++){
     int remainder = seeds[i] % (int)(pow(bases[i], J[i]));
-    RcppThread::Rcout << "cppWhere2Start() remainder : " << remainder << std::endl;
+    //RcppThread::Rcout << "cppWhere2Start() remainder : " << remainder << std::endl;
     //const auto [q, r] = std::div(seeds[i], pow(bases[i], J[i]));
     L[i] = remainder;
     //L.push_back(remainder);
   }
-  RcppThread::Rcout << "cppWhere2Start() L : " << L << std::endl;
+  //RcppThread::Rcout << "cppWhere2Start() L : " << L << std::endl;
 
   //boxInit <- SolveCongruence(matrix(L, ncol = 2, nrow = 1), bases, J)
   NumericMatrix mL(1, 2, L.begin());
   NumericVector boxInit = SolveCongruence(mL, bases, J);
-  RcppThread::Rcout << "cppWhere2Start() boxInit : " << boxInit << std::endl;
+  //RcppThread::Rcout << "cppWhere2Start() boxInit : " << boxInit << std::endl;
 
   if(boxes.isNULL())
     return NA_REAL;
 
   // boxes <- ifelse(boxes < boxInit, B + (boxes - boxInit), boxes - boxInit)
   boxes = compareBoxesBoxInit(boxes, boxInit, B);
-  RcppThread::Rcout << "cppWhere2Start() tst boxes : " << boxes << std::endl;
+  //RcppThread::Rcout << "cppWhere2Start() tst boxes : " << boxes << std::endl;
 
   return boxes.sort(false);
 }
+
+//'
+//' @export
+// [[Rcpp::export(rng = false)]]
+int cppSumPoweredElements(NumericVector& J, NumericVector& bases, int numElements)
+{
+  // calculate the sum of the powered elements
+  int B = 1;
+  for (int i = 0; i < numElements; i++){
+    int powered_value = pow(bases[i], J[i]);
+    B *= powered_value;
+  }
+  return B;
+}
+
+
+//'
+//' @export
+// [[Rcpp::export(rng = false)]]
+NumericVector vectorMod(NumericVector k, int b){
+  NumericVector xkt;
+  for (int i = 0; i < k.length(); i++){
+    xkt[i] = std::remainder(k[i], b);
+  }
+  return xkt;
+}
+
+//'
+//' @export
+// [[Rcpp::export(rng = false)]]
+double log_a_to_base_b(int a, int b)
+{
+  return log2(a) / log2(b);
+}
+
+/**
+ * Extend division reminder to vectors
+ *
+ * @param   a       Dividend
+ * @param   n       Divisor
+ */
+template<typename T>
+T mod(T a, int n)
+{
+  return a - floor(a / n) * n;
+}
+
 
 
 //'
@@ -208,7 +255,7 @@ NumericVector cppWhere2Start(NumericVector& J, IntegerVector& seeds, NumericVect
 // [[Rcpp::export(rng = false)]]
 NumericVector cppRSHalton(int & n, IntegerVector& seeds, NumericVector& bases, NumericVector& boxes, NumericVector& J)
 {
-  NumericVector xk(n);
+  NumericVector xk; //(n);
   //int index = k;
   //double f;
   //for (int i = 0; i < n; i++) {
@@ -240,19 +287,24 @@ NumericVector cppRSHalton(int & n, IntegerVector& seeds, NumericVector& bases, N
   boxes = cppWhere2Start(subsetJ, subsetSeeds, subsetBases, boxes);
   RcppThread::Rcout << "cppRSHalton() after cppWhere2Start boxes : " << boxes << std::endl;
 
+  int B = cppSumPoweredElements(J, bases, 2);
+  RcppThread::Rcout << "cppRSHalton() B : " << B << std::endl;
+
   //########### Just Testing ######################################
 
+  // Second part of k.
   // ceiling(n/length(boxes)) - 1)*B
-  int ceiling = ceil(n/boxes.length());
+  int ceiling = ceil(n / boxes.length());
+  RcppThread::Rcout << "cppRSHalton() ceiling : " << ceiling << std::endl;
   int repeat_count = ceiling - 1;
-  int step = 36; //B;
+  //int step = 36; //B;
   int each = boxes.length();
 
   //NumericVector result(repeat_count * each);
 
   std::vector<int> result;
   for (int i = 0; i < ceiling; ++i) {
-    int value = i * 36;
+    int value = i * B;
     std::vector<int> temp(each, value);
     result.insert(result.end(), temp.begin(), temp.end());
   }
@@ -267,11 +319,44 @@ NumericVector cppRSHalton(int & n, IntegerVector& seeds, NumericVector& bases, N
   Rcpp::NumericVector v2(result.begin(), result.end());
   RcppThread::Rcout << "cppRSHalton() result : " << v2.length() << std::endl;
 
+
+  //Rcpp::NumericVector k1;
+  Rcpp::NumericVector k1rep;
+  Rcpp::NumericVector k2rep;
+  Rcpp::NumericVector k;
+
   //########### Main Loop #########################################
   for (int i = 0; i < d; i++){
     RcppThread::Rcout << "cppRSHalton() d[i] : " << i << std::endl;
     int b = bases[i];
     int u = seeds[i];
+
+    //k1 = boxes + u;
+    k1rep = rep(boxes + u, ceil(n / boxes.length()));
+    k2rep = rep(seq(0, ceil(n / boxes.length()) - 1) * B, each = boxes.length());
+    k = k1rep + k2rep;
+    xk = mod(k, b) / b;
+    RcppThread::Rcout << "cppRSHalton() k[0] : " << k[0] << std::endl;
+    RcppThread::Rcout << "cppRSHalton() b : " << b << std::endl;
+    RcppThread::Rcout << "cppRSHalton() xk[0] : " << xk[0] << std::endl;
+
+    //RcppThread::Rcout << "cppRSHalton() k1 : " << k1 << std::endl;
+    RcppThread::Rcout << "cppRSHalton() k1rep.length() : " << k1rep.length() << std::endl;
+    RcppThread::Rcout << "cppRSHalton() k2rep.length() : " << k2rep.length() << std::endl;
+
+    //for (j in 1:(ceiling(logb(u+n,b)) + 2)) {
+    //  xk <- xk + (floor(k/(b^j)) %% b)/(b^(j+1));
+    //}
+    //RcppThread::Rcout << "cppRSHalton() u : " << u << std::endl;
+    //RcppThread::Rcout << "cppRSHalton() n : " << n << std::endl;
+    //int jjj = ceil(log_a_to_base_b(u + n, b)) + 2;
+    //RcppThread::Rcout << "cppRSHalton() jjj : " << jjj << std::endl;
+
+    for (int j = 0; j < (ceil(log_a_to_base_b(u + n, b)) + 2); j++){
+      RcppThread::Rcout << "cppRSHalton() j : " << j << std::endl;
+      NumericVector tmp1 = floor(k / (b ^ j));
+      NumericVector tmp2 = mod(tmp1, b);
+    }
   }
 
   return xk;

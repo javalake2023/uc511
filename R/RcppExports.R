@@ -36,7 +36,7 @@ GetBoxIndices <- function(lxy, base, J) {
 }
 
 #' Draw Halton Sequence values for a single dimension.
-#' Note that this was borrowed from the Internet and is not my implmementation.
+#' Note that this was borrowed from the Internet and is not my implementation.
 #'
 #'
 #' @param x An integer for the starting index k >= 0.
@@ -61,6 +61,24 @@ compareBoxesBoxInit <- function(boxes, boxInit, intB) {
 #' @export
 cppWhere2Start <- function(J, seeds, bases, boxes) {
     .Call(`_uc511_cppWhere2Start`, J, seeds, bases, boxes)
+}
+
+#'
+#' @export
+cppSumPoweredElements <- function(J, bases, numElements) {
+    .Call(`_uc511_cppSumPoweredElements`, J, bases, numElements)
+}
+
+#'
+#' @export
+vectorMod <- function(k, b) {
+    .Call(`_uc511_vectorMod`, k, b)
+}
+
+#'
+#' @export
+log_a_to_base_b <- function(a, b) {
+    .Call(`_uc511_log_a_to_base_b`, a, b)
 }
 
 #'
