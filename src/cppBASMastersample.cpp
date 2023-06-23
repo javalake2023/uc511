@@ -355,7 +355,8 @@ NumericVector cppRSHalton(int & n, IntegerVector& seeds, NumericVector& bases, N
     for (int j = 0; j < (ceil(log_a_to_base_b(u + n, b)) + 2); j++){
       RcppThread::Rcout << "cppRSHalton() j : " << j << std::endl;
       NumericVector tmp1 = floor(k / (b ^ j));
-      NumericVector tmp2 = mod(tmp1, b);
+      NumericVector tmp2 = mod(tmp1, b) / (b ^ (j + 1));
+      xk = xk + tmp2;
     }
   }
 
