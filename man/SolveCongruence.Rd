@@ -2,9 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{SolveCongruence}
 \alias{SolveCongruence}
-\title{Solve system of linear congruence from HIP paper to order HIP boxes.
-See page 5 of Robertson et al. 2018 Halton Iterative Partitioning.
-This is essentially an internal function and shouldn't be worried about.}
+\title{Solve system of linear congruence from HIP paper to order HIP boxes.}
 \usage{
 SolveCongruence(A, base, J)
 }
@@ -15,8 +13,10 @@ SolveCongruence(A, base, J)
 
 \item{J}{Integer of 2 values that represent the numbers 2^J1, 3^J2.}
 }
+\value{
+A numeric vector of...
+}
 \description{
-Solve system of linear congruence from HIP paper to order HIP boxes.
 See page 5 of Robertson et al. 2018 Halton Iterative Partitioning.
 This is essentially an internal function and shouldn't be worried about.
 }

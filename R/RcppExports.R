@@ -6,81 +6,157 @@ cppBASMastersample <- function() {
     invisible(.Call(`_uc511_cppBASMastersample`))
 }
 
-#' Solve system of linear congruence from HIP paper to order HIP boxes.
-#' See page 5 of Robertson et al. 2018 Halton Iterative Partitioning.
-#' This is essentially an internal function and shouldn't be worried about.
+#' @name SolveCongruence
 #'
+#' @title Solve system of linear congruence from HIP paper to order HIP boxes.
+#'
+#' @description See page 5 of Robertson et al. 2018 Halton Iterative Partitioning.
+#' This is essentially an internal function and shouldn't be worried about.
 #'
 #' @param A Matrix that is in numeric for computational reasons but is the a_i solutions for all HIP boxes.
 #' @param base Co-prime Base but generally for BAS work it is 2 or 3.
 #' @param J Integer of 2 values that represent the numbers 2^J1, 3^J2.
 #'
+#' @returns A numeric vector of...
 #'
 #' @export
 SolveCongruence <- function(A, base, J) {
     .Call(`_uc511_SolveCongruence`, A, base, J)
 }
 
-#' Fast Implementation of finding x and y order numbers to feed into the linear congruence equation.
+#' @name GetBoxIndices
+#'
+#' @title a title
+#'
+#' @description Fast Implementation of finding x and y order numbers to feed into the linear congruence equation.
 #' This solves equation solves for a_i in the HIP paper.
 #' This is essentially an internal function and shouldn't be worried about.
-#'
 #'
 #' @param lxy A Matrix of lower x y coordinates of a Halton Box inside the unit box.
 #' @param base Co-prime Base but generally for BAS work it is 2 or 3.
 #' @param J Integer of 2 values that represent the numbers 2^J1, 3^J2.
+#' @return something
 #'
 #' @export
 GetBoxIndices <- function(lxy, base, J) {
     .Call(`_uc511_GetBoxIndices`, lxy, base, J)
 }
 
-#' Draw Halton Sequence values for a single dimension.
-#' Note that this was borrowed from the Internet and is not my implementation.
+#' @name cppHaltonSeq
 #'
+#' @title Draw Halton Sequence values for a single dimension.
 #'
-#' @param x An integer for the starting index k >= 0.
+#' @description Note that this was borrowed from the Internet and is not my implementation.
+#'
+#' @param k An integer for the starting index k >= 0.
 #' @param base Co-prime Base but generally for BAS work it is 2 or 3.
 #' @param n Number of samples to draw.
+#' @return something
 #'
 #' @examples
-#' HaltonSeq(k = 0, base = 2, n = 10)
+#' cppHaltonSeq(k = 0, base = 2, n = 10)
 #'
 #' @export
 cppHaltonSeq <- function(k, base, n) {
     .Call(`_uc511_cppHaltonSeq`, k, base, n)
 }
 
+#' @name compareBoxesBoxInit
+#'
+#' @title title.
+#'
+#' @description description.
+#'
+#' @param boxes bla.
+#' @param boxInit bla.
+#' @param intB bla.
+#' @return something
 #'
 #' @export
 compareBoxesBoxInit <- function(boxes, boxInit, intB) {
     .Call(`_uc511_compareBoxesBoxInit`, boxes, boxInit, intB)
 }
 
+#' @name cppWhere2Start
+#'
+#' @title Internal function to find the ordering of the first box according to the random seed.
+#'
+#' @description This is a function to find which Halton Box the initial BAS point from the Master Sample falls into and
+#' thus use it to order the remaining boxes based on the initial. It also helps us tracks
+#' the master sample index as we skip boxes that have no resource.
+#'
+#' @param J Definition for the number of grid cells of Halton frame.
+#' @param seeds Master Sample random seed.
+#' @param bases Co-prime bases should really always be 2,3
+#' @param boxes ordering of boxes that have been clipped to be reordered according to the master sample seed.
+#'
+#' @returns vector of reordered Halton indices.
 #'
 #' @export
 cppWhere2Start <- function(J, seeds, bases, boxes) {
     .Call(`_uc511_cppWhere2Start`, J, seeds, bases, boxes)
 }
 
+#' @name cppSumPoweredElements
+#'
+#' @title Raise each element in a vector by a corresponding power provided in another vector,
+#'        then return the sum of all the results.
+#'
+#' @description Raise each element in a vector by a corresponding power provided in another vector,
+#'        then return the sum of all the results.
+#'
+#' @param   J           A numeric vector of values with which to raise the corresponding
+#'                      element in bases to.
+#' @param   bases       A numeric vector containing values to raised to by the corresponding
+#'                      powers in J
+#' @param   numElements The number of elements in the numeric vector bases.
+#'
+#' @return The sum of all the powers.
 #'
 #' @export
 cppSumPoweredElements <- function(J, bases, numElements) {
     .Call(`_uc511_cppSumPoweredElements`, J, bases, numElements)
 }
 
+#' @name log_a_to_base_b
 #'
-#' @export
-vectorMod <- function(k, b) {
-    .Call(`_uc511_vectorMod`, k, b)
-}
-
+#' @title Compute the log of a to base b.
+#'
+#' @description Compute the log of a to base b.
+#'
+#' @param   a       Integer to find the log to base b of.
+#' @param   b       Base
+#'
+#' @return The log of a to base b.
 #'
 #' @export
 log_a_to_base_b <- function(a, b) {
     .Call(`_uc511_log_a_to_base_b`, a, b)
 }
 
+#' @name cppRSHalton
+#'
+#' @title Generate numbers from a Halton Sequence with a random start
+#'
+#' @description For efficiency, this function can generate points along a random start Halton Sequence for
+#' predefined Halton.
+#'
+#' @param n Number of points required
+#' @param seeds Random starting point in each dimension
+#' @param bases Co-prime base for the Halton Sequence
+#' @param boxes Halton boxes that points are required to be generated in
+#' @param J Defines the Halton frame, and relates to the number of boxes used.
+#'
+#' @return Matrix with the columns, order of point, x in [0,1) and y in [0,1)
+#'
+#' @examples
+#' \dontrun{
+#' # First 10 points in the Halton Sequence for base 2,3
+#' pts <- RSHalton(n = 10)
+#' # First 10 points in the Halton Sequence for base 2,3 with
+#' # starting point at the 15th and 22nd index.
+#' pts <- RSHalton(n = 10, seeds = c(14, 21))
+#' }
 #'
 #' @export
 cppRSHalton <- function(n, seeds, bases, boxes, J) {

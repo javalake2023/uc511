@@ -2,9 +2,7 @@
 % Please edit documentation in R/MasterSample.R
 \name{point2Frame}
 \alias{point2Frame}
-\title{Get the Halton Boxes around a point resource ordered by BAS Master Sample.
-If you pass discrete points to this function it will return how the Halton
-frame is represented and what the ordering is.}
+\title{a title}
 \usage{
 point2Frame(pts, bb = NULL, base = c(2, 3), J = NULL, size = 100)
 }
@@ -18,6 +16,9 @@ point2Frame(pts, bb = NULL, base = c(2, 3), J = NULL, size = 100)
 \item{J}{Definition for the number of grid cells of Halton frame.}
 
 \item{size}{Physical target size of Halton boxes (square ish) if J is NULL.}
+}
+\value{
+something
 }
 \description{
 Get the Halton Boxes around a point resource ordered by BAS Master Sample.
@@ -39,4 +40,5 @@ plot(st_geometry(cities.halton), add= TRUE)
 #What is the actual area of a Halton box?
 st_area(cities.halton[1,])/1000^2
 }
+
 }

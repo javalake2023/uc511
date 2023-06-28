@@ -26,16 +26,6 @@ using the buildMS() function or will be selecting a marine master sample site in
       <ul class="nav navbar-nav"><li>
   <a href="../reference/index.html">Reference</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/Introduction.html">Introduction</a>
-    </li>
-  </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -92,25 +82,21 @@ using the buildMS() function or will be selecting a marine master sample site in
 <dt>quiet</dt>
 <dd><p>Boolean if you want to see any output printed to screen. Helpful if taking a long time.</p></dd>
 
+
+<dt>inclSeed</dt>
+<dd><p>Boolean need something here</p></dd>
+
 </dl></div>
+    <div id="value">
+    <h2>Value</h2>
+    
+
+<p>something</p>
+    </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Fed_MPAs_clipped</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="co"># Sample sizes for each stratum:</span></span></span>
-<span class="r-in"><span><span class="va">N_Zone</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Adaptive Management Zone"</span> <span class="op">=</span> <span class="fl">30</span>, <span class="st">"Marine"</span> <span class="op">=</span> <span class="fl">20</span>, <span class="st">"Other"</span> <span class="op">=</span> <span class="fl">40</span><span class="op">)</span> <span class="co">#chose how many sites in each polygon in the dataset</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Rename the NA value as the function does not accept NA at the moment.</span></span></span>
-<span class="r-in"><span><span class="va">Fed_MPAs_clipped</span><span class="op">$</span><span class="va">ZONEDESC_E</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">Fed_MPAs_clipped</span><span class="op">$</span><span class="va">ZONEDESC_E</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"Other"</span></span></span>
-<span class="r-in"><span><span class="co"># Core Protection is totally within Adaptive Management Zone. Remove it or make it explicit that it is different.</span></span></span>
-<span class="r-in"><span><span class="va">shp.MPAs</span> <span class="op">&lt;-</span> <span class="va">Fed_MPAs_clipped</span><span class="op">[</span><span class="va">Fed_MPAs_clipped</span><span class="op">$</span><span class="va">ZONEDESC_E</span> <span class="op">!=</span> <span class="st">"Core Protection Zone"</span>, <span class="op">]</span></span></span>
-<span class="r-in"><span><span class="co"># Select the Master Sample sites:</span></span></span>
-<span class="r-in"><span><span class="va">smp.str</span> <span class="op">&lt;-</span> <span class="fu">masterSample</span><span class="op">(</span><span class="va">shp.MPAs</span>, N <span class="op">=</span> <span class="va">N_Zone</span>, stratum <span class="op">=</span> <span class="st">"ZONEDESC_E"</span>, quiet <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">st_geometry</span><span class="op">(</span><span class="va">shp.MPAs</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">st_geometry</span><span class="op">(</span><span class="va">smp.str</span><span class="op">)</span>, add <span class="op">=</span> <span class="cn">T</span>, col<span class="op">=</span> <span class="st">"red"</span>, pch <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
-</code></pre></div>
+    
     </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -120,7 +106,7 @@ using the buildMS() function or will be selecting a marine master sample site in
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Phil Davies.</p>
+  <p></p><p>Developed by Phil Davies, Phil Davies, Phil Davies.</p>
 </div>
 
 <div class="pkgdown">

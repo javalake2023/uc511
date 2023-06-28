@@ -40,4 +40,5 @@ bb <- getBB()
 data(NS_bioregion)
 haltonBoxes <- shape2Frame(shp = NS_biogregion, J = c(6,4), bb = bb)
 }
+
 }

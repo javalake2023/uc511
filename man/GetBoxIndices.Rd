@@ -2,9 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{GetBoxIndices}
 \alias{GetBoxIndices}
-\title{Fast Implementation of finding x and y order numbers to feed into the linear congruence equation.
-This solves equation solves for a_i in the HIP paper.
-This is essentially an internal function and shouldn't be worried about.}
+\title{a title}
 \usage{
 GetBoxIndices(lxy, base, J)
 }
@@ -14,6 +12,9 @@ GetBoxIndices(lxy, base, J)
 \item{base}{Co-prime Base but generally for BAS work it is 2 or 3.}
 
 \item{J}{Integer of 2 values that represent the numbers 2^J1, 3^J2.}
+}
+\value{
+something
 }
 \description{
 Fast Implementation of finding x and y order numbers to feed into the linear congruence equation.

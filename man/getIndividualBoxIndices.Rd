@@ -2,11 +2,7 @@
 % Please edit documentation in R/MasterSample.R
 \name{getIndividualBoxIndices}
 \alias{getIndividualBoxIndices}
-\title{Get the Halton Box Index for a point.
-If you pass discrete points to this function it will return the Halton Index according to the
-Master Sample as defined by the bounding box. If the points are closer together than the defined box
-size then they are treated as the same sample unit. We do not expect this to be spatially balanced and do
-not recommend using this function alone to select a sample.}
+\title{Get the Halton Box Index for a point.}
 \usage{
 getIndividualBoxIndices(pts, J = NULL, bb, size = 100)
 }
@@ -19,8 +15,10 @@ getIndividualBoxIndices(pts, J = NULL, bb, size = 100)
 
 \item{size}{Physical target size of Halton boxes (square ish) if J is NULL.}
 }
+\value{
+something
+}
 \description{
-Get the Halton Box Index for a point.
 If you pass discrete points to this function it will return the Halton Index according to the
 Master Sample as defined by the bounding box. If the points are closer together than the defined box
 size then they are treated as the same sample unit. We do not expect this to be spatially balanced and do
@@ -39,4 +37,5 @@ cities.ord <- getIndividualBoxIndices(pts = cities, bb = bb, size = 100)
 plot(st_geometry(cities), pch = 20)
 plot(st_geometry(cities.ord[rank(cities.ord$HaltonIndex) < 15,]), add= TRUE, col = "red", cex = 1.5)
 }
+
 }

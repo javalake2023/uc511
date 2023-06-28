@@ -25,16 +25,6 @@
       <ul class="nav navbar-nav"><li>
   <a href="../reference/index.html">Reference</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/Introduction.html">Introduction</a>
-    </li>
-  </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -52,21 +42,18 @@
           <p class="section-desc"></p>
         </th>
       </tr></tbody><tbody><tr><td>
-          <p><code><a href="getIndividualBoxIndices.html">getIndividualBoxIndices()</a></code> </p>
-        </td>
-        <td><p>Get the Halton Box Index for a point.
-If you pass discrete points to this function it will return the Halton Index according to the
-Master Sample as defined by the bounding box. If the points are closer together than the defined box
-size then they are treated as the same sample unit. We do not expect this to be spatially balanced and do
-not recommend using this function alone to select a sample.</p></td>
-      </tr><tr><td>
-          <p><code><a href="HaltonFrames.html">HaltonFrames()</a></code> </p>
+          <p><code><a href="BAS.html">BAS()</a></code> </p>
         </td>
         <td><p>Do something useful.</p></td>
       </tr><tr><td>
-          <p><code><a href="RSHalton.html">RSHalton()</a></code> </p>
+          <p><code><a href="BASMastersample.html">BASMastersample()</a></code> </p>
         </td>
-        <td><p>Generate numbers from a Halton Sequence with a random start</p></td>
+        <td><p>BASMastersample.R
+Do something useful.</p></td>
+      </tr><tr><td>
+          <p><code><a href="BuildMS.html">buildMS()</a></code> </p>
+        </td>
+        <td><p>Build a new Master Sample with a random rotation and seed.</p></td>
       </tr><tr><td>
           <p><code><a href="DAS.html">DAS()</a></code> </p>
         </td>
@@ -74,47 +61,29 @@ not recommend using this function alone to select a sample.</p></td>
       </tr><tr><td>
           <p><code><a href="GetBoxIndices.html">GetBoxIndices()</a></code> </p>
         </td>
-        <td><p>Fast Implementation of finding x and y order numbers to feed into the linear congruence equation.
-This solves equation solves for a_i in the HIP paper.
-This is essentially an internal function and shouldn't be worried about.</p></td>
-      </tr><tr><td>
-          <p><code><a href="masterSampleSelect.html">masterSampleSelect()</a></code> </p>
-        </td>
-        <td><p>Generate sample points using BAS master sample. This function has no features and is generally expected to be run by the wrapper function.
-masterSample that ensures all the correct pieces are passed and adds the additional feature of stratification.</p></td>
+        <td><p>a title</p></td>
       </tr><tr><td>
           <p><code><a href="HIP.html">HIP()</a></code> </p>
         </td>
         <td><p>Do something useful.</p></td>
       </tr><tr><td>
-          <p><code><a href="shape2Frame.html">shape2Frame()</a></code> </p>
-        </td>
-        <td><p>Clip a Halton Frame based on the bounding box to the current shape.</p></td>
-      </tr><tr><td>
-          <p><code><a href="SpatialStratification.html">SpatialStratification()</a></code> </p>
+          <p><code><a href="HaltonFrames.html">HaltonFrames()</a></code> </p>
         </td>
         <td><p>Do something useful.</p></td>
-      </tr><tr><td>
-          <p><code><a href="makeFrame.html">makeFrame()</a></code> </p>
-        </td>
-        <td><p>Create a Halton Frame raster, defined in sf based on the bounding box master sample.</p></td>
       </tr><tr><td>
           <p><code><a href="SRS.html">SRS()</a></code> </p>
         </td>
         <td><p>Do something useful.</p></td>
       </tr><tr><td>
-          <p><code><a href="point2Frame.html">point2Frame()</a></code> </p>
+          <p><code><a href="SolveCongruence.html">SolveCongruence()</a></code> </p>
         </td>
-        <td><p>Get the Halton Boxes around a point resource ordered by BAS Master Sample.
-If you pass discrete points to this function it will return how the Halton
-frame is represented and what the ordering is.</p></td>
-      </tr><tr><td>
-          <p><code><a href="BASMastersample.html">BASMastersample()</a></code> </p>
-        </td>
-        <td><p>BASMastersample.R
-Do something useful.</p></td>
+        <td><p>Solve system of linear congruence from HIP paper to order HIP boxes.</p></td>
       </tr><tr><td>
           <p><code><a href="SpacialBalanceMeasures.html">SpacialBalanceMeasures()</a></code> </p>
+        </td>
+        <td><p>Do something useful.</p></td>
+      </tr><tr><td>
+          <p><code><a href="SpatialStratification.html">SpatialStratification()</a></code> </p>
         </td>
         <td><p>Do something useful.</p></td>
       </tr><tr><td>
@@ -122,28 +91,86 @@ Do something useful.</p></td>
         </td>
         <td><p>Do something useful.</p></td>
       </tr><tr><td>
-          <p><code><a href="SolveCongruence.html">SolveCongruence()</a></code> </p>
+          <p><code><a href="compareBoxesBoxInit.html">compareBoxesBoxInit()</a></code> </p>
         </td>
-        <td><p>Solve system of linear congruence from HIP paper to order HIP boxes.
-See page 5 of Robertson et al. 2018 Halton Iterative Partitioning.
-This is essentially an internal function and shouldn't be worried about.</p></td>
+        <td><p>title.</p></td>
       </tr><tr><td>
-          <p><code><a href="BAS.html">BAS()</a></code> </p>
+          <p><code><a href="cppHaltonSeq.html">cppHaltonSeq()</a></code> </p>
         </td>
-        <td><p>Do something useful.</p></td>
+        <td><p>Draw Halton Sequence values for a single dimension.</p></td>
+      </tr><tr><td>
+          <p><code><a href="cppRSHalton.html">cppRSHalton()</a></code> </p>
+        </td>
+        <td><p>Generate numbers from a Halton Sequence with a random start</p></td>
+      </tr><tr><td>
+          <p><code><a href="cppSumPoweredElements.html">cppSumPoweredElements()</a></code> </p>
+        </td>
+        <td><p>Raise each element in a vector by a corresponding power provided in another vector,
+then return the sum of all the results.</p></td>
+      </tr><tr><td>
+          <p><code><a href="cppWhere2Start.html">cppWhere2Start()</a></code> </p>
+        </td>
+        <td><p>Internal function to find the ordering of the first box according to the random seed.</p></td>
+      </tr><tr><td>
+          <p><code><a href="getBB.html">getBB()</a></code> </p>
+        </td>
+        <td><p>Get the bounding box for other functions.</p></td>
+      </tr><tr><td>
+          <p><code><a href="getIndividualBoxIndices.html">getIndividualBoxIndices()</a></code> </p>
+        </td>
+        <td><p>Get the Halton Box Index for a point.</p></td>
+      </tr><tr><td>
+          <p><code><a href="getProj.html">getProj()</a></code> </p>
+        </td>
+        <td><p>Define spatial objects in projection of the master sample.</p></td>
+      </tr><tr><td>
+          <p><code><a href="getRotation.html">getRotation()</a></code> </p>
+        </td>
+        <td><p>Returns the radians of rotation of the bounding box.</p></td>
+      </tr><tr><td>
+          <p><code><a href="getSeed.html">getSeed()</a></code> </p>
+        </td>
+        <td><p>Random seed definition for Western Canada Marine Master Sample.</p></td>
+      </tr><tr><td>
+          <p><code><a href="log_a_to_base_b.html">log_a_to_base_b()</a></code> </p>
+        </td>
+        <td><p>Compute the log of a to base b.</p></td>
+      </tr><tr><td>
+          <p><code><a href="makeFrame.html">makeFrame()</a></code> </p>
+        </td>
+        <td><p>Create a Halton Frame raster, defined in sf based on the bounding box master sample.</p></td>
+      </tr><tr><td>
+          <p><code><a href="masterSampleSelect.html">masterSampleSelect()</a></code> </p>
+        </td>
+        <td><p>Generate sample points using BAS master sample.</p></td>
+      </tr><tr><td>
+          <p><code><a href="point2Frame.html">point2Frame()</a></code> </p>
+        </td>
+        <td><p>a title</p></td>
+      </tr><tr><td>
+          <p><code><a href="rot.html">rot()</a></code> </p>
+        </td>
+        <td><p>Generate a rotation matrix for rotating objects later.</p></td>
+      </tr><tr><td>
+          <p><code><a href="rotate.bb.html">rotate.bb()</a></code> </p>
+        </td>
+        <td><p>Rotate Bounding box by theta radians</p></td>
+      </tr><tr><td>
+          <p><code><a href="rotate.scale.coords.html">rotate.scale.coords()</a></code> </p>
+        </td>
+        <td><p>Scale and rotate points from the unit square to a defined projection.</p></td>
+      </tr><tr><td>
+          <p><code><a href="rotate.shp.html">rotate.shp()</a></code> </p>
+        </td>
+        <td><p>Rotate a polygon around the centroid of a Master Sample bounding box.</p></td>
+      </tr><tr><td>
+          <p><code><a href="shape2Frame.html">shape2Frame()</a></code> </p>
+        </td>
+        <td><p>Clip a Halton Frame based on the bounding box to the current shape.</p></td>
       </tr><tr><td>
           <p><code><a href="xmasterSample.html">xmasterSample()</a></code> </p>
         </td>
         <td><p>Select pts from a polygon using a BAS Master Sample.</p></td>
-      </tr><tr><td>
-          <p><code><a href="where2Start.html">where2Start()</a></code> </p>
-        </td>
-        <td><p>Internal function to find the ordering of the first box according to the random seed.</p></td>
-      </tr><tr><td>
-          <p><code><a href="cppHaltonSeq.html">cppHaltonSeq()</a></code> </p>
-        </td>
-        <td><p>Draw Halton Sequence values for a single dimension.
-Note that this was borrowed from the Internet and is not my implmementation.</p></td>
       </tr></tbody></table></div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -153,7 +180,7 @@ Note that this was borrowed from the Internet and is not my implmementation.</p>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Phil Davies.</p>
+  <p></p><p>Developed by Phil Davies, Phil Davies, Phil Davies.</p>
 </div>
 
 <div class="pkgdown">

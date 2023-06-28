@@ -2,23 +2,24 @@
 % Please edit documentation in R/RcppExports.R
 \name{cppHaltonSeq}
 \alias{cppHaltonSeq}
-\title{Draw Halton Sequence values for a single dimension.
-Note that this was borrowed from the Internet and is not my implmementation.}
+\title{Draw Halton Sequence values for a single dimension.}
 \usage{
 cppHaltonSeq(k, base, n)
 }
 \arguments{
+\item{k}{An integer for the starting index k >= 0.}
+
 \item{base}{Co-prime Base but generally for BAS work it is 2 or 3.}
 
 \item{n}{Number of samples to draw.}
-
-\item{x}{An integer for the starting index k >= 0.}
+}
+\value{
+something
 }
 \description{
-Draw Halton Sequence values for a single dimension.
-Note that this was borrowed from the Internet and is not my implmementation.
+Note that this was borrowed from the Internet and is not my implementation.
 }
 \examples{
-HaltonSeq(k = 0, base = 2, n = 10)
+cppHaltonSeq(k = 0, base = 2, n = 10)
 
 }

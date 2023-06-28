@@ -26,6 +26,11 @@ xmasterSample(
 \item{nExtra}{An efficiency problem of how many extra samples to draw before spatial clipping to shp.}
 
 \item{quiet}{Boolean if you want to see any output printed to screen. Helpful if taking a long time.}
+
+\item{inclSeed}{Boolean need something here}
+}
+\value{
+something
 }
 \description{
 This is the main function for selecting sites using the BAS master sample. It assumes that you have already defined the master sample
@@ -35,15 +40,18 @@ using the buildMS() function or will be selecting a marine master sample site in
 \dontrun{
 data(Fed_MPAs_clipped)
 # Sample sizes for each stratum:
-N_Zone <- c("Adaptive Management Zone" = 30, "Marine" = 20, "Other" = 40) #chose how many sites in each polygon in the dataset
+# chose how many sites in each polygon in the dataset
+N_Zone <- c("Adaptive Management Zone" = 30, "Marine" = 20, "Other" = 40)
 
 # Rename the NA value as the function does not accept NA at the moment.
 Fed_MPAs_clipped$ZONEDESC_E[is.na(Fed_MPAs_clipped$ZONEDESC_E)] <- "Other"
-# Core Protection is totally within Adaptive Management Zone. Remove it or make it explicit that it is different.
+# Core Protection is totally within Adaptive Management Zone. Remove it or
+make it explicit that it is different.
 shp.MPAs <- Fed_MPAs_clipped[Fed_MPAs_clipped$ZONEDESC_E != "Core Protection Zone", ]
 # Select the Master Sample sites:
-smp.str <- masterSample(shp.MPAs, N = N_Zone, stratum = "ZONEDESC_E", quiet = FALSE)
+smp.str <- xmasterSample(shp.MPAs, N = N_Zone, stratum = "ZONEDESC_E", quiet = FALSE)
 plot(st_geometry(shp.MPAs))
 plot(st_geometry(smp.str), add = T, col= "red", pch = 16)
 }
+
 }

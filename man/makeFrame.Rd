@@ -27,4 +27,5 @@ This function is an internal function simply to select sub BAS points without ha
 bb <- getBB()
 haltonFrame <- makeFrame(J = c(8,4), bb = bb)
 }
+
 }
