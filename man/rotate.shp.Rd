@@ -23,8 +23,8 @@ by that bounding box either backwards or forwards.
 \examples{
 \dontrun{
 data(NS_bioregion)
-bb <- getBB()
-pts.shp <- rotate.shp(shp = NS_bioregion, bb = bb)
+bb <- uc511::getBB()
+pts.shp <- uc511::rotate.shp(shp = NS_bioregion, bb = bb)
 }
 
 }

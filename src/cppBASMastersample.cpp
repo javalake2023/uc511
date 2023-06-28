@@ -21,6 +21,14 @@ using namespace Rcpp;
 //   http://gallery.rcpp.org/
 //
 
+//' @name cppBASMastersample
+//'
+//' @title cppBASMastersample
+//'
+//' @description A placeholder for now.
+//'
+//' @returns Nothing.
+
 //' @export
 // [[Rcpp::export]]
 void cppBASMastersample() {
@@ -42,7 +50,7 @@ void cppBASMastersample() {
 //' @param base Co-prime Base but generally for BAS work it is 2 or 3.
 //' @param J Integer of 2 values that represent the numbers 2^J1, 3^J2.
 //'
-//' @returns A numeric vector of...
+//' @returns A numeric vector.
 //'
 //' @export
 // [[Rcpp::export(rng = false)]]
@@ -77,16 +85,16 @@ NumericVector SolveCongruence(NumericMatrix& A, NumericVector& base, NumericVect
 
 //' @name GetBoxIndices
 //'
-//' @title a title
+//' @title Fast Implementation of finding x and y order numbers
 //'
 //' @description Fast Implementation of finding x and y order numbers to feed into the linear congruence equation.
-//' This solves equation solves for a_i in the HIP paper.
+//' This solves equation for a_i in the HIP paper.
 //' This is essentially an internal function and shouldn't be worried about.
 //'
 //' @param lxy A Matrix of lower x y coordinates of a Halton Box inside the unit box.
 //' @param base Co-prime Base but generally for BAS work it is 2 or 3.
 //' @param J Integer of 2 values that represent the numbers 2^J1, 3^J2.
-//' @return something
+//' @return A matrix of box indices
 //'
 //' @export
 // [[Rcpp::export(rng = false)]]
@@ -121,10 +129,10 @@ NumericMatrix GetBoxIndices(NumericMatrix& lxy, IntegerVector& base, IntegerVect
 //' @param k An integer for the starting index k >= 0.
 //' @param base Co-prime Base but generally for BAS work it is 2 or 3.
 //' @param n Number of samples to draw.
-//' @return something
+//' @return A Halton sequence of size n.
 //'
 //' @examples
-//' cppHaltonSeq(k = 0, base = 2, n = 10)
+//' uc511::cppHaltonSeq(k = 0, base = 2, n = 10)
 //'
 //' @export
 // [[Rcpp::export(rng = false)]]
@@ -173,6 +181,39 @@ Rcpp::NumericVector compareBoxesBoxInit(Rcpp::NumericVector boxes, Rcpp::Numeric
 }
 
 
+//' @name cppProductPoweredElements
+//'
+//' @title Raise each element in a vector by a corresponding power provided in another vector,
+//'        then return the product of all the results.
+//'
+//' @description Raise each element in a vector by a corresponding power provided in another vector,
+//'        then return the product of all the results.
+//'
+//' @param   J           A numeric vector of values with which to raise the corresponding
+//'                      element in bases to.
+//' @param   bases       A numeric vector containing values to raised to by the corresponding
+//'                      powers in J
+//' @param   numElements The number of elements in the numeric vector bases.
+//'
+//' @return The product of all the powers.
+//'
+//' @examples
+//' # calculate the product of the powered elements
+//' uc511::cppProductPoweredElements(c(1, 2, 3), c(3, 2, 1), 3)
+//'
+//' @export
+// [[Rcpp::export(rng = false)]]
+int cppProductPoweredElements(NumericVector& J, NumericVector& bases, int numElements)
+{
+  // calculate the sum of the powered elements
+  int B = 1;
+  for (int i = 0; i < numElements; i++){
+    int powered_value = pow(bases[i], J[i]);
+    B *= powered_value;
+  }
+  return B;
+}
+
 
 //' @name cppWhere2Start
 //'
@@ -194,71 +235,26 @@ Rcpp::NumericVector compareBoxesBoxInit(Rcpp::NumericVector boxes, Rcpp::Numeric
 NumericVector cppWhere2Start(NumericVector& J, IntegerVector& seeds, NumericVector& bases, NumericVector& boxes){
 
   // calculate the sum of the powered elements
-  int num_elements = 2; //sizeof(bases)/sizeof(bases[0]);
-  int B = 1;
-  for (int i = 0; i < num_elements; i++){
-    int powered_value = pow(bases[i], J[i]);
-    B *= powered_value;
-  }
-  //NumericVector B = cumprod(NumericVector::create( pow(bases[0], J[0]), pow(bases[1], J[1]) ));
-  //RcppThread::Rcout << "cppWhere2Start() B : " << B << std::endl;
+  int numElements = 2; //sizeof(bases)/sizeof(bases[0]);
+  int B = cppProductPoweredElements(J, bases, numElements);
 
-  //#### calc L
-  num_elements = seeds.length();
-  //RcppThread::Rcout << "cppWhere2Start() num_elements : " << num_elements << std::endl;
-  IntegerVector L(num_elements);
-  for (int i = 0; i < num_elements; i++){
-    int remainder = seeds[i] % (int)(pow(bases[i], J[i]));
-    //RcppThread::Rcout << "cppWhere2Start() remainder : " << remainder << std::endl;
-    //const auto [q, r] = std::div(seeds[i], pow(bases[i], J[i]));
-    L[i] = remainder;
-    //L.push_back(remainder);
+  // calculate L
+  numElements = seeds.length();
+  IntegerVector L(numElements);
+  for (int i = 0; i < numElements; i++){
+    L[i] = seeds[i] % (int)(pow(bases[i], J[i]));
   }
-  //RcppThread::Rcout << "cppWhere2Start() L : " << L << std::endl;
 
   //boxInit <- SolveCongruence(matrix(L, ncol = 2, nrow = 1), bases, J)
   NumericMatrix mL(1, 2, L.begin());
   NumericVector boxInit = SolveCongruence(mL, bases, J);
-  //RcppThread::Rcout << "cppWhere2Start() boxInit : " << boxInit << std::endl;
 
   if(boxes.isNULL())
     return NA_REAL;
 
   // boxes <- ifelse(boxes < boxInit, B + (boxes - boxInit), boxes - boxInit)
   boxes = compareBoxesBoxInit(boxes, boxInit, B);
-  //RcppThread::Rcout << "cppWhere2Start() tst boxes : " << boxes << std::endl;
-
   return boxes.sort(false);
-}
-
-
-//' @name cppSumPoweredElements
-//'
-//' @title Raise each element in a vector by a corresponding power provided in another vector,
-//'        then return the sum of all the results.
-//'
-//' @description Raise each element in a vector by a corresponding power provided in another vector,
-//'        then return the sum of all the results.
-//'
-//' @param   J           A numeric vector of values with which to raise the corresponding
-//'                      element in bases to.
-//' @param   bases       A numeric vector containing values to raised to by the corresponding
-//'                      powers in J
-//' @param   numElements The number of elements in the numeric vector bases.
-//'
-//' @return The sum of all the powers.
-//'
-//' @export
-// [[Rcpp::export(rng = false)]]
-int cppSumPoweredElements(NumericVector& J, NumericVector& bases, int numElements)
-{
-  // calculate the sum of the powered elements
-  int B = 1;
-  for (int i = 0; i < numElements; i++){
-    int powered_value = pow(bases[i], J[i]);
-    B *= powered_value;
-  }
-  return B;
 }
 
 
@@ -272,6 +268,10 @@ int cppSumPoweredElements(NumericVector& J, NumericVector& bases, int numElement
 //' @param   b       Base
 //'
 //' @return The log of a to base b.
+//'
+//' @examples
+//' # calculate log of a to base b.
+//' log_a_to_base_b(2, 4)
 //'
 //' @export
 // [[Rcpp::export(rng = false)]]
@@ -305,18 +305,35 @@ T mod(T a, int n)
 //' @return Matrix with the columns, order of point, x in [0,1) and y in [0,1)
 //'
 //' @examples
-//' \dontrun{
 //' # First 10 points in the Halton Sequence for base 2,3
-//' pts <- RSHalton(n = 10)
+//' uc511::cppRSHalton(n = 10)
 //' # First 10 points in the Halton Sequence for base 2,3 with
 //' # starting point at the 15th and 22nd index.
-//' pts <- RSHalton(n = 10, seeds = c(14, 21))
-//' }
+//' uc511::cppRSHalton(n = 10, seeds = c(14, 21))
 //'
 //' @export
 // [[Rcpp::export(rng = false)]]
-NumericVector cppRSHalton(int & n, IntegerVector& seeds, NumericVector& bases, NumericVector& boxes, NumericVector& J)
+NumericVector cppRSHalton(int n = 10,
+                          IntegerVector seeds = Rcpp::IntegerVector::create(),
+                          NumericVector bases = Rcpp::NumericVector::create(),
+                          NumericVector boxes = Rcpp::NumericVector::create(),
+                          NumericVector J     = Rcpp::NumericVector::create())
 {
+  // defaults: n = 10, seeds = c(0,0), bases = c(2,3), boxes = 0, J = c(0,0)
+  RcppThread::Rcout << "cppRSHalton() seeds.size() : " << seeds.size() << std::endl;
+  if (seeds.size() == 0){
+    seeds = {0, 0};
+  }
+  if (bases.size() == 0){
+    bases = {2, 3};
+  }
+  if (boxes.size() == 0){
+    boxes = {0};
+  }
+  if (J.size() == 0){
+    J = {0, 0};
+  }
+
   NumericVector xk;
 
   //RcppThread::Rcout << "cppRSHalton() n     : " << n << std::endl;
@@ -337,7 +354,7 @@ NumericVector cppRSHalton(int & n, IntegerVector& seeds, NumericVector& bases, N
   NumericVector subsetBases = bases[Rcpp::Range(0, 1)];
   boxes = cppWhere2Start(subsetJ, subsetSeeds, subsetBases, boxes);
 
-  int B = cppSumPoweredElements(J, bases, 2);
+  int B = cppProductPoweredElements(J, bases, 2);
   double maxrep = n / (double)boxes.length();
   int ceiling = ceil(maxrep);
   int repeat_count = ceiling - 1;
@@ -366,10 +383,8 @@ NumericVector cppRSHalton(int & n, IntegerVector& seeds, NumericVector& bases, N
     for (int j = 0; j < (ceil(log_a_to_base_b(u + n, b)) + 2); j++){
       NumericVector tmp1 = floor(k / pow(b, j+1));
       //NumericVector tmp11 = tmp1[Rcpp::Range(0, 9)];
-
       //NumericVector tmp0 = mod(tmp1, b);
       //NumericVector tmp00 = tmp0[Rcpp::Range(0, 9)];
-
       int tmp000 = pow(b, (j + 2));
       NumericVector tmp2 = mod(tmp1, b) / tmp000;
       //NumericVector tmp3 = tmp2[Rcpp::Range(0, 9)];

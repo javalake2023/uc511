@@ -81,10 +81,12 @@ masterSampleSelect <- function(shp, N = 100, bb = NULL, nExtra = 5000, printJ = 
   draw <- N + nExtra
 
   J <- c(0, 0)
-  shp.rot <- rotate.shp(shp, bb, back = FALSE) # Tricky here to figure out where the shape is on the vertical Halton box.
+  # Tricky here to figure out where the shape is on the vertical Halton box.
+  shp.rot <- rotate.shp(shp, bb, back = FALSE)
   hal.frame <- shape2Frame(shp.rot, J = J, bb = bb, projstring = msproj)
   area.shp <- as.numeric(sum(sf::st_area(shp)))
-  while(area.shp < 0.25*as.numeric(sf::st_area(hal.frame))[1])	# Subset again:
+  # Subset again:
+  while(area.shp < 0.25*as.numeric(sf::st_area(hal.frame))[1])
   {
     if(base[2]^J[2] > base[1]^J[1]){
       J[1] <- J[1] + 1
@@ -107,7 +109,11 @@ masterSampleSelect <- function(shp, N = 100, bb = NULL, nExtra = 5000, printJ = 
   B <- prod(c(2,3)^J)
 
   # I like to know how many divisions we had to make...
-  if(printJ) message(J)
+  if(printJ){
+    msg <- "uc511(masterSampleSelect) Number of divisions made (J=) %s.\n"
+    msgs <- sprintf(msg, J)
+    message(msgs)
+  }
 
   getSample <- function(k = 0, endPoint = 0){
     seed <- c(seed, inclSeed)
@@ -115,7 +121,7 @@ masterSampleSelect <- function(shp, N = 100, bb = NULL, nExtra = 5000, printJ = 
     }else {
       seedshift <- endPoint + seed
     }
-    pts <- cppRSHalton(n = draw, seeds = seedshift, bases = c(2,3,5), boxes = halt.rep, J = J)
+    pts <- cppRSHalton(n = draw, seeds = seedshift, bases = c(2, 3, 5), boxes = halt.rep, J = J)
     pts <- pts[1:draw,]
     #print("dim(cpp pts)")
     #print(dim(pts))
@@ -156,12 +162,13 @@ masterSampleSelect <- function(shp, N = 100, bb = NULL, nExtra = 5000, printJ = 
 }
 
 
-#' @name xmasterSample
+#' @name getBASMasterSample
 #'
-#' @title Select pts from a polygon using a BAS Master Sample.
+#' @title Select points from a polygon using a BAS Master Sample.
 #'
-#' @description This is the main function for selecting sites using the BAS master sample. It assumes that you have already defined the master sample
-#' using the buildMS() function or will be selecting a marine master sample site in BC.
+#' @description This is the main function for selecting sites using the BAS master
+#' sample. It assumes that you have already defined the master sample using the
+#' buildMS() function or will be selecting a marine master sample site in BC.
 #'
 #' @param shp Shape file as a polygon (sp or sf) to select sites for.
 #' @param N Number of sites to select. If using stratification it is a named vector containing sample sizes of each group.
@@ -178,20 +185,19 @@ masterSampleSelect <- function(shp, N = 100, bb = NULL, nExtra = 5000, printJ = 
 #' # Sample sizes for each stratum:
 #' # chose how many sites in each polygon in the dataset
 #' N_Zone <- c("Adaptive Management Zone" = 30, "Marine" = 20, "Other" = 40)
-#'
 #' # Rename the NA value as the function does not accept NA at the moment.
 #' Fed_MPAs_clipped$ZONEDESC_E[is.na(Fed_MPAs_clipped$ZONEDESC_E)] <- "Other"
 #' # Core Protection is totally within Adaptive Management Zone. Remove it or
-#' make it explicit that it is different.
+#' # make it explicit that it is different.
 #' shp.MPAs <- Fed_MPAs_clipped[Fed_MPAs_clipped$ZONEDESC_E != "Core Protection Zone", ]
 #' # Select the Master Sample sites:
-#' smp.str <- xmasterSample(shp.MPAs, N = N_Zone, stratum = "ZONEDESC_E", quiet = FALSE)
-#' plot(st_geometry(shp.MPAs))
-#' plot(st_geometry(smp.str), add = T, col= "red", pch = 16)
+#' smp.str <- uc511::getBASMasterSample(shp.MPAs, N = N_Zone, stratum = "ZONEDESC_E", quiet = FALSE)
+#' plot(sf::st_geometry(shp.MPAs))
+#' plot(sf::st_geometry(smp.str), add = T, col= "red", pch = 16)
 #' }
 #'
 #' @export
-xmasterSample <- function(shp, N = 100, bb = NULL, stratum = NULL, nExtra = 10000, quiet = FALSE, inclSeed = NULL)
+getBASMasterSample <- function(shp, N = 100, bb = NULL, stratum = NULL, nExtra = 10000, quiet = FALSE, inclSeed = NULL)
 {
   if(is.null(inclSeed)) inclSeed <- floor(stats::runif(1,1,10000))
   if(is.null(stratum)){
@@ -200,7 +206,11 @@ xmasterSample <- function(shp, N = 100, bb = NULL, stratum = NULL, nExtra = 1000
     if(is.null(names(N))) return("Need design sample size as N = named vector")
     strata.levels <- names(N)
 
-    if(!quiet) print(paste0("Stratum: ", strata.levels[1]))
+    if(!quiet){
+      msg <- "uc511(getBASMasterSample) Stratum: %s.\n"
+      msgs <- sprintf(msg, strata.levels[1])
+      message(msgs)
+    }
     k.indx <- which(shp[, stratum, drop = TRUE] == strata.levels[1])
     shp.stratum <- shp[k.indx,] #%>% st_union()	# ? Not sure if this is necessary... slowed things down too much!
     smp <- masterSampleSelect(shp.stratum, N = N[1], bb = bb, nExtra = nExtra, printJ = !quiet, inclSeed)
@@ -209,7 +219,11 @@ xmasterSample <- function(shp, N = 100, bb = NULL, stratum = NULL, nExtra = 1000
     if(length(N) > 1){
       for(k in 2:length(N))
       {
-        if(!quiet) print(paste0("Stratum: ", strata.levels[k]))
+        if(!quiet){
+          msg <- "uc511(getBASMasterSample) Stratum: %s."
+          msgs <- sprintf(msg, strata.levels[k])
+          message(msgs)
+        }
         k.indx <- which(shp[, stratum, drop = TRUE] == strata.levels[k])
         shp.stratum <- shp[k.indx,] ## %>% st_union()	# Needed?
         smp.s <- masterSampleSelect(shp = shp.stratum, N = N[k], bb = bb, nExtra = nExtra, printJ = !quiet, inclSeed = inclSeed)
@@ -224,7 +238,7 @@ xmasterSample <- function(shp, N = 100, bb = NULL, stratum = NULL, nExtra = 1000
 
 #' @name point2Frame
 #'
-#' @title a title
+#' @title Get the Halton Boxes around a point resource ordered by BAS Master Sample.
 #'
 #' @description Get the Halton Boxes around a point resource ordered by BAS Master Sample.
 #' If you pass discrete points to this function it will return how the Halton
@@ -235,22 +249,22 @@ xmasterSample <- function(shp, N = 100, bb = NULL, stratum = NULL, nExtra = 1000
 #' @param base Co-prime base of Halton sequence
 #' @param J Definition for the number of grid cells of Halton frame.
 #' @param size Physical target size of Halton boxes (square ish) if J is NULL.
-#' @return something
+#' @return how the Halton frame is represented and what the ordering is.
 
 #' @examples
 #' \dontrun{
-#' library(bcmaps)
 #' # If you haven't already installed this:
 #' install.packages('bcmapsdata', repos='https://bcgov.github.io/drat/')
 #' library(bcmapsdata)
-#' cities <- get_layer("bc_cities")
-#' bb <- buildMS(hydro, d = 2, FALSE)
+#' library(bcmaps)
+#' cities <- bcmaps::get_layer("bc_cities")
+#' bb <- uc511::buildMS(cities, d = 2, FALSE)
 #' # For visibility will make boxes 10 km
-#' cities.halton <- point2Frame(pts = cities, bb = bb, size = 10000)
-#' plot(st_geometry(cities), pch = 20, cex = 0.1)
-#' plot(st_geometry(cities.halton), add= TRUE)
-#' #What is the actual area of a Halton box?
-#' st_area(cities.halton[1,])/1000^2
+#' cities.halton <- uc511::point2Frame(pts = cities, bb = bb, size = 10000)
+#' plot(sf::st_geometry(cities), pch = 20, cex = 0.1)
+#' plot(sf::st_geometry(cities.halton), add= TRUE)
+#' # What is the actual area of a Halton box?
+#' sf::st_area(cities.halton[1,])/1000^2
 #' }
 #'
 #' @export
@@ -344,10 +358,10 @@ point2Frame <- function(pts, bb = NULL, base = c(2,3), J = NULL, size = 100)
 #' # If you haven't already installed this:
 #' install.packages('bcmapsdata', repos='https://bcgov.github.io/drat/')
 #' library(bcmapsdata)
-#' cities <- get_layer("bc_cities")
-#' bb <- buildMS(hydro, d = 2, FALSE)
+#' cities <- bcmaps::get_layer("bc_cities")
+#' bb <- uc511::buildMS(cities, d = 2, FALSE)
 #' # For visibility will make boxes 10 km
-#' cities.ord <- getIndividualBoxIndices(pts = cities, bb = bb, size = 100)
+#' cities.ord <- uc511::getIndividualBoxIndices(pts = cities, bb = bb, size = 100)
 #' plot(st_geometry(cities), pch = 20)
 #' plot(st_geometry(cities.ord[rank(cities.ord$HaltonIndex) < 15,]), add= TRUE, col = "red", cex = 1.5)
 #' }

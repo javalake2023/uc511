@@ -7,7 +7,7 @@
 getSeed()
 }
 \value{
-something
+The random seeds for the Western Canada Marine Master Sample.
 }
 \description{
 Defines the random seed specific to the Western Canada Marine Master Sample.

@@ -67,7 +67,13 @@
     <loc>/reference/compareBoxesBoxInit.html</loc>
   </url>
   <url>
+    <loc>/reference/cppBASMastersample.html</loc>
+  </url>
+  <url>
     <loc>/reference/cppHaltonSeq.html</loc>
+  </url>
+  <url>
+    <loc>/reference/cppProductPoweredElements.html</loc>
   </url>
   <url>
     <loc>/reference/cppRSHalton.html</loc>
@@ -77,6 +83,9 @@
   </url>
   <url>
     <loc>/reference/cppWhere2Start.html</loc>
+  </url>
+  <url>
+    <loc>/reference/getBASMasterSample.html</loc>
   </url>
   <url>
     <loc>/reference/getBB.html</loc>

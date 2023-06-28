@@ -14,8 +14,8 @@
 #'
 #' @examples
 #' \dontrun{
-#' bb <- getBB()
-#' haltonFrame <- makeFrame(J = c(8,4), bb = bb)
+#' bb <- uc511::getBB()
+#' haltonFrame <- uc511::makeFrame(J = c(8,4), bb = bb)
 #' }
 #'
 #' @export
@@ -50,9 +50,9 @@ makeFrame <- function(base = c(2,3), J = c(2,2), bb, rotate = FALSE)
 #'
 #' @examples
 #' \dontrun{
-#' bb <- getBB()
+#' bb <- uc511::getBB()
 #' data(NS_bioregion)
-#' haltonBoxes <- shape2Frame(shp = NS_biogregion, J = c(6,4), bb = bb)
+#' haltonBoxes <- uc511::shape2Frame(shp = NS_bioregion, J = c(6,4), bb = bb)
 #' }
 #'
 #' @export
@@ -66,11 +66,11 @@ shape2Frame <- function(shp, bb = NULL, base = c(2,3), J = c(2,2), projstring = 
     theta <- attr(bb, "rotation")
     cntrd <- attr(bb, "centroid")
     projstring <- sf::st_crs(bb)$proj4string
-  }else{ return("Define Bounding Box Please.")}
+  }else{ return("uc511(shape2Frame) Define Bounding Box Please.")}
 
-  if( is.null( projstring)) {
+  if( is.null(projstring)) {
     projstring <- getProj()
-    cat("Assuming Projection\n")
+    message("uc511(shape2Frame) Assuming Projection\n")
   }
   if(sf::st_crs(shp) != sf::st_crs(projstring)) shp <- sf::st_transform(shp, projstring)
 

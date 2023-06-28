@@ -22,9 +22,9 @@ them given the bounding box rotation defined by the Master Sample.
 }
 \examples{
 \dontrun{
-pts <- RSHalton(n = 10)
-bb <- getBB()
-pts.shp <- rotate.scale.coords(coords = pts, bb)
+pts <- uc511::cppRSHalton(n = 10)
+bb <- uc511::getBB()
+pts.shp <- uc511::rotate.scale.coords(coords = pts, bb)
 }
 
 }

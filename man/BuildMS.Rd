@@ -29,10 +29,10 @@ the first master sample point does indeed fall within the largest scale of the m
 \examples{
 \dontrun{
 data(NS_bioregion)
-bb <- buildMS(shp = NS_bioregion)         # Vertically aligned master sample bounding box.
-bb.rot <- rotate.shp(bb, bb, back = TRUE) # Actual bounding box.
-plot(st_geometry(NS_bioregion))
-plot(st_geometry(bb.rot), add = TRUE)
+bb <- uc511::buildMS(shp = NS_bioregion)         # Vertically aligned master sample bounding box.
+bb.rot <- uc511::rotate.shp(bb, bb, back = TRUE) # Actual bounding box.
+plot(sf::st_geometry(NS_bioregion))
+plot(sf::st_geometry(bb.rot), add = TRUE)
 }
 
 }

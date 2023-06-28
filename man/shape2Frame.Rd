@@ -36,9 +36,9 @@ context.
 }
 \examples{
 \dontrun{
-bb <- getBB()
+bb <- uc511::getBB()
 data(NS_bioregion)
-haltonBoxes <- shape2Frame(shp = NS_biogregion, J = c(6,4), bb = bb)
+haltonBoxes <- uc511::shape2Frame(shp = NS_bioregion, J = c(6,4), bb = bb)
 }
 
 }

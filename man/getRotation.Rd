@@ -7,7 +7,7 @@
 getRotation()
 }
 \value{
-something
+The radians of rotation of the bounding box.
 }
 \description{
 Defines the random rotation specific to the Western Canada Marine Master Sample.

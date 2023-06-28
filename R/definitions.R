@@ -18,10 +18,10 @@
 #' @examples
 #' \dontrun{
 #' data(NS_bioregion)
-#' bb <- buildMS(shp = NS_bioregion)         # Vertically aligned master sample bounding box.
-#' bb.rot <- rotate.shp(bb, bb, back = TRUE) # Actual bounding box.
-#' plot(st_geometry(NS_bioregion))
-#' plot(st_geometry(bb.rot), add = TRUE)
+#' bb <- uc511::buildMS(shp = NS_bioregion)         # Vertically aligned master sample bounding box.
+#' bb.rot <- uc511::rotate.shp(bb, bb, back = TRUE) # Actual bounding box.
+#' plot(sf::st_geometry(NS_bioregion))
+#' plot(sf::st_geometry(bb.rot), add = TRUE)
 #' }
 #'
 #' @export
@@ -50,8 +50,12 @@ buildMS <- function(shp, d = 2, showOutput = TRUE, rotate = TRUE)
   attr(build.bb, "seed") <- seed
 
   if(showOutput){
-    cat("Seed:", seed, "\n")
-    cat("Rotation:", theta, "Radians\n")
+    msg <- "uc511(buildMS) Seed: %s.\n"
+    msgs <- sprintf(msg, seed)
+    message(msgs)
+    msg <- "uc511(buildMS) Rotation: %s Radians.\n"
+    msgs <- sprintf(msg, theta)
+    message(msgs)
   }
   return(build.bb)
 }
@@ -79,7 +83,7 @@ getProj <- function()
 #'
 #' @description Bounding box under NAD83/BC Albers.
 #'
-#' @return something
+#' @return The bounding box.
 #'
 #' @export
 getBB <- function()
@@ -100,7 +104,7 @@ getBB <- function()
 #'
 #' @description Defines the random seed specific to the Western Canada Marine Master Sample.
 #'
-#' @return something
+#' @return The random seeds for the Western Canada Marine Master Sample.
 #'
 #' @export
 getSeed <- function()
@@ -115,7 +119,7 @@ getSeed <- function()
 #'
 #' @description Defines the random rotation specific to the Western Canada Marine Master Sample.
 #'
-#' @return something
+#' @return The radians of rotation of the bounding box.
 #'
 #' @export
 getRotation <- function()

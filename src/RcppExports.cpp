@@ -69,6 +69,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cppProductPoweredElements
+int cppProductPoweredElements(NumericVector& J, NumericVector& bases, int numElements);
+RcppExport SEXP _uc511_cppProductPoweredElements(SEXP JSEXP, SEXP basesSEXP, SEXP numElementsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< NumericVector& >::type J(JSEXP);
+    Rcpp::traits::input_parameter< NumericVector& >::type bases(basesSEXP);
+    Rcpp::traits::input_parameter< int >::type numElements(numElementsSEXP);
+    rcpp_result_gen = Rcpp::wrap(cppProductPoweredElements(J, bases, numElements));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cppWhere2Start
 NumericVector cppWhere2Start(NumericVector& J, IntegerVector& seeds, NumericVector& bases, NumericVector& boxes);
 RcppExport SEXP _uc511_cppWhere2Start(SEXP JSEXP, SEXP seedsSEXP, SEXP basesSEXP, SEXP boxesSEXP) {
@@ -79,18 +91,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector& >::type bases(basesSEXP);
     Rcpp::traits::input_parameter< NumericVector& >::type boxes(boxesSEXP);
     rcpp_result_gen = Rcpp::wrap(cppWhere2Start(J, seeds, bases, boxes));
-    return rcpp_result_gen;
-END_RCPP
-}
-// cppSumPoweredElements
-int cppSumPoweredElements(NumericVector& J, NumericVector& bases, int numElements);
-RcppExport SEXP _uc511_cppSumPoweredElements(SEXP JSEXP, SEXP basesSEXP, SEXP numElementsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< NumericVector& >::type J(JSEXP);
-    Rcpp::traits::input_parameter< NumericVector& >::type bases(basesSEXP);
-    Rcpp::traits::input_parameter< int >::type numElements(numElementsSEXP);
-    rcpp_result_gen = Rcpp::wrap(cppSumPoweredElements(J, bases, numElements));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -106,15 +106,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // cppRSHalton
-NumericVector cppRSHalton(int& n, IntegerVector& seeds, NumericVector& bases, NumericVector& boxes, NumericVector& J);
+NumericVector cppRSHalton(int n, IntegerVector seeds, NumericVector bases, NumericVector boxes, NumericVector J);
 RcppExport SEXP _uc511_cppRSHalton(SEXP nSEXP, SEXP seedsSEXP, SEXP basesSEXP, SEXP boxesSEXP, SEXP JSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< int& >::type n(nSEXP);
-    Rcpp::traits::input_parameter< IntegerVector& >::type seeds(seedsSEXP);
-    Rcpp::traits::input_parameter< NumericVector& >::type bases(basesSEXP);
-    Rcpp::traits::input_parameter< NumericVector& >::type boxes(boxesSEXP);
-    Rcpp::traits::input_parameter< NumericVector& >::type J(JSEXP);
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type seeds(seedsSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type bases(basesSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type boxes(boxesSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type J(JSEXP);
     rcpp_result_gen = Rcpp::wrap(cppRSHalton(n, seeds, bases, boxes, J));
     return rcpp_result_gen;
 END_RCPP
@@ -126,8 +126,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_uc511_GetBoxIndices", (DL_FUNC) &_uc511_GetBoxIndices, 3},
     {"_uc511_cppHaltonSeq", (DL_FUNC) &_uc511_cppHaltonSeq, 3},
     {"_uc511_compareBoxesBoxInit", (DL_FUNC) &_uc511_compareBoxesBoxInit, 3},
+    {"_uc511_cppProductPoweredElements", (DL_FUNC) &_uc511_cppProductPoweredElements, 3},
     {"_uc511_cppWhere2Start", (DL_FUNC) &_uc511_cppWhere2Start, 4},
-    {"_uc511_cppSumPoweredElements", (DL_FUNC) &_uc511_cppSumPoweredElements, 3},
     {"_uc511_log_a_to_base_b", (DL_FUNC) &_uc511_log_a_to_base_b, 2},
     {"_uc511_cppRSHalton", (DL_FUNC) &_uc511_cppRSHalton, 5},
     {NULL, NULL, 0}

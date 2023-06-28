@@ -7,7 +7,7 @@
 getBB()
 }
 \value{
-something
+The bounding box.
 }
 \description{
 Bounding box under NAD83/BC Albers.

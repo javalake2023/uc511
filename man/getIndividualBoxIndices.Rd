@@ -30,10 +30,10 @@ library(bcmaps)
 # If you haven't already installed this:
 install.packages('bcmapsdata', repos='https://bcgov.github.io/drat/')
 library(bcmapsdata)
-cities <- get_layer("bc_cities")
-bb <- buildMS(hydro, d = 2, FALSE)
+cities <- bcmaps::get_layer("bc_cities")
+bb <- uc511::buildMS(cities, d = 2, FALSE)
 # For visibility will make boxes 10 km
-cities.ord <- getIndividualBoxIndices(pts = cities, bb = bb, size = 100)
+cities.ord <- uc511::getIndividualBoxIndices(pts = cities, bb = bb, size = 100)
 plot(st_geometry(cities), pch = 20)
 plot(st_geometry(cities.ord[rank(cities.ord$HaltonIndex) < 15,]), add= TRUE, col = "red", cex = 1.5)
 }

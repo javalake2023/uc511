@@ -2,7 +2,7 @@
 % Please edit documentation in R/MasterSample.R
 \name{point2Frame}
 \alias{point2Frame}
-\title{a title}
+\title{Get the Halton Boxes around a point resource ordered by BAS Master Sample.}
 \usage{
 point2Frame(pts, bb = NULL, base = c(2, 3), J = NULL, size = 100)
 }
@@ -18,7 +18,7 @@ point2Frame(pts, bb = NULL, base = c(2, 3), J = NULL, size = 100)
 \item{size}{Physical target size of Halton boxes (square ish) if J is NULL.}
 }
 \value{
-something
+how the Halton frame is represented and what the ordering is.
 }
 \description{
 Get the Halton Boxes around a point resource ordered by BAS Master Sample.
@@ -27,18 +27,18 @@ frame is represented and what the ordering is.
 }
 \examples{
 \dontrun{
-library(bcmaps)
 # If you haven't already installed this:
 install.packages('bcmapsdata', repos='https://bcgov.github.io/drat/')
 library(bcmapsdata)
-cities <- get_layer("bc_cities")
-bb <- buildMS(hydro, d = 2, FALSE)
+library(bcmaps)
+cities <- bcmaps::get_layer("bc_cities")
+bb <- uc511::buildMS(cities, d = 2, FALSE)
 # For visibility will make boxes 10 km
-cities.halton <- point2Frame(pts = cities, bb = bb, size = 10000)
-plot(st_geometry(cities), pch = 20, cex = 0.1)
-plot(st_geometry(cities.halton), add= TRUE)
-#What is the actual area of a Halton box?
-st_area(cities.halton[1,])/1000^2
+cities.halton <- uc511::point2Frame(pts = cities, bb = bb, size = 10000)
+plot(sf::st_geometry(cities), pch = 20, cex = 0.1)
+plot(sf::st_geometry(cities.halton), add= TRUE)
+# What is the actual area of a Halton box?
+sf::st_area(cities.halton[1,])/1000^2
 }
 
 }

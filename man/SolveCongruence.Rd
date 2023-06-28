@@ -14,7 +14,7 @@ SolveCongruence(A, base, J)
 \item{J}{Integer of 2 values that represent the numbers 2^J1, 3^J2.}
 }
 \value{
-A numeric vector of...
+A numeric vector.
 }
 \description{
 See page 5 of Robertson et al. 2018 Halton Iterative Partitioning.

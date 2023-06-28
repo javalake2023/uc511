@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{GetBoxIndices}
 \alias{GetBoxIndices}
-\title{a title}
+\title{Fast Implementation of finding x and y order numbers}
 \usage{
 GetBoxIndices(lxy, base, J)
 }
@@ -14,10 +14,10 @@ GetBoxIndices(lxy, base, J)
 \item{J}{Integer of 2 values that represent the numbers 2^J1, 3^J2.}
 }
 \value{
-something
+A matrix of box indices
 }
 \description{
 Fast Implementation of finding x and y order numbers to feed into the linear congruence equation.
-This solves equation solves for a_i in the HIP paper.
+This solves equation for a_i in the HIP paper.
 This is essentially an internal function and shouldn't be worried about.
 }

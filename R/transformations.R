@@ -37,7 +37,7 @@ rot <- function(a)
 #' @examples
 #' \dontrun{
 #' data(NS_bioregion)
-#' bb.new <- rotate.bb(NS_bioregion, -pi/3)
+#' bb.new <- uc511::rotate.bb(NS_bioregion, -pi/3)
 #' }
 #'
 #' @export
@@ -64,7 +64,7 @@ rotate.bb <- function(shp, theta)
 #'
 #' @title Scale and rotate points from the unit square to a defined projection.
 #'
-#' @description Given some coordinates on [0,1)x[0,1), shift and scale them to the bounding box, and then rotate
+#' @description Given some coordinates on \[0,1)x\[0,1), shift and scale them to the bounding box, and then rotate
 #' them given the bounding box rotation defined by the Master Sample.
 #'
 #' @param coords Output from RSHalton() to be converted to the spatial surface of interest.
@@ -75,9 +75,9 @@ rotate.bb <- function(shp, theta)
 #'
 #' @examples
 #' \dontrun{
-#' pts <- RSHalton(n = 10)
-#' bb <- getBB()
-#' pts.shp <- rotate.scale.coords(coords = pts, bb)
+#' pts <- uc511::cppRSHalton(n = 10)
+#' bb <- uc511::getBB()
+#' pts.shp <- uc511::rotate.scale.coords(coords = pts, bb)
 #' }
 #'
 #' @export
@@ -117,8 +117,8 @@ rotate.scale.coords <- function(coords, bb, back = TRUE)
 #' @examples
 #' \dontrun{
 #' data(NS_bioregion)
-#' bb <- getBB()
-#' pts.shp <- rotate.shp(shp = NS_bioregion, bb = bb)
+#' bb <- uc511::getBB()
+#' pts.shp <- uc511::rotate.shp(shp = NS_bioregion, bb = bb)
 #' }
 #'
 #' @export

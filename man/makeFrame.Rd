@@ -24,8 +24,8 @@ This function is an internal function simply to select sub BAS points without ha
 }
 \examples{
 \dontrun{
-bb <- getBB()
-haltonFrame <- makeFrame(J = c(8,4), bb = bb)
+bb <- uc511::getBB()
+haltonFrame <- uc511::makeFrame(J = c(8,4), bb = bb)
 }
 
 }

@@ -4,11 +4,16 @@ Title: Implements a Number of Balanced Sampling Algorithms
 Version: 0.1.0
 Authors@R: c(
     person("Phil", "Davies", email = "philip.davies@canterbury.ac.nz", role = c("aut", "cre")),
-    person("Phil", "Davies", email = "philip.davies@canterbury.ac.nz", role = c("aut")),
-    person("Phil", "Davies", email = "philip.davies@canterbury.ac.nz", role = c("aut")))
+    person("Blair", "Robertson", email = "blair.robertson@canterbury.ac.nz", role = c("aut")),
+    person("Paul", "van Dam-Bates", email = "paul.vandambates@gmail.com", role = c("aut")))
 Maintainer: Phil Davies <philip.davies@canterbury.ac.nz>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: A package to encapsulate a number of balanced sampling algorithms, namely, 
+    BAS (equal, unequal, seed point, panels), Halton frames (for discretizing a 
+    continuous resource), HIP (equal probability), Spatial balance measures (Voronoi
+    and Modified Moran’s I), Variance estimators (local mean, nearest neighbour and
+    quasi bootstrap), DAS and the Spatial stratification algorithm.
+    **** This is a work in progress and everything is subject to change without 
+    notice.
 Depends: R (>= 3.6.0)
 License: MIT + file LICENSE
 Encoding: UTF-8

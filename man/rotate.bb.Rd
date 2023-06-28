@@ -23,7 +23,7 @@ the new rotated bounding box fits the shp.
 \examples{
 \dontrun{
 data(NS_bioregion)
-bb.new <- rotate.bb(NS_bioregion, -pi/3)
+bb.new <- uc511::rotate.bb(NS_bioregion, -pi/3)
 }
 
 }

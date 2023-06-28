@@ -4,7 +4,13 @@
 \alias{cppRSHalton}
 \title{Generate numbers from a Halton Sequence with a random start}
 \usage{
-cppRSHalton(n, seeds, bases, boxes, J)
+cppRSHalton(
+  n = 10L,
+  seeds = as.integer(c()),
+  bases = as.numeric(c()),
+  boxes = as.numeric(c()),
+  J = as.numeric(c())
+)
 }
 \arguments{
 \item{n}{Number of points required}
@@ -25,12 +31,10 @@ For efficiency, this function can generate points along a random start Halton Se
 predefined Halton.
 }
 \examples{
-\dontrun{
 # First 10 points in the Halton Sequence for base 2,3
-pts <- RSHalton(n = 10)
+uc511::cppRSHalton(n = 10)
 # First 10 points in the Halton Sequence for base 2,3 with
 # starting point at the 15th and 22nd index.
-pts <- RSHalton(n = 10, seeds = c(14, 21))
-}
+uc511::cppRSHalton(n = 10, seeds = c(14, 21))
 
 }

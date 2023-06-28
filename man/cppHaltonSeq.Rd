@@ -14,12 +14,12 @@ cppHaltonSeq(k, base, n)
 \item{n}{Number of samples to draw.}
 }
 \value{
-something
+A Halton sequence of size n.
 }
 \description{
 Note that this was borrowed from the Internet and is not my implementation.
 }
 \examples{
-cppHaltonSeq(k = 0, base = 2, n = 10)
+uc511::cppHaltonSeq(k = 0, base = 2, n = 10)
 
 }
