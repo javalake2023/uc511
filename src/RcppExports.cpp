@@ -12,12 +12,12 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// cppBASMastersample
-void cppBASMastersample();
-RcppExport SEXP _uc511_cppBASMastersample() {
+// cppBASMasterSample
+void cppBASMasterSample();
+RcppExport SEXP _uc511_cppBASMasterSample() {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
-    cppBASMastersample();
+    cppBASMasterSample();
     return R_NilValue;
 END_RCPP
 }
@@ -121,7 +121,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_uc511_cppBASMastersample", (DL_FUNC) &_uc511_cppBASMastersample, 0},
+    {"_uc511_cppBASMasterSample", (DL_FUNC) &_uc511_cppBASMasterSample, 0},
     {"_uc511_SolveCongruence", (DL_FUNC) &_uc511_SolveCongruence, 3},
     {"_uc511_GetBoxIndices", (DL_FUNC) &_uc511_GetBoxIndices, 3},
     {"_uc511_cppHaltonSeq", (DL_FUNC) &_uc511_cppHaltonSeq, 3},

@@ -21,9 +21,9 @@ using namespace Rcpp;
 //   http://gallery.rcpp.org/
 //
 
-//' @name cppBASMastersample
+//' @name cppBASMasterSample
 //'
-//' @title cppBASMastersample
+//' @title A placeholder for now.
 //'
 //' @description A placeholder for now.
 //'
@@ -31,9 +31,9 @@ using namespace Rcpp;
 
 //' @export
 // [[Rcpp::export]]
-void cppBASMastersample() {
+void cppBASMasterSample() {
 
-  RcppThread::Rcout << "cppBASMastersample()" << std::endl;
+  RcppThread::Rcout << "cppBASMasterSample()" << std::endl;
 
   return;
 }
