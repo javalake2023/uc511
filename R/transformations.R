@@ -4,6 +4,9 @@
 #'
 #' @description Generate a rotation matrix for rotating objects later.
 #'
+#' @details This function was first written by Paul van Dam-Bates for the
+#' package BASMasterSample.
+#'
 #' @param a radians of rotation.
 #'
 #' @return Matrix
@@ -28,6 +31,9 @@ rot <- function(a)
 #' and return the rotation and the centroid as attributes. This is used for
 #' defining a Master Sample bounding box that has random rotation while ensuring that
 #' the new rotated bounding box fits the shp.
+#'
+#' @details This function was first written by Paul van Dam-Bates for the
+#' package BASMasterSample.
 #'
 #' @param shp A spatial file with the spatial boundary of the sample.
 #' @param theta Radians of rotation. Positive to the right of pi/2, negative to the left.
@@ -66,6 +72,9 @@ rotate.bb <- function(shp, theta)
 #'
 #' @description Given some coordinates on \[0,1)x\[0,1), shift and scale them to the bounding box, and then rotate
 #' them given the bounding box rotation defined by the Master Sample.
+#'
+#' @details This function was first written by Paul van Dam-Bates for the
+#' package BASMasterSample.
 #'
 #' @param coords Output from RSHalton() to be converted to the spatial surface of interest.
 #' @param bb Special shape file defining the bounding box with attributes for centroid and rotation.
@@ -111,6 +120,9 @@ rotate.scale.coords <- function(coords, bb, back = TRUE)
 #' @param shp Any polygon within the sample frame defined as a spatial features object.
 #' @param bb Special shape file defining the bounding box with attributes for centroid and rotation.
 #' @param back Boolean for whether or not the rotation is back to the original rotated bounding box.
+#'
+#' @details This function was first written by Paul van Dam-Bates for the
+#' package BASMasterSample.
 #'
 #' @return rotated sf spatial object.
 #'

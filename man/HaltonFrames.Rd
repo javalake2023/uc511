@@ -2,7 +2,7 @@
 % Please edit documentation in R/HaltonFrames.R
 \name{HaltonFrames}
 \alias{HaltonFrames}
-\title{Do something useful.}
+\title{A title.}
 \usage{
 HaltonFrames(parm1)
 }
@@ -10,8 +10,11 @@ HaltonFrames(parm1)
 \item{parm1}{A parameter.}
 }
 \value{
-something useful.
+Something very useful.
 }
 \description{
 A description of this useful function.
+}
+\details{
+This function will be written by Phil Davies.
 }

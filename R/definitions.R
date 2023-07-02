@@ -8,6 +8,9 @@
 #' we are able to ignore that detail. If this function is used without a random rotation, we recommend running it until
 #' the first master sample point does indeed fall within the largest scale of the master sample use.
 #'
+#' @details This function was first written by Paul van Dam-Bates for the
+#' package BASMasterSample.
+#'
 #' @param shp Spatial feature that defines the boundary of the area to define a bounding box over.
 #' @param d Dimension of the new Master Sample, at this stage we only work with d=2.
 #' @param showOutput Print the rotation and random seed when it is generated.
@@ -27,7 +30,6 @@
 #' @export
 buildMS <- function(shp, d = 2, showOutput = TRUE, rotate = TRUE)
 {
-
   seed <- floor(stats::runif(d, 0, 10000))
   # We always use base 2,3
   base <- c(2,3,5)[1:d]
@@ -60,13 +62,17 @@ buildMS <- function(shp, d = 2, showOutput = TRUE, rotate = TRUE)
   return(build.bb)
 }
 
+
 #' @name getProj
 #'
 #' @title Define spatial objects in projection of the master sample.
 #'
 #' @description Default projection of the master sample. Needed for consistency for the entire bounding box.
 #'
-#' @return something
+#' @details This function was first written by Paul van Dam-Bates for the
+#' package BASMasterSample.
+#'
+#' @return Spatial object projection.
 #'
 #' @export
 getProj <- function()
@@ -83,6 +89,9 @@ getProj <- function()
 #'
 #' @description Bounding box under NAD83/BC Albers.
 #'
+#' @details This function was first written by Paul van Dam-Bates for the
+#' package BASMasterSample.
+#'
 #' @return The bounding box.
 #'
 #' @export
@@ -98,11 +107,15 @@ getBB <- function()
   return(bb)
 }
 
+
 #' @name getSeed
 #'
 #' @title Random seed definition for Western Canada Marine Master Sample.
 #'
 #' @description Defines the random seed specific to the Western Canada Marine Master Sample.
+#'
+#' @details This function was first written by Paul van Dam-Bates for the
+#' package BASMasterSample.
 #'
 #' @return The random seeds for the Western Canada Marine Master Sample.
 #'
@@ -113,11 +126,15 @@ getSeed <- function()
   return(seed)
 }
 
+
 #' @name getRotation
 #'
 #' @title Returns the radians of rotation of the bounding box.
 #'
 #' @description Defines the random rotation specific to the Western Canada Marine Master Sample.
+#'
+#' @details This function was first written by Paul van Dam-Bates for the
+#' package BASMasterSample.
 #'
 #' @return The radians of rotation of the bounding box.
 #'

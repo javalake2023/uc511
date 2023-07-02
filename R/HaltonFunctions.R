@@ -5,6 +5,9 @@
 #' @description Make a Halton Frame based on B = 2^J\[1\]*3^J\[2\] grid cells. If rotation is required, will return rotated.
 #' This function is an internal function simply to select sub BAS points without having to do spatial clipping at the point level.
 #'
+#' @details This function was first written by Paul van Dam-Bates for the
+#' package BASMasterSample.
+#'
 #' @param base Co-prime base for BAS, do not change from 2,3.
 #' @param J Definition for the number of grid cells of Halton frame.
 #' @param bb Bounding box shapefile with centroid, random seed, rotation.
@@ -38,6 +41,9 @@ makeFrame <- function(base = c(2,3), J = c(2,2), bb, rotate = FALSE)
 #' @description Take a shapefile as a sf object and clips boxes from a Halton frame around it. Size of those boxes is chosen
 #' by choosing J, the number of base 2,3 powers to subdivide. Intended for internal use but can be useful in other
 #' context.
+#'
+#' @details This function was first written by Paul van Dam-Bates for the
+#' package BASMasterSample.
 #'
 #' @param shp shape as spatial features object to wrap into Halton frame.
 #' @param bb Master Sample bounding box.

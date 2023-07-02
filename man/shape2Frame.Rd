@@ -34,6 +34,10 @@ Take a shapefile as a sf object and clips boxes from a Halton frame around it. S
 by choosing J, the number of base 2,3 powers to subdivide. Intended for internal use but can be useful in other
 context.
 }
+\details{
+This function was first written by Paul van Dam-Bates for the
+package BASMasterSample.
+}
 \examples{
 \dontrun{
 bb <- uc511::getBB()

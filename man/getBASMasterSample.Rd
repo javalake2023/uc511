@@ -30,12 +30,16 @@ getBASMasterSample(
 \item{inclSeed}{Boolean need something here}
 }
 \value{
-something
+A master sample.
 }
 \description{
 This is the main function for selecting sites using the BAS master
 sample. It assumes that you have already defined the master sample using the
 buildMS() function or will be selecting a marine master sample site in BC.
+}
+\details{
+This function was first written by Paul van Dam-Bates for the
+package BASMasterSample.
 }
 \examples{
 \dontrun{

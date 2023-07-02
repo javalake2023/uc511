@@ -23,3 +23,7 @@ This is a function to find which Halton Box the initial BAS point from the Maste
 thus use it to order the remaining boxes based on the initial. It also helps us tracks
 the master sample index as we skip boxes that have no resource.
 }
+\details{
+This function was first written in R by Paul van Dam-Bates for the
+package BASMasterSample. Subsequently it was written in C/C++ by Phil Davies.
+}

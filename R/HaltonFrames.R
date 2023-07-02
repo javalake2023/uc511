@@ -1,11 +1,16 @@
 # HaltonFrames.R
 
-#' Do something useful.
+#' @name HaltonFrames
 #'
-#' A description of this useful function.
+#' @title A title.
+#'
+#' @description A description of this useful function.
+#'
+#' @details This function will be written by Phil Davies.
 #'
 #' @param parm1 A parameter.
-#' @return something useful.
+#'
+#' @return Something very useful.
 HaltonFrames <- function(parm1) {
   message("Hello from HaltonFrames.")
 }

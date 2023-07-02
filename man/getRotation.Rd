@@ -12,3 +12,7 @@ The radians of rotation of the bounding box.
 \description{
 Defines the random rotation specific to the Western Canada Marine Master Sample.
 }
+\details{
+This function was first written by Paul van Dam-Bates for the
+package BASMasterSample.
+}

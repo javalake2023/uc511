@@ -27,7 +27,9 @@ using namespace Rcpp;
 //'
 //' @description A placeholder for now.
 //'
-//' @returns Nothing.
+//' @details This function will be written by Phil Davies.
+//'
+//' @returns Nothing at the moment.
 
 //' @export
 // [[Rcpp::export]]
@@ -45,6 +47,9 @@ void cppBASMasterSample() {
 //'
 //' @description See page 5 of Robertson et al. 2018 Halton Iterative Partitioning.
 //' This is essentially an internal function and shouldn't be worried about.
+//'
+//' @details This function was first written by Paul van Dam-Bates for the
+//' package BASMasterSample.
 //'
 //' @param A Matrix that is in numeric for computational reasons but is the a_i solutions for all HIP boxes.
 //' @param base Co-prime Base but generally for BAS work it is 2 or 3.
@@ -91,9 +96,13 @@ NumericVector SolveCongruence(NumericMatrix& A, NumericVector& base, NumericVect
 //' This solves equation for a_i in the HIP paper.
 //' This is essentially an internal function and shouldn't be worried about.
 //'
+//' @details This function was first written by Paul van Dam-Bates for the
+//' package BASMasterSample.
+//'
 //' @param lxy A Matrix of lower x y coordinates of a Halton Box inside the unit box.
 //' @param base Co-prime Base but generally for BAS work it is 2 or 3.
 //' @param J Integer of 2 values that represent the numbers 2^J1, 3^J2.
+//'
 //' @return A matrix of box indices
 //'
 //' @export
@@ -126,9 +135,13 @@ NumericMatrix GetBoxIndices(NumericMatrix& lxy, IntegerVector& base, IntegerVect
 //'
 //' @description Note that this was borrowed from the Internet and is not my implementation.
 //'
+//' @details This function was first written by Paul van Dam-Bates for the
+//' package BASMasterSample.
+//'
 //' @param k An integer for the starting index k >= 0.
 //' @param base Co-prime Base but generally for BAS work it is 2 or 3.
 //' @param n Number of samples to draw.
+//'
 //' @return A Halton sequence of size n.
 //'
 //' @examples
@@ -160,10 +173,13 @@ NumericVector cppHaltonSeq(const int & k, double & base, int & n)
 //'
 //' @description description.
 //'
+//' @details This function was written by Phil Davies.
+//'
 //' @param boxes bla.
 //' @param boxInit bla.
 //' @param intB bla.
-//' @return something
+//'
+//' @return A numeric vector.
 //'
 //' @export
 // [[Rcpp::export(rng = false)]]
@@ -189,11 +205,14 @@ Rcpp::NumericVector compareBoxesBoxInit(Rcpp::NumericVector boxes, Rcpp::Numeric
 //' @description Raise each element in a vector by a corresponding power provided in another vector,
 //'        then return the product of all the results.
 //'
-//' @param   J           A numeric vector of values with which to raise the corresponding
-//'                      element in bases to.
-//' @param   bases       A numeric vector containing values to raised to by the corresponding
-//'                      powers in J
-//' @param   numElements The number of elements in the numeric vector bases.
+//' @details This function was written by Phil Davies.
+//'
+//' @param J A numeric vector of values with which to raise the corresponding
+//' element in bases to.
+//' @param bases A numeric vector containing values to raised to by the corresponding
+//' powers in J.
+//' @param numElements The number of elements in the numeric vector bases.
+//' We might dispense with this parameter at a later stage.
 //'
 //' @return The product of all the powers.
 //'
@@ -222,6 +241,9 @@ int cppProductPoweredElements(NumericVector& J, NumericVector& bases, int numEle
 //' @description This is a function to find which Halton Box the initial BAS point from the Master Sample falls into and
 //' thus use it to order the remaining boxes based on the initial. It also helps us tracks
 //' the master sample index as we skip boxes that have no resource.
+//'
+//' @details This function was first written in R by Paul van Dam-Bates for the
+//' package BASMasterSample. Subsequently it was written in C/C++ by Phil Davies.
 //'
 //' @param J Definition for the number of grid cells of Halton frame.
 //' @param seeds Master Sample random seed.
@@ -264,8 +286,10 @@ NumericVector cppWhere2Start(NumericVector& J, IntegerVector& seeds, NumericVect
 //'
 //' @description Compute the log of a to base b.
 //'
-//' @param   a       Integer to find the log to base b of.
-//' @param   b       Base
+//' @details This function was written by Phil Davies.
+//'
+//' @param a Integer to find the log to base b of.
+//' @param b Base
 //'
 //' @return The log of a to base b.
 //'
@@ -296,6 +320,9 @@ T mod(T a, int n)
 //' @description For efficiency, this function can generate points along a random start Halton Sequence for
 //' predefined Halton.
 //'
+//' @details This function was first written in R by Paul van Dam-Bates for the
+//' package BASMasterSample. Subsequently it was written in C/C++ by Phil Davies.
+//'
 //' @param n Number of points required
 //' @param seeds Random starting point in each dimension
 //' @param bases Co-prime base for the Halton Sequence
@@ -320,7 +347,7 @@ NumericVector cppRSHalton(int n = 10,
                           NumericVector J     = Rcpp::NumericVector::create())
 {
   // defaults: n = 10, seeds = c(0,0), bases = c(2,3), boxes = 0, J = c(0,0)
-  RcppThread::Rcout << "cppRSHalton() seeds.size() : " << seeds.size() << std::endl;
+  //RcppThread::Rcout << "cppRSHalton() seeds.size() : " << seeds.size() << std::endl;
   if (seeds.size() == 0){
     seeds = {0, 0};
   }

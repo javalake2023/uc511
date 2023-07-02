@@ -4,8 +4,11 @@
 \alias{cppBASMasterSample}
 \title{A placeholder for now.}
 \value{
-Nothing.
+Nothing at the moment.
 }
 \description{
 A placeholder for now.
+}
+\details{
+This function will be written by Phil Davies.
 }

@@ -30,6 +30,10 @@ Matrix with the columns, order of point, x in [0,1) and y in [0,1)
 For efficiency, this function can generate points along a random start Halton Sequence for
 predefined Halton.
 }
+\details{
+This function was first written in R by Paul van Dam-Bates for the
+package BASMasterSample. Subsequently it was written in C/C++ by Phil Davies.
+}
 \examples{
 # First 10 points in the Halton Sequence for base 2,3
 uc511::cppRSHalton(n = 10)

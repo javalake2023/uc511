@@ -21,3 +21,7 @@ Fast Implementation of finding x and y order numbers to feed into the linear con
 This solves equation for a_i in the HIP paper.
 This is essentially an internal function and shouldn't be worried about.
 }
+\details{
+This function was first written by Paul van Dam-Bates for the
+package BASMasterSample.
+}

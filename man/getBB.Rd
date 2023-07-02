@@ -12,3 +12,7 @@ The bounding box.
 \description{
 Bounding box under NAD83/BC Albers.
 }
+\details{
+This function was first written by Paul van Dam-Bates for the
+package BASMasterSample.
+}

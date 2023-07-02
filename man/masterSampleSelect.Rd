@@ -33,3 +33,7 @@ Sample points.
 This function has no features and is generally expected to be run by the wrapper function.
 masterSample that ensures all the correct pieces are passed and adds the additional feature of stratification.
 }
+\details{
+This function was first written by Paul van Dam-Bates for the
+package BASMasterSample.
+}

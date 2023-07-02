@@ -14,8 +14,11 @@ compareBoxesBoxInit(boxes, boxInit, intB)
 \item{intB}{bla.}
 }
 \value{
-something
+A numeric vector.
 }
 \description{
 description.
+}
+\details{
+This function was written by Phil Davies.
 }

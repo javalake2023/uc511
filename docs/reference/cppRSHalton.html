@@ -82,12 +82,16 @@ predefined Halton.</p>
 
 <p>Matrix with the columns, order of point, x in [0,1) and y in [0,1)</p>
     </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>This function was first written in R by Paul van Dam-Bates for the
+package BASMasterSample. Subsequently it was written in C/C++ by Phil Davies.</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># First 10 points in the Halton Sequence for base 2,3</span></span></span>
 <span class="r-in"><span><span class="fu">uc511</span><span class="fu">::</span><span class="fu">cppRSHalton</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cppRSHalton() seeds.size() : 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       [,1]   [,2]       [,3]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1,]    1 0.0000 0.00000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [2,]    2 0.5000 0.33333333</span>
@@ -102,7 +106,6 @@ predefined Halton.</p>
 <span class="r-in"><span><span class="co"># First 10 points in the Halton Sequence for base 2,3 with</span></span></span>
 <span class="r-in"><span><span class="co"># starting point at the 15th and 22nd index.</span></span></span>
 <span class="r-in"><span><span class="fu">uc511</span><span class="fu">::</span><span class="fu">cppRSHalton</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">10</span>, seeds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">14</span>, <span class="fl">21</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cppRSHalton() seeds.size() : 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       [,1]    [,2]       [,3]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1,]    1 0.43750 0.18518519</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [2,]    2 0.93750 0.51851852</span>
@@ -122,7 +125,7 @@ predefined Halton.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by Phil Davies, Blair Robertson, Paul van Dam-Bates.</p>
+  <p></p><p>Developed by Phil Davies, Blair Robertson, Paul van Dam-Bates, Oliver Gansell.</p>
 </div>
 
 <div class="pkgdown-footer-right">

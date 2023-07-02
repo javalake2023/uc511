@@ -12,9 +12,10 @@ cppProductPoweredElements(J, bases, numElements)
 element in bases to.}
 
 \item{bases}{A numeric vector containing values to raised to by the corresponding
-powers in J}
+powers in J.}
 
-\item{numElements}{The number of elements in the numeric vector bases.}
+\item{numElements}{The number of elements in the numeric vector bases.
+We might dispense with this parameter at a later stage.}
 }
 \value{
 The product of all the powers.
@@ -22,6 +23,9 @@ The product of all the powers.
 \description{
 Raise each element in a vector by a corresponding power provided in another vector,
 then return the product of all the results.
+}
+\details{
+This function was written by Phil Davies.
 }
 \examples{
 # calculate the product of the powered elements

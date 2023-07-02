@@ -19,6 +19,10 @@ A Halton sequence of size n.
 \description{
 Note that this was borrowed from the Internet and is not my implementation.
 }
+\details{
+This function was first written by Paul van Dam-Bates for the
+package BASMasterSample.
+}
 \examples{
 uc511::cppHaltonSeq(k = 0, base = 2, n = 10)
 

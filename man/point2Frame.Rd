@@ -25,6 +25,10 @@ Get the Halton Boxes around a point resource ordered by BAS Master Sample.
 If you pass discrete points to this function it will return how the Halton
 frame is represented and what the ordering is.
 }
+\details{
+This function was first written by Paul van Dam-Bates for the
+package BASMasterSample.
+}
 \examples{
 \dontrun{
 # If you haven't already installed this:

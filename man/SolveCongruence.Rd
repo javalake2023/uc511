@@ -20,3 +20,7 @@ A numeric vector.
 See page 5 of Robertson et al. 2018 Halton Iterative Partitioning.
 This is essentially an internal function and shouldn't be worried about.
 }
+\details{
+This function was first written by Paul van Dam-Bates for the
+package BASMasterSample.
+}

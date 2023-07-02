@@ -7,8 +7,12 @@
 getProj()
 }
 \value{
-something
+Spatial object projection.
 }
 \description{
 Default projection of the master sample. Needed for consistency for the entire bounding box.
+}
+\details{
+This function was first written by Paul van Dam-Bates for the
+package BASMasterSample.
 }

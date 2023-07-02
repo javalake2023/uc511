@@ -17,6 +17,9 @@ The log of a to base b.
 \description{
 Compute the log of a to base b.
 }
+\details{
+This function was written by Phil Davies.
+}
 \examples{
 # calculate log of a to base b.
 log_a_to_base_b(2, 4)

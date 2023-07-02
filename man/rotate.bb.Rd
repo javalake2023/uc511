@@ -20,6 +20,10 @@ and return the rotation and the centroid as attributes. This is used for
 defining a Master Sample bounding box that has random rotation while ensuring that
 the new rotated bounding box fits the shp.
 }
+\details{
+This function was first written by Paul van Dam-Bates for the
+package BASMasterSample.
+}
 \examples{
 \dontrun{
 data(NS_bioregion)

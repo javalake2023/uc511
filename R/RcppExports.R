@@ -7,7 +7,9 @@
 #'
 #' @description A placeholder for now.
 #'
-#' @returns Nothing.
+#' @details This function will be written by Phil Davies.
+#'
+#' @returns Nothing at the moment.
 NULL
 
 #' @export
@@ -21,6 +23,9 @@ cppBASMasterSample <- function() {
 #'
 #' @description See page 5 of Robertson et al. 2018 Halton Iterative Partitioning.
 #' This is essentially an internal function and shouldn't be worried about.
+#'
+#' @details This function was first written by Paul van Dam-Bates for the
+#' package BASMasterSample.
 #'
 #' @param A Matrix that is in numeric for computational reasons but is the a_i solutions for all HIP boxes.
 #' @param base Co-prime Base but generally for BAS work it is 2 or 3.
@@ -41,9 +46,13 @@ SolveCongruence <- function(A, base, J) {
 #' This solves equation for a_i in the HIP paper.
 #' This is essentially an internal function and shouldn't be worried about.
 #'
+#' @details This function was first written by Paul van Dam-Bates for the
+#' package BASMasterSample.
+#'
 #' @param lxy A Matrix of lower x y coordinates of a Halton Box inside the unit box.
 #' @param base Co-prime Base but generally for BAS work it is 2 or 3.
 #' @param J Integer of 2 values that represent the numbers 2^J1, 3^J2.
+#'
 #' @return A matrix of box indices
 #'
 #' @export
@@ -57,9 +66,13 @@ GetBoxIndices <- function(lxy, base, J) {
 #'
 #' @description Note that this was borrowed from the Internet and is not my implementation.
 #'
+#' @details This function was first written by Paul van Dam-Bates for the
+#' package BASMasterSample.
+#'
 #' @param k An integer for the starting index k >= 0.
 #' @param base Co-prime Base but generally for BAS work it is 2 or 3.
 #' @param n Number of samples to draw.
+#'
 #' @return A Halton sequence of size n.
 #'
 #' @examples
@@ -76,10 +89,13 @@ cppHaltonSeq <- function(k, base, n) {
 #'
 #' @description description.
 #'
+#' @details This function was written by Phil Davies.
+#'
 #' @param boxes bla.
 #' @param boxInit bla.
 #' @param intB bla.
-#' @return something
+#'
+#' @return A numeric vector.
 #'
 #' @export
 compareBoxesBoxInit <- function(boxes, boxInit, intB) {
@@ -94,11 +110,14 @@ compareBoxesBoxInit <- function(boxes, boxInit, intB) {
 #' @description Raise each element in a vector by a corresponding power provided in another vector,
 #'        then return the product of all the results.
 #'
-#' @param   J           A numeric vector of values with which to raise the corresponding
-#'                      element in bases to.
-#' @param   bases       A numeric vector containing values to raised to by the corresponding
-#'                      powers in J
-#' @param   numElements The number of elements in the numeric vector bases.
+#' @details This function was written by Phil Davies.
+#'
+#' @param J A numeric vector of values with which to raise the corresponding
+#' element in bases to.
+#' @param bases A numeric vector containing values to raised to by the corresponding
+#' powers in J.
+#' @param numElements The number of elements in the numeric vector bases.
+#' We might dispense with this parameter at a later stage.
 #'
 #' @return The product of all the powers.
 #'
@@ -119,6 +138,9 @@ cppProductPoweredElements <- function(J, bases, numElements) {
 #' thus use it to order the remaining boxes based on the initial. It also helps us tracks
 #' the master sample index as we skip boxes that have no resource.
 #'
+#' @details This function was first written in R by Paul van Dam-Bates for the
+#' package BASMasterSample. Subsequently it was written in C/C++ by Phil Davies.
+#'
 #' @param J Definition for the number of grid cells of Halton frame.
 #' @param seeds Master Sample random seed.
 #' @param bases Co-prime bases should really always be 2,3
@@ -137,8 +159,10 @@ cppWhere2Start <- function(J, seeds, bases, boxes) {
 #'
 #' @description Compute the log of a to base b.
 #'
-#' @param   a       Integer to find the log to base b of.
-#' @param   b       Base
+#' @details This function was written by Phil Davies.
+#'
+#' @param a Integer to find the log to base b of.
+#' @param b Base
 #'
 #' @return The log of a to base b.
 #'
@@ -157,6 +181,9 @@ log_a_to_base_b <- function(a, b) {
 #'
 #' @description For efficiency, this function can generate points along a random start Halton Sequence for
 #' predefined Halton.
+#'
+#' @details This function was first written in R by Paul van Dam-Bates for the
+#' package BASMasterSample. Subsequently it was written in C/C++ by Phil Davies.
 #'
 #' @param n Number of points required
 #' @param seeds Random starting point in each dimension

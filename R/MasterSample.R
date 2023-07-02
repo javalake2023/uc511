@@ -26,6 +26,9 @@ NULL
 #' @description This function has no features and is generally expected to be run by the wrapper function.
 #' masterSample that ensures all the correct pieces are passed and adds the additional feature of stratification.
 #'
+#' @details This function was first written by Paul van Dam-Bates for the
+#' package BASMasterSample.
+#'
 #' @param shp Shape file as a polygon to select sites for.
 #' @param N Number of sites to select.
 #' @param bb Bounding box which defines the Master Sample. Default is BC Marine Master Sample.
@@ -121,7 +124,7 @@ masterSampleSelect <- function(shp, N = 100, bb = NULL, nExtra = 5000, printJ = 
     }else {
       seedshift <- endPoint + seed
     }
-    pts <- cppRSHalton(n = draw, seeds = seedshift, bases = c(2, 3, 5), boxes = halt.rep, J = J)
+    pts <- uc511::cppRSHalton(n = draw, seeds = seedshift, bases = c(2, 3, 5), boxes = halt.rep, J = J)
     pts <- pts[1:draw,]
     #print("dim(cpp pts)")
     #print(dim(pts))
@@ -170,6 +173,9 @@ masterSampleSelect <- function(shp, N = 100, bb = NULL, nExtra = 5000, printJ = 
 #' sample. It assumes that you have already defined the master sample using the
 #' buildMS() function or will be selecting a marine master sample site in BC.
 #'
+#' @details This function was first written by Paul van Dam-Bates for the
+#' package BASMasterSample.
+#'
 #' @param shp Shape file as a polygon (sp or sf) to select sites for.
 #' @param N Number of sites to select. If using stratification it is a named vector containing sample sizes of each group.
 #' @param bb Bounding box which defines the Master Sample. Default is BC Marine Master Sample.
@@ -177,7 +183,8 @@ masterSampleSelect <- function(shp, N = 100, bb = NULL, nExtra = 5000, printJ = 
 #' @param nExtra An efficiency problem of how many extra samples to draw before spatial clipping to shp.
 #' @param quiet Boolean if you want to see any output printed to screen. Helpful if taking a long time.
 #' @param inclSeed Boolean need something here
-#' @return something
+#'
+#' @return A master sample.
 
 #' @examples
 #' \dontrun{
@@ -244,11 +251,15 @@ getBASMasterSample <- function(shp, N = 100, bb = NULL, stratum = NULL, nExtra =
 #' If you pass discrete points to this function it will return how the Halton
 #' frame is represented and what the ordering is.
 #'
+#' @details This function was first written by Paul van Dam-Bates for the
+#' package BASMasterSample.
+#'
 #' @param pts Shape file as a polygon (sp or sf) to generate the boxes for.
 #' @param bb Bounding box which defines the Master Sample. Default is BC Marine Master Sample.
 #' @param base Co-prime base of Halton sequence
 #' @param J Definition for the number of grid cells of Halton frame.
 #' @param size Physical target size of Halton boxes (square ish) if J is NULL.
+#'
 #' @return how the Halton frame is represented and what the ordering is.
 
 #' @examples
@@ -346,11 +357,15 @@ point2Frame <- function(pts, bb = NULL, base = c(2,3), J = NULL, size = 100)
 #' size then they are treated as the same sample unit. We do not expect this to be spatially balanced and do
 #' not recommend using this function alone to select a sample.
 #'
+#' @details This function was first written by Paul van Dam-Bates for the
+#' package BASMasterSample.
+#'
 #' @param pts Shape file as a polygon (sp or sf) to generate the boxes for.
 #' @param J Definition for the number of grid cells of Halton frame.
 #' @param bb Bounding box which defines the Master Sample. Default is BC Marine Master Sample.
 #' @param size Physical target size of Halton boxes (square ish) if J is NULL.
-#' @return something
+#'
+#' @return Return the Halton Index for all "pts" that are passed to this function.
 
 #' @examples
 #' \dontrun{

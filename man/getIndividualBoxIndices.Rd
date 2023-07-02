@@ -16,13 +16,17 @@ getIndividualBoxIndices(pts, J = NULL, bb, size = 100)
 \item{size}{Physical target size of Halton boxes (square ish) if J is NULL.}
 }
 \value{
-something
+Return the Halton Index for all "pts" that are passed to this function.
 }
 \description{
 If you pass discrete points to this function it will return the Halton Index according to the
 Master Sample as defined by the bounding box. If the points are closer together than the defined box
 size then they are treated as the same sample unit. We do not expect this to be spatially balanced and do
 not recommend using this function alone to select a sample.
+}
+\details{
+This function was first written by Paul van Dam-Bates for the
+package BASMasterSample.
 }
 \examples{
 \dontrun{

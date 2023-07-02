@@ -22,6 +22,10 @@ rotated sf spatial object.
 Make a Halton Frame based on B = 2^J[1]*3^J[2] grid cells. If rotation is required, will return rotated.
 This function is an internal function simply to select sub BAS points without having to do spatial clipping at the point level.
 }
+\details{
+This function was first written by Paul van Dam-Bates for the
+package BASMasterSample.
+}
 \examples{
 \dontrun{
 bb <- uc511::getBB()

@@ -1,13 +1,14 @@
 Package: uc511
 Type: Package
-Title: Implements a Number of Balanced Sampling Algorithms
+Title: Implements a Number of Spatially Balanced Sampling Algorithms
 Version: 0.1.0
 Authors@R: c(
     person("Phil", "Davies", email = "philip.davies@canterbury.ac.nz", role = c("aut", "cre")),
     person("Blair", "Robertson", email = "blair.robertson@canterbury.ac.nz", role = c("aut")),
-    person("Paul", "van Dam-Bates", email = "paul.vandambates@gmail.com", role = c("aut")))
+    person("Paul", "van Dam-Bates", email = "paul.vandambates@gmail.com", role = c("aut")),
+    person("Oliver", "Gansell", email = "ogansell@doc.govt.nz", role = c("aut")))
 Maintainer: Phil Davies <philip.davies@canterbury.ac.nz>
-Description: A package to encapsulate a number of balanced sampling algorithms, namely, 
+Description: A package to encapsulate a number of spatially balanced sampling algorithms, namely, 
     BAS (equal, unequal, seed point, panels), Halton frames (for discretizing a 
     continuous resource), HIP (equal probability), Spatial balance measures (Voronoi
     and Modified Moran’s I), Variance estimators (local mean, nearest neighbour and

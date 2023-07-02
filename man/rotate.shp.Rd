@@ -20,6 +20,10 @@ rotated sf spatial object.
 Given some polygon within the bounding box of a Master Sample rotate it by theta defined
 by that bounding box either backwards or forwards.
 }
+\details{
+This function was first written by Paul van Dam-Bates for the
+package BASMasterSample.
+}
 \examples{
 \dontrun{
 data(NS_bioregion)
