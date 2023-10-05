@@ -27,8 +27,8 @@ cppRSHalton(
 Matrix with the columns, order of point, x in [0,1) and y in [0,1)
 }
 \description{
-For efficiency, this function can generate points along a random start Halton Sequence for
-predefined Halton.
+For efficiency, this function can generate points along a random start
+Halton Sequence for a predefined Halton.
 }
 \details{
 This function was first written in R by Paul van Dam-Bates for the

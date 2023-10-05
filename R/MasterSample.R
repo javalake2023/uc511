@@ -8,7 +8,7 @@
 #' @import sf
 #' @import rgeos
 #' @import Rcpp
-#' @import rgdal
+# @import rgdal
 #' @import raster
 NULL
 
@@ -99,17 +99,26 @@ masterSampleSelect <- function(shp, N = 100, bb = NULL, nExtra = 5000, printJ = 
     hal.frame <- shape2Frame(shp.rot, J = J, bb = bb, projstring = msproj)
   }
 
-  hal.fr2 <- rotate.shp(hal.frame, bb)
-  hal.indx <- which(rowSums(sf::st_intersects(hal.fr2, shp, sparse = FALSE)) > 0)
+  hal.fr2 <- uc511::rotate.shp(hal.frame, bb)
+  hal.indx <- which(raster::rowSums(sf::st_intersects(hal.fr2, shp, sparse = FALSE)) > 0)
+  if(length(hal.indx) < 2){browser()}
+
   #hal.pts <- (sf::st_centroid(hal.frame) %>% sf::st_coordinates())[hal.indx,]	## Hack to react to changes in sf. Need to get coordinates and then subset now. Fix it better in the future.
-  hal.tmp <- sf::st_centroid(hal.frame) #[hal.indx,]
+  hal.tmp <- sf::st_centroid(hal.fr2) #hal.frame ???? #[hal.indx,]
   hal.pts <- sf::st_coordinates(hal.tmp)[hal.indx,]
+
+  print("hal.indx:")
+  print(hal.indx)
+  print("len hal.indx:")
+  print(length(hal.indx))
+  print("len hal.pts:")
+  print(length(hal.pts))
 
   # Find the corner Halton Pts
   box.lower <- t(apply(hal.pts, 1, FUN = function(x){(x - shift.bas)/scale.bas}))
-  A <- GetBoxIndices(box.lower, base, J)
-  halt.rep <- SolveCongruence(A, base, J)
-  B <- prod(c(2,3)^J)
+  A <- uc511::GetBoxIndices(box.lower, base, J)
+  halt.rep <- uc511::SolveCongruence(A, base, J)
+  B <- prod(c(2, 3) ^ J)
 
   # I like to know how many divisions we had to make...
   if(printJ){
@@ -119,23 +128,31 @@ masterSampleSelect <- function(shp, N = 100, bb = NULL, nExtra = 5000, printJ = 
   }
 
   getSample <- function(k = 0, endPoint = 0){
+    print("getSample")
     seed <- c(seed, inclSeed)
     if(k == 0){ seedshift <- seed
     }else {
       seedshift <- endPoint + seed
     }
-    pts <- uc511::cppRSHalton(n = draw, seeds = seedshift, bases = c(2, 3, 5), boxes = halt.rep, J = J)
-    pts <- pts[1:draw,]
+    #pts <- uc511::cppRSHalton(n = draw, seeds = seedshift, bases = c(2, 3, 5), boxes = halt.rep, J = J)
+    #pts <- pts[1:draw,]
+    res <- uc511::cppRSHalton_br(n = draw, seeds = seedshift, bases = c(2, 3, 5))
+    pts <- res$pts
+    siteid <- seq(from = 1, to = draw, by = 1)
+    pts <- cbind(siteid, pts)
+
     #print("dim(cpp pts)")
     #print(dim(pts))
     #print(pts[1:10,])
-    #pts <- RSHalton(n = draw, seeds = seedshift, bases = c(2,3,5), boxes = halt.rep, J = J)
+    #xpts <- RSHalton(n = draw, seeds = seedshift, bases = c(2,3,5), boxes = halt.rep, J = J)
+    #print("YIKES:")
+    #all.equal(pts, xpts)
     #print("dim(r pts)")
     #print(dim(pts))
     #print(pts[1:10,])
 
     xy <- cbind(pts[,2]*scale.bas[1] + shift.bas[1], pts[,3]*scale.bas[2] + shift.bas[2])
-    if(theta != 0) xy <- sweep ( sweep(xy, 2,  cntrd, FUN = "-") %*% rot(-theta), 2,  cntrd, FUN = "+")
+    if(theta != 0) xy <- sweep ( sweep(xy, 2,  cntrd, FUN = "-") %*% uc511::rot(-theta), 2,  cntrd, FUN = "+")
     pts.coord <- sf::st_as_sf(data.frame(SiteID = pts[,1] + endPoint, xy, inclProb = pts[,4]), coords = c(2,3))
     sf::st_crs(pts.coord) <- sf::st_crs(bb)
     pts.coord <- pts.coord[shp,]
@@ -143,6 +160,7 @@ masterSampleSelect <- function(shp, N = 100, bb = NULL, nExtra = 5000, printJ = 
   }
 
   pts.sample <- getSample()
+  print(pts.sample)
   while(nrow(pts.sample) == 0) {
     draw <- draw * 2
     pts.sample <- getSample()
@@ -150,6 +168,7 @@ masterSampleSelect <- function(shp, N = 100, bb = NULL, nExtra = 5000, printJ = 
 
   di <- 1
   while(nrow(pts.sample) < N){
+    print("nrow(pts.sample)")
     last.pt <- pts.sample$SiteID[nrow(pts.sample)]
     new.pts <- getSample(k = di, endPoint = last.pt)
     if(nrow(new.pts) > 0) pts.sample <- rbind(pts.sample, new.pts)

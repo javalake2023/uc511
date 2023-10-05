@@ -1,11 +1,37 @@
 # SRS.R
 
-#' Do something useful.
+#' @name SRS
 #'
-#' A description of this useful function.
+#' @title Simple random sampling.
 #'
-#' @param parm1 A parameter.
-#' @return something useful.
-SRS <- function(parm1) {
-  message("Hello from SRS.")
+#' @description This function invokes base::sample() to draw a random sample using
+#' a user specified random seed.
+#'
+#' @details This function was written by Phil Davies.
+#'
+#' @param seed The random seed to be used to draw the current sample.
+#' @param total_rows The total number of rows in our input dataset.
+#' @param sample_size The number of rows wanted in our random sample.
+#'
+#' @return A random sample.
+
+#' @examples
+#' \dontrun{
+#' # Create a random sample with a seed of 99.
+#' uc511::SRS(seed = 99, total_rows = 100, sample_size = 20)
+#' # Create a random sample with a seed of 42.
+#' uc511::SRS(seed = 42, total_rows = 100, sample_size = 20)
+#' # Create a random sample with a seed of 99.
+#' uc511::SRS(seed = 99, total_rows = 100, sample_size = 25)
+#' }
+#'
+#' @export
+SRS <- function(seed = 42, total_rows = 0, sample_size = 0) {
+  sam_pts <- NULL
+  set.seed(seed)
+  sam_pts <- base::sample(x = total_rows,
+                          size = sample_size,
+                          replace = FALSE,
+                          prob = NULL)
+  return (sam_pts)
 }

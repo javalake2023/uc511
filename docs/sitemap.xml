@@ -34,6 +34,9 @@
     <loc>/reference/HIP.html</loc>
   </url>
   <url>
+    <loc>/reference/HaltonFrame.html</loc>
+  </url>
+  <url>
     <loc>/reference/HaltonFrames.html</loc>
   </url>
   <url>
@@ -61,6 +64,9 @@
     <loc>/reference/cppBASMastersample.html</loc>
   </url>
   <url>
+    <loc>/reference/cppBASpts.html</loc>
+  </url>
+  <url>
     <loc>/reference/cppHaltonSeq.html</loc>
   </url>
   <url>
@@ -68,6 +74,9 @@
   </url>
   <url>
     <loc>/reference/cppRSHalton.html</loc>
+  </url>
+  <url>
+    <loc>/reference/cppRSHalton_br.html</loc>
   </url>
   <url>
     <loc>/reference/cppWhere2Start.html</loc>
@@ -119,5 +128,8 @@
   </url>
   <url>
     <loc>/reference/shape2Frame.html</loc>
+  </url>
+  <url>
+    <loc>/reference/validate_parameters.html</loc>
   </url>
 </urlset>

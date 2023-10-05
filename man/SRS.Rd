@@ -2,16 +2,35 @@
 % Please edit documentation in R/SRS.R
 \name{SRS}
 \alias{SRS}
-\title{Do something useful.}
+\title{Simple random sampling.}
 \usage{
-SRS(parm1)
+SRS(seed = 42, total_rows = 0, sample_size = 0)
 }
 \arguments{
-\item{parm1}{A parameter.}
+\item{seed}{The random seed to be used to draw the current sample.}
+
+\item{total_rows}{The total number of rows in our input dataset.}
+
+\item{sample_size}{The number of rows wanted in our random sample.}
 }
 \value{
-something useful.
+A random sample.
 }
 \description{
-A description of this useful function.
+This function invokes base::sample() to draw a random sample using
+a user specified random seed.
+}
+\details{
+This function was written by Phil Davies.
+}
+\examples{
+\dontrun{
+# Create a random sample with a seed of 99.
+uc511::SRS(seed = 99, total_rows = 100, sample_size = 20)
+# Create a random sample with a seed of 42.
+uc511::SRS(seed = 42, total_rows = 100, sample_size = 20)
+# Create a random sample with a seed of 99.
+uc511::SRS(seed = 99, total_rows = 100, sample_size = 25)
+}
+
 }

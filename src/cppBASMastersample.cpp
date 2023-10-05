@@ -2,9 +2,17 @@
 
 // [[Rcpp::plugins(cpp11)]]
 // [[Rcpp::depends(RcppThread)]]
+// [[Rcpp::depends(dqrng)]]
 
 #include <Rcpp.h>
 #include <RcppThread.h>
+#include <dqrng.h>
+
+using Rcpp::IntegerVector;
+using Rcpp::NumericVector;
+using dqrng::dqrunif;
+
+#include <cmath>
 
 using namespace Rcpp;
 
@@ -20,25 +28,6 @@ using namespace Rcpp;
 //   http://adv-r.had.co.nz/Rcpp.html
 //   http://gallery.rcpp.org/
 //
-
-//' @name cppBASMasterSample
-//'
-//' @title A placeholder for now.
-//'
-//' @description A placeholder for now.
-//'
-//' @details This function will be written by Phil Davies.
-//'
-//' @returns Nothing at the moment.
-
-//' @export
-// [[Rcpp::export]]
-void cppBASMasterSample() {
-
-  RcppThread::Rcout << "cppBASMasterSample()" << std::endl;
-
-  return;
-}
 
 
 //' @name SolveCongruence
@@ -299,11 +288,39 @@ NumericVector cppWhere2Start(NumericVector& J, IntegerVector& seeds, NumericVect
 //'
 //' @export
 // [[Rcpp::export(rng = false)]]
-double log_a_to_base_b(int a, int b)
+double log_a_to_base_b(long long a, int b)
 {
   return log2(a) / log2(b);
 }
 
+//
+//template <typename Iter, typename T>
+//inline void xiota(Iter first, Iter last, T value){
+//  while(first != last){
+//    *first++ = value++;
+//  }
+//}
+
+//template <typename T>
+//inline T pop_random(std::vector<T>& v){
+//  typename std::vector<T>::size_type pos = std::rand() % v.size();
+//  T res = v[pos];
+//  std::swap(v[pos], v.back());
+//  v.pop_back();
+//  return res;
+//}
+
+//// [[Rcpp::export]]
+//Rcpp::IntegerVector sample_int(int n, int min, int max){
+//  Rcpp::IntegerVector res(n);
+//  std::vector<int> pool(max + 1 - min);
+//  xiota(pool.begin(), pool.end(), min);
+
+//  for(R_xlen_t i = 0; i < n; i++){
+//    res[i] = pop_random(pool);
+//  }
+//  return res;
+//}
 
 //
 template<typename T>
@@ -312,13 +329,18 @@ T mod(T a, int n)
   return a - floor(a / n) * n;
 }
 
+//void sample_int(int first, int last, std::vector<int> *out, std::size_t n, std::mt19937*g){
+//  std::ranges::sample(std::views::iota(first, last), std::back_inserter(*out), n, *g);
+//}
+
+
 
 //' @name cppRSHalton
 //'
 //' @title Generate numbers from a Halton Sequence with a random start
 //'
-//' @description For efficiency, this function can generate points along a random start Halton Sequence for
-//' predefined Halton.
+//' @description For efficiency, this function can generate points along a random start
+//' Halton Sequence for a predefined Halton.
 //'
 //' @details This function was first written in R by Paul van Dam-Bates for the
 //' package BASMasterSample. Subsequently it was written in C/C++ by Phil Davies.
@@ -393,11 +415,12 @@ NumericVector cppRSHalton(int n = 10,
 
   Rcpp::NumericMatrix pts(n + ((ceiling * each) - n), 1);
 
+  int b;
   int u;
 
   //########### Main Loop #########################################
   for (int i = 0; i < d; i++){
-    int b = bases[i];
+    b = bases[i];
     u = seeds[i];
     k1rep = rep(boxes + u, ceil(maxrep));
 
@@ -409,14 +432,9 @@ NumericVector cppRSHalton(int n = 10,
 
     for (int j = 0; j < (ceil(log_a_to_base_b(u + n, b)) + 2); j++){
       NumericVector tmp1 = floor(k / pow(b, j+1));
-      //NumericVector tmp11 = tmp1[Rcpp::Range(0, 9)];
-      //NumericVector tmp0 = mod(tmp1, b);
-      //NumericVector tmp00 = tmp0[Rcpp::Range(0, 9)];
       int tmp000 = pow(b, (j + 2));
       NumericVector tmp2 = mod(tmp1, b) / tmp000;
-      //NumericVector tmp3 = tmp2[Rcpp::Range(0, 9)];
       xk = xk + tmp2;
-      //NumericVector tmp4 = xk[Rcpp::Range(0, 9)];
     }
     pts = Rcpp::cbind(pts, xk);
   }
@@ -430,3 +448,260 @@ NumericVector cppRSHalton(int n = 10,
   // need to return a matrix of (n, d+1)
   return pts;
 }
+
+
+//
+template <typename Iter, typename T>
+inline void xiota(Iter first, Iter last, T value){
+  while(first != last){
+    *first++ = value++;
+  }
+}
+
+template <typename T>
+inline T pop_random(std::vector<T>& v){
+  typename std::vector<T>::size_type pos = std::rand() % v.size();
+  T res = v[pos];
+  std::swap(v[pos], v.back());
+  v.pop_back();
+  return res;
+}
+
+// [[Rcpp::export]]
+Rcpp::IntegerVector sample_int(int n, int min, int max){
+  Rcpp::IntegerVector res(n);
+  std::vector<int> pool(max + 1 - min);
+  xiota(pool.begin(), pool.end(), min);
+
+  for(R_xlen_t i = 0; i < n; i++){
+    res[i] = pop_random(pool);
+  }
+  return res;
+}
+
+
+//double runif(double min, double max) {
+//  return min + static_cast<double>(rand()) / RAND_MAX * (max - min);
+//}
+
+
+// [[Rcpp::export]]
+Rcpp::NumericVector removeDuplicates(Rcpp::NumericVector vec){
+  // sort vector
+  std::sort(vec.begin(), vec.end());
+  // remove duplicates
+  vec.erase(std::unique(vec.begin(), vec.end()), vec.end());
+  return vec;
+}
+
+
+//' @name cppBASpts
+//'
+//' @title Generate numbers from a Halton Sequence.
+//'
+//' @description For efficiency, this function can generate points along a random start
+//' Halton Sequence for a predefined Halton.
+//'
+//' @details This function was first written in R by Blair Robertson, subsequently it was
+//' re-written in C/C++ by Phil Davies.
+//'
+//' @param n Number of points required
+//' @param seeds Random starting point in each dimension
+//' @param bases Co-prime base for the Halton Sequence
+//'
+//' @return Matrix with the columns, order of points, x in [0,1) and y in [0,1)
+//'
+//' @examples
+//' # First 10 points in the Halton Sequence for base 2,3
+//' uc511::cppBASpts(n = 10)
+//' # First 10 points in the Halton Sequence for base 2,3 with
+//' # starting point at the 15th and 22nd index.
+//' uc511::cppBASpts(n = 10, seeds = c(14, 21))
+//'
+//' @export
+// [[Rcpp::export(rng = false)]]
+Rcpp::List cppBASpts(int n = 10,
+                     IntegerVector seeds = Rcpp::IntegerVector::create(),
+                     NumericVector bases = Rcpp::NumericVector::create())
+{
+  // set default seeds values
+  if (seeds.size() == 0){
+    seeds = sample_int(2, 0, 62208);
+  }
+  // set default bases values
+  if (bases.size() == 0){
+    bases = {2, 3};
+  }
+
+  //RcppThread::Rcout << "cppBASpts() n     : " << n << std::endl;
+  //RcppThread::Rcout << "cppBASpts() seeds : " << seeds << std::endl;
+  //RcppThread::Rcout << "cppBASpts() bases : " << bases << std::endl;
+
+  // initialise variables
+  int d = bases.length();
+  int u;
+  int b;
+
+  Rcpp::NumericVector xk;
+  Rcpp::List          xklist;
+  Rcpp::NumericMatrix pts(n, d);
+
+  if (seeds.length() != d){
+    RcppThread::Rcout << "cppBASpts() seeds.length() != d : " << std::endl;
+    seeds = rep(seeds[1], d);
+  }
+
+  //########### Main Loop #########################################
+  for (int i = 0; i < d; i++){
+    b = bases[i];
+    u = seeds[i];
+    // k <- u:(u+n-1);
+    Rcpp::IntegerVector ik = Rcpp::seq(u, (u+n-1));
+    Rcpp::NumericVector k = as<Rcpp::NumericVector>(ik);
+    xk = mod(k, b) / b;
+    xklist.push_back(removeDuplicates(clone(xk)));
+
+    for (int j = 0; j < (ceil(log_a_to_base_b(u + n, b)) + 2); j++){
+      Rcpp::NumericVector tmp1 = floor(k / std::pow(b, j + 1));
+      int tmp000 = std::pow(b, (j + 2));
+      NumericVector tmp2 = mod(tmp1, b) / tmp000;
+      xk = xk + tmp2;
+    } // end for j
+
+    // point to column i
+    NumericMatrix::Column thisCol = pts(_, i);
+    // propagate changes to pts.
+    thisCol = thisCol + xk;
+
+  } // end for i
+
+  //return pts;
+  return Rcpp::List::create(_["pts"]    = pts,
+                            _["xklist"] = xklist);
+}
+
+
+//' @name cppRSHalton_br
+//'
+//' @title Generate numbers from a Halton Sequence with a random start
+//'
+//' @description For efficiency, this function can generate points along a random start
+//' Halton Sequence for a predefined Halton.
+//'
+//' @details This function was first written in R by Paul van Dam-Bates for the
+//' package BASMasterSample. Subsequently it was written in C/C++ by Phil Davies.
+//'
+//' @param n Number of points required
+//' @param bases Co-prime base for the Halton Sequence
+//' @param seeds Random starting point in each dimension
+//'
+//' @return Matrix with the columns, order of point, x in [0,1) and y in [0,1)
+//'
+//' @examples
+//' # First 10 points in the Halton Sequence for base 2,3
+//' uc511::cppRSHalton_br(n = 10)
+//' # First 10 points in the Halton Sequence for base 2,3 with
+//' # starting point at the 15th and 22nd index.
+//' uc511::cppRSHalton_br(n = 10, seeds = c(14, 21))
+//'
+//' @export
+// [[Rcpp::export(rng = false)]]
+Rcpp::List cppRSHalton_br(int n = 10,
+                          NumericVector bases = Rcpp::NumericVector::create(),
+                          NumericVector seeds = Rcpp::NumericVector::create())
+{
+  // defaults: n = 10, bases = c(2, 3), seeds = c(0, 0)
+
+  //if (seeds.size() == 0){
+  //  seeds = {0, 0};
+  //}
+  if (bases.size() == 0){
+    bases = {2, 3};
+  }
+
+  //RcppThread::Rcout << "cppRSHalton_br() n     : " << n << std::endl;
+  //RcppThread::Rcout << "cppRSHalton_br() seeds : " << seeds << std::endl;
+  //RcppThread::Rcout << "cppRSHalton_br() bases : " << bases << std::endl;
+
+  // initialize variables.
+  long long UpLim = pow(10, 15);
+  long long m = 0;
+  long long tmpm;
+  long long u2;
+
+  int d = bases.length();
+  int b;
+
+  double min = 0.0; // Minimum value for runif
+  double max = 1.0; // Maximum value for runif
+
+  std::vector<double> u;
+
+  Rcpp::NumericVector xk;
+  Rcpp::NumericMatrix pts(n, d);
+  Rcpp::NumericVector k(n);
+  Rcpp::List          xklist;
+
+  dqrng::dqRNGkind("Xoroshiro128+");
+  dqrng::dqset_seed(IntegerVector::create(42));
+  NumericVector xxx = dqrunif(d, min, max);
+  RcppThread::Rcout << "cppRSHalton_br() xxx : " << xxx << std::endl;
+
+  if (seeds.size() == 0){
+    // seeds = numeric(d)
+    seeds[d];
+    // u = runif(d)
+    // Generate random values using uniform distribution
+    for (int i = 0; i < d; i++) {
+      // Generate random uniform values (respects the current R set.seed())
+      RcppThread::Rcout << "cppRSHalton_br() u : " << R::runif(min, max) << std::endl;
+      u.push_back(R::runif(min, max));
+    } // end for i
+
+    // for each element of bases
+    for (int i = 0; i < d; i++) {
+      b = bases[i];
+      m = 0;
+      int j = 1;
+      // while (m + (b-1)*(b^(j-1)) <= UpLim) {
+      while (m + (b-1) * std::pow(b, j-1) <= UpLim){
+        // m = m + (floor(u[i]*(b^j)) %% b)*(b^(j-1))
+        tmpm = std::floor(u[i] * std::pow(b, j));
+        m = m + (mod(tmpm, b) * std::pow(b, j-1));
+        j++;
+      }
+      seeds[i] = m;
+    } // end for i
+  } // end if seeds.size()
+
+  //########### Main Loop #########################################
+  for (int i = 0; i < d; i++){
+    b = bases[i];
+    u2 = seeds[i];
+
+    // Populate the vector with values from u to (u+n-1), R: k <- u:(u+n-1);
+    for (int i = 0; i < n; i++) {
+      k[i] = (u2 + i);
+    }
+
+    xk = mod(k, b) / b;
+    xklist.push_back(removeDuplicates(clone(xk)));
+
+    for (int j = 1; j <= (ceil(log_a_to_base_b(u2 + n, b)) + 2); j++){
+      //
+      NumericVector tmp1 = Rcpp::floor(k / std::pow(b, j));
+      NumericVector tmp2 = mod(tmp1, b) / std::pow(b, (j + 1));
+      xk = xk + tmp2;
+    } // end for j
+
+    // point to column i
+    NumericMatrix::Column thisCol = pts(_, i);
+    // propagate changes to pts.
+    thisCol = thisCol + xk;
+  } // end for i
+
+  //return pts;
+  return Rcpp::List::create(_["pts"]    = pts,
+                            _["xklist"] = xklist);
+}
+
