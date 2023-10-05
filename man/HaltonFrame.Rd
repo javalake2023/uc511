@@ -15,7 +15,7 @@ HaltonFrame(
 
 \item{J}{A list of 2 values. The default value is c(3, 2), we could also use c(5, 3).}
 
-\item{bases}{A list of 2 co-prime values. The default value is c(2, 3).}
+\item{bases}{Co-prime base for the Halton Sequence. The default value is c(2, 3).}
 }
 \value{
 A list containing the following four variables:
