@@ -19,15 +19,21 @@
 validate_parameters <- function(parm, parm_value){
   # make sure parameter is a list (or vector)
   if(!is.vector(parm_value)){
-    stop("uc511(validate_parameters) Parameter " + parm + " must be a list or vector.")
+    stop(c("uc511(validate_parameters) Parameter ", parm, " must be a list or vector."))
   }
   # check if all values in the list are numeric
   if(!all(sapply(parm_value, is.numeric))){
-    stop("uc511(validate_parameters) Parameter " + parm + " must contain all numeric values.")
+    stop(c("uc511(validate_parameters) Parameter ", parm, " must contain all numeric values."))
   }
   # check if list is of length 2
   if(parm == "J" & length(parm_value) != 2){
     stop("uc511(validate_parameters) Parameter J must be a list of length 2.")
+  }
+  # check if values for SRS parameters are greater than zero.
+  if(parm %in% c("seed", "total_rows", "sample_size")) {
+    if (parm_value <= 0){
+      stop(c("uc511(validate_parameters) Parameter ", parm, " must have a value greater than zero."))
+    }
   }
   return(TRUE)
 }
@@ -68,11 +74,14 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]), J = c(3, 2), base
   # calculate B
   B <- (bases[1]^j1) * (bases[2]^j2)
   # check how many points the caller wants.
-  if(n > B) {B <- n}
+  if(n > B) {
+    B <- (floor(n / B) + 1) * B
+  }
   # double the number of points
   B2 <- 2 * B
   # compute B2 halton points
-  cpprshs <- uc511::cppRSHalton_br(n = B2, bases = bases)
+  #cpprshs <- uc511::cppRSHalton_br(n = B2, bases = bases)
+  cpprshs <- uc511::cppBASpts(n = B2, bases = bases)
   #
   z <- ((cpprshs$pts[1:B,] + cpprshs$pts[(B+1):B2,])/2)
   # x-dimension

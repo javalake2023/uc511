@@ -1,0 +1,76 @@
+---
+title: "uc511 - Spatially Balanced Sampling"
+author: "Phil Davies"
+date: "19/11/2023"
+
+always_allow_html: true
+
+#output: rmarkdown::html_vignette
+output:
+  bookdown::html_document2:
+    toc: true
+    toc_float:
+      toc_collapsed: true
+    toc_depth: 3
+    number_sections: true
+    fig_caption: yes
+
+vignette: >
+  %\VignetteIndexEntry{uc511 - Spatially Balanced Sampling}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+library(bookdown)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(uc511)
+```
+
+# uc511: Spatially balanced sampling.
+
+This vignette is intended to provide details of the functions and methods in the __uc511__ package. The __uc511__ package encapsulates a number of spatially balanced sampling algorithms namely, Balanced acceptance sampling (BAS) (equal, unequal, seed point, panels), Halton frames (for discretizing a continuous resource), HIP (equal probability), Spatial balance measures (Voronoi and Modified Moran's I), Variance estimators (local mean, nearest neighbour and quasi bootstrap), DAS and the Spatial stratification algorithm.
+
+This vignette is divided into the following sections:
+
+## Simple Random Sampling (SRS)
+
+### uc511::SRS()
+
+This function invokes __base::sample()__ to draw a random sample using a user specified random seed. 
+
+The following parameters are supported:
+
++ __seed__ - The random seed to be used to draw the current sample. The default is 42.
++ __total_rows__ - The total number of rows in our input dataset.
++ __sample_size__ - The number of rows wanted in our random sample.
+
+All parameter values must be numeric and have values greater than zero, __sample_size__ must be less than __total_rows__.
+
+#### uc511::SRS() code example
+
+Function __uc511::SRS()__ returns a list of size __sample_size__.
+
+```{r}
+# Create a random sample with a seed of 99.
+rand_samp <- uc511::SRS(seed = 99, total_rows = 100, sample_size = 20)
+rand_samp
+```
+
+### uc511::SRS() from the uc511 Shiny App
+
+The uc511 Shiny App has a menu option (SRS) to invoke Simple Random Sampling.
+
+
+
+
+## Balanced acceptance sampling (BAS)
+
+## Halton Frames (HF)
+
