@@ -35,6 +35,15 @@ validate_parameters <- function(parm, parm_value){
       stop(c("uc511(validate_parameters) Parameter ", parm, " must have a value greater than zero."))
     }
   }
+  # validate HIP parameters
+  if(parm == "hipIterations"){
+    if(parm_value < 2){
+      stop(c("uc511(validate_parameters) Parameter ", parm, " values less than two are not supported."))
+    }
+    if(parm_value > 13){
+      stop(c("uc511(validate_parameters) Parameter ", parm, " values greater than 13 are not supported."))
+    }
+  }
   return(TRUE)
 }
 

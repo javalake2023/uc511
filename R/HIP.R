@@ -147,8 +147,11 @@ hipPartition <- function(pts, its) {
   HaltonIndex <- rep(0, N)
 
   # Partitioning parameters
-  xlevel <- c(1, 2, 6, 12, 24, 72, 144, 432, 864, 1728, 5184)
-  diml <- c(1, 2, 1, 1, 2, 1, 2, 1, 1, 2, 1)
+  xlevel <- c(1, 2, 6, 12, 24, 72, 144, 432, 864, 1728, 5184, 10368, 20736)
+  #xlevel <- c(1, 2, 6, 12, 24, 72, 144, 432, 864, 1728, 5184)
+  # support upto 13 levels.
+  diml <- c(1, 2, 1, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1)
+  #diml <- c(1, 2, 1, 1, 2, 1, 2, 1, 1, 2, 1)
 
   # Partitioning loop
   for (j in (1:its)) {
@@ -192,8 +195,9 @@ hipPartition <- function(pts, its) {
 #' @export
 hipIndexRandomPermutation <- function(its) {
 
-  # Partitioning parameters
-  diml <- c(1, 2, 1, 1, 2, 1, 2, 1, 1, 2, 1)
+  # Partitioning parameters - support upto 13 levels.
+  diml <- c(1, 2, 1, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1)
+  #diml <- c(1, 2, 1, 1, 2, 1, 2, 1, 1, 2, 1)
   diml <- diml[1:its]
 
   # Halton Indices
@@ -221,6 +225,10 @@ hipIndexRandomPermutation <- function(its) {
 
   for (i in 1:(J1 - 1)) {
     #if (J1 < 2) {break}
+    if (J1 < 2) {
+      #print("J1 < 2")
+      next
+    }
     v <- vector()
     L <- sum(!is.na(order2))
 
@@ -234,6 +242,10 @@ hipIndexRandomPermutation <- function(its) {
   }
   for (i in 1:(J2 - 1)) {
     #if (J2 < 2) {break}
+    if (J2 < 2) {
+      #print("J2 < 2")
+      next
+    }
     v <- vector()
     L <- sum(!is.na(order3))
     for (j in (1:L)) {
@@ -318,8 +330,16 @@ HIP <- function(population, n = 20, iterations = 7) {
   validate_parameters("hipPopulation", c(population))
   # must be numeric, greater than 0.
   validate_parameters("hipN", c(n))
-  # must be numeric, greater than 0 and less than or equal to 20.
+  # must be numeric, greater than 1 and less than or equal to 13.
   validate_parameters("hipIterations", c(iterations))
+
+  # Partitioning parameters
+  iteration_level <- c(1, 2, 6, 12, 24, 72, 144, 432, 864, 1728, 5184, 10368, 20736)
+  if(((base::length(population)/2)/iteration_level[iterations+1]) < 1.0){
+    msg <- "uc511(HIP) Population size %s not compatible with number of iteration levels %s. %s. %s."
+    msgs <- sprintf(msg, base::length(population)/2, iterations, base::length(population), iteration_level[iterations+1])
+    stop(msgs)
+  }
 
   # Partition the population
   partitionResult <- hipPartition(population, iterations)

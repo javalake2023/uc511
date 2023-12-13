@@ -9,7 +9,7 @@
 #'
 #' @importFrom Rcpp evalCpp
 #' @useDynLib uc511, .registration = TRUE
-BASMastersample <- function(parm1) {
-  message("Hello from BASMastersample.")
-  cppBASMastersample()
-}
+#BASMastersample <- function(parm1) {
+#  message("Hello from BASMastersample.")
+#  cppBASMastersample()
+#}

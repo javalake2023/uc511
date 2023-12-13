@@ -2,16 +2,27 @@
 % Please edit documentation in R/HIP.R
 \name{HIP}
 \alias{HIP}
-\title{Do something useful.}
+\title{A title.}
 \usage{
-HIP(parm1)
+HIP(population, n = 20, iterations = 7)
 }
 \arguments{
-\item{parm1}{A parameter.}
+\item{population}{A population of points. (is the pop always pairs of points?).}
+
+\item{n}{The number of points to draw from the population. Default 20.}
+
+\item{iterations}{The levels of partitioning required. Default 7.}
 }
 \value{
-something useful.
+A list containing the following variables:
+sampleI - indices of the sample points to use.
+popIndex - ???
+Order - ???
+HaltonIndex - Halton indices for all population points.
 }
 \description{
-A description of this useful function.
+A description.
+}
+\details{
+The details.
 }

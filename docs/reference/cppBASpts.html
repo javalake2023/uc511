@@ -20,7 +20,10 @@ Halton Sequence for a predefined Halton."><!-- mathjax --><script src="https://c
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item">
+      <ul class="navbar-nav me-auto"><li class="nav-item">
+  <a class="nav-link" href="../articles/uc511.html">Get started</a>
+</li>
+<li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
@@ -78,51 +81,11 @@ re-written in C/C++ by Phil Davies.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># First 10 points in the Halton Sequence for base 2,3</span></span></span>
 <span class="r-in"><span><span class="fu">uc511</span><span class="fu">::</span><span class="fu">cppBASpts</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $pts</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             [,1]       [,2]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1,] 0.20477295 0.54204136</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [2,] 0.70477295 0.87537469</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [3,] 0.45477295 0.31981913</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [4,] 0.95477295 0.65315247</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [5,] 0.04852295 0.98648580</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [6,] 0.54852295 0.03586852</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7,] 0.29852295 0.36920185</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [8,] 0.79852295 0.70253518</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9,] 0.17352295 0.14697963</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [10,] 0.67352295 0.48031296</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xklist</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xklist[[1]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.0 0.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xklist[[2]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.0000000 0.3333333 0.6666667</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in uc511::cppBASpts(n = 10):</span> object '_uc511_cppBASpts' not found</span>
 <span class="r-in"><span><span class="co"># First 10 points in the Halton Sequence for base 2,3 with</span></span></span>
 <span class="r-in"><span><span class="co"># starting point at the 15th and 22nd index.</span></span></span>
 <span class="r-in"><span><span class="fu">uc511</span><span class="fu">::</span><span class="fu">cppBASpts</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">10</span>, seeds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">14</span>, <span class="fl">21</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $pts</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          [,1]       [,2]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1,] 0.43750 0.18518519</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [2,] 0.93750 0.51851852</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [3,] 0.03125 0.85185185</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [4,] 0.53125 0.29629630</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [5,] 0.28125 0.62962963</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [6,] 0.78125 0.96296296</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7,] 0.15625 0.01234568</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [8,] 0.65625 0.34567901</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9,] 0.40625 0.67901235</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [10,] 0.90625 0.12345679</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xklist</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xklist[[1]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.0 0.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xklist[[2]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.0000000 0.3333333 0.6666667</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in uc511::cppBASpts(n = 10, seeds = c(14, 21)):</span> object '_uc511_cppBASpts' not found</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
