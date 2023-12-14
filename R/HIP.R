@@ -336,8 +336,8 @@ HIP <- function(population, n = 20, iterations = 7) {
   # Partitioning parameters
   iteration_level <- c(1, 2, 6, 12, 24, 72, 144, 432, 864, 1728, 5184, 10368, 20736)
   if(((base::length(population)/2)/iteration_level[iterations+1]) < 1.0){
-    msg <- "uc511(HIP) Population size %s not compatible with number of iteration levels %s. %s. %s."
-    msgs <- sprintf(msg, base::length(population)/2, iterations, base::length(population), iteration_level[iterations+1])
+    msg <- "uc511(HIP) Pop. size %s not compatible with number of iteration levels %s. Try pop. size of %s+ or a smaller iteration level."
+    msgs <- sprintf(msg, base::length(population)/2, iterations, iteration_level[iterations+1])
     stop(msgs)
   }
 
