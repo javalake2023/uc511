@@ -30,7 +30,7 @@ hipX1split <- function(x1pts, HaltonIndex, BoxIndex, xlevel, x1Hpts) {
 
   # odd number of points?
   if ((nF %% 2) == 1) {
-    r <- sample(nF, 1)
+    r <- base::sample(nF, 1)
     HaltonIndex[F[r]] <- NA
     F <- F[-r]
     nF <- (nF - 1)
@@ -38,16 +38,16 @@ hipX1split <- function(x1pts, HaltonIndex, BoxIndex, xlevel, x1Hpts) {
   }
 
   # Partition and update Halton indices
-  x1sort <- order(x1pts)
+  x1sort <- base::order(x1pts)
   F <- F[x1sort]
   Hpt1 <- x1Hpts[(BoxIndex + 1)]
   Hpt2 <- x1Hpts[(BoxIndex + 1 + xlevel)]
-  I <- order(c(Hpt1, Hpt2))
+  I <- base::order(c(Hpt1, Hpt2))
 
   # set halton index - top half.
-  HaltonIndex[F[1:(floor(nF/2))]] <- (BoxIndex + (I[1] - 1) * xlevel)
+  HaltonIndex[F[1:(base::floor(nF/2))]] <- (BoxIndex + (I[1] - 1) * xlevel)
   # set halton index - bottom half.
-  HaltonIndex[F[((floor(nF/2))+1):nF]] <- (BoxIndex + (I[2] - 1) * xlevel)
+  HaltonIndex[F[((base::floor(nF/2))+1):nF]] <- (BoxIndex + (I[2] - 1) * xlevel)
   # return the halton index.
   return(HaltonIndex)
 }
@@ -89,13 +89,13 @@ hipX2split <- function(x2pts, HaltonIndex, BoxIndex, xlevel, x2Hpts) {
     nF <- (nF - 1)
     x2pts <- x2pts[-r]
   } else if ((nF %% 3) == 2) {
-    r <- sample(nF, 1)
+    r <- base::sample(nF, 1)
     HaltonIndex[F[r]] <- NA
     F <- F[-r]
     nF <- (nF - 1)
     x2pts <- x2pts[-r]
 
-    r <- sample(nF, 1)
+    r <- base::sample(nF, 1)
     HaltonIndex[F[r]] <- NA
     F <- F[-r]
     nF <- (nF - 1)
@@ -103,17 +103,17 @@ hipX2split <- function(x2pts, HaltonIndex, BoxIndex, xlevel, x2Hpts) {
   }
 
   # Partition and update Halton indices
-  x2sort <- order(x2pts)
+  x2sort <- base::order(x2pts)
   F <- F[x2sort]
   Hpt1 <- x2Hpts[(BoxIndex + 1)]
   Hpt2 <- x2Hpts[(BoxIndex + 1 + xlevel)]
   Hpt3 <- x2Hpts[(BoxIndex + 1 + (2 * xlevel))]
-  I <- order(c(Hpt1, Hpt2, Hpt3))
+  I <- base::order(c(Hpt1, Hpt2, Hpt3))
 
   # update halton indices - top third.
-  HaltonIndex[F[1:(floor(nF/3))]] <- (BoxIndex + (I[1] - 1) * xlevel)
+  HaltonIndex[F[1:(base::floor(nF/3))]] <- (BoxIndex + (I[1] - 1) * xlevel)
   # update halton indices - middle third.
-  HaltonIndex[F[((floor(nF/3))+1):(2*(floor(nF/3)))]] <- (BoxIndex + (I[2] - 1) * xlevel)
+  HaltonIndex[F[((base::floor(nF/3))+1):(2*(base::floor(nF/3)))]] <- (BoxIndex + (I[2] - 1) * xlevel)
   # update halton indices - bottom third.
   HaltonIndex[F[((2*(floor(nF/3)))+1):nF]] <- (BoxIndex + (I[3] - 1) * xlevel)
   # return the halton index.
@@ -209,7 +209,7 @@ hipIndexRandomPermutation <- function(its) {
   HIM <- matrix(0, nrow = (b2^J2), ncol = (b1^J1))
   H <- HaltonPts(B)
 
-  Hindex <- floor(rbind((b1^(J1) + 1e-12) * H[,1], (b2^(J2) + 1e-12) * H[,2])) + 1
+  Hindex <- base::floor(rbind((b1^(J1) + 1e-12) * H[,1], (b2^(J2) + 1e-12) * H[,2])) + 1
   Hindex <- t(Hindex)
 
   # Halton Matrix
@@ -220,8 +220,8 @@ hipIndexRandomPermutation <- function(its) {
   # Permutated Halton Matrix
   step2 <- c(2, 4, 8, 16, 32, 64, 128, 256)
   step3 <- c(3, 9, 27, 81, 243)
-  order2 <- c((sample(2) - 1), rep(NA, ((b1^J1) - b1)))
-  order3 <- c((sample(3) - 1), rep(NA, ((b2^J2) - b2)))
+  order2 <- c((base::sample(2) - 1), rep(NA, ((b1^J1) - b1)))
+  order3 <- c((base::sample(3) - 1), rep(NA, ((b2^J2) - b2)))
 
   for (i in 1:(J1 - 1)) {
     #if (J1 < 2) {break}
@@ -234,7 +234,7 @@ hipIndexRandomPermutation <- function(its) {
 
     for (j in (1:L)) {
       k <- order2[j]
-      P <- (sample(2) - 1)
+      P <- (base::sample(2) - 1)
       s <- step2[i]
       v <- c(v, (k + s * P[1]), (k + s * P[2]))
     }
@@ -250,7 +250,7 @@ hipIndexRandomPermutation <- function(its) {
     L <- sum(!is.na(order3))
     for (j in (1:L)) {
       k <- order3[j]
-      P <- (sample(3) - 1)
+      P <- (base::sample(3) - 1)
       s <- step3[i]
       v <- c(v, (k + s * P[1]),  (k + s * P[2]),  (k + s * P[3]))
     }
@@ -294,8 +294,8 @@ HaltonPts <- function(n) {
       j <- 1
       xk <- (k %% bases[i]) * (1 / bases[i])
 
-      while (floor(k / (bases[i] ^ (j))) > 0) {
-        xk <- xk + (floor(k / (bases[i] ^ (j))) %% bases[i]) * (1 / (bases[i] ^ (j + 1)))
+      while (base::floor(k / (bases[i] ^ (j))) > 0) {
+        xk <- xk + (base::floor(k / (bases[i] ^ (j))) %% bases[i]) * (1 / (bases[i] ^ (j + 1)))
         j <- (j + 1)
       }
 
@@ -304,6 +304,13 @@ HaltonPts <- function(n) {
   }
   return(pts)
 }
+
+# internal only function
+# Check if an object is an sf points object
+is_sf_points <- function(x) {
+  inherits(x, "sf") && inherits(sf_points$geometry, "sfc_POINT")
+}
+
 
 #' @name HIP
 #'
@@ -322,16 +329,34 @@ HaltonPts <- function(n) {
 #'         popIndex - ???
 #'         Order - ???
 #'         HaltonIndex - Halton indices for all population points.
+#'         Population - ???
 
 #' @export
 HIP <- function(population, n = 20, iterations = 7) {
 
-  # must be numeric.
-  validate_parameters("hipPopulation", c(population))
   # must be numeric, greater than 0.
   validate_parameters("hipN", c(n))
   # must be numeric, greater than 1 and less than or equal to 13.
   validate_parameters("hipIterations", c(iterations))
+  # population can be either a matrix or sf point object
+  sf_points_object <- FALSE
+  if (is_sf_points(population)) {
+    print("It's an sf points object!")
+    sf_points_object <- TRUE
+    sf_population <- population
+    population <- sf::st_coordinates(population)
+  } else if (is.matrix(pop)) {
+    print("It's not an sf points object.")
+    # must be numeric.
+    validate_parameters("hipPopulation", c(population))
+    # only 2-d matrix is supported
+    if(dim(population)[2] != 2){
+      stop(c("uc511(HIP) Parameter population must have two dimensions."))
+    }
+  } else {
+    # unsupported object type.
+    stop(c("uc511(HIP) Unsupported type, the population must be defined as a sf point object or matrix."))
+  }
 
   # Partitioning parameters
   iteration_level <- c(1, 2, 6, 12, 24, 72, 144, 432, 864, 1728, 5184, 10368, 20736)
@@ -351,18 +376,18 @@ HIP <- function(population, n = 20, iterations = 7) {
   permHaltonIndex <- permResult$permHaltonIndex
   B <- permResult$B
 
-  Order <- rep(0, length(HaltonIndex))
+  Order <- rep(0, base::length(HaltonIndex))
 
   for (i in 0:(B - 1)) {
     Order[which(HaltonIndex == i)] <- permHaltonIndex[i + 1]
   }
 
   # Assign unique indices
-  ptsInBox <- (length(HaltonIndex) / B)
+  ptsInBox <- (base::length(HaltonIndex) / B)
   if (ptsInBox > 1) {
     for (i in 0:(B - 1)) {
       F <- which(Order == i)
-      Order[F] <- (i + B * (sample(ptsInBox) - 1))
+      Order[F] <- (i + B * (base::sample(ptsInBox) - 1))
     }
   }
 
@@ -371,11 +396,21 @@ HIP <- function(population, n = 20, iterations = 7) {
   for (i in (1:n)) {
     sampleI[i] <- popIndex[which(Order == (i - 1))]
   }
+  # add extra column to population sf point object
+  sf_points <- NULL
+  if(sf_points_object){
+    sf_points <- population
+  }
+  # create PopulationSample from sampleI and return as a sf point object.
+  selected_points <- sf_points[sampleI, ]
+  # Convert the selected points into a new SF points object
+  #PopulationSample <- sf::st_as_sf(data.frame(selected_points), coords = c("X1", "X2"))
+  PopulationSample <- sf::st_as_sf(data.frame(selected_points), coords = c("X", "Y"))
 
-  return(list(sampleI     = sampleI,
-              popIndex    = popIndex,
-              Order       = Order,
-              HaltonIndex = HaltonIndex))
+  return(list(sampleI          = sampleI,
+              popIndex         = popIndex,
+              Order            = Order,
+              HaltonIndex      = HaltonIndex,
+              Population       = sf_points,
+              PopulationSample = PopulationSample))
 }
-
-

@@ -78,14 +78,7 @@
 <span><span class="co">#&gt; It may be desirable to make the sf package available;</span></span>
 <span><span class="co">#&gt; package maintainers should consider adding sf to Suggests:.</span></span>
 <span><span class="co">#&gt; The sp package is now running under evolution status 2</span></span>
-<span><span class="co">#&gt;      (status 2 uses the sf package in place of rgdal)</span></span>
-<span><span class="co">#&gt; rgeos version: 0.6-4, (SVN revision 699)</span></span>
-<span><span class="co">#&gt;  GEOS runtime version: 3.8.0-CAPI-1.13.1 </span></span>
-<span><span class="co">#&gt;  Please note that rgeos will be retired during October 2023,</span></span>
-<span><span class="co">#&gt; plan transition to sf or terra functions using GEOS at your earliest convenience.</span></span>
-<span><span class="co">#&gt; See https://r-spatial.org/r/2023/05/15/evolution4.html for details.</span></span>
-<span><span class="co">#&gt;  Linking to sp version: 2.0-0 </span></span>
-<span><span class="co">#&gt;  Polygon checking: TRUE</span></span></code></pre></div>
+<span><span class="co">#&gt;      (status 2 uses the sf package in place of rgdal)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="uc511-spatially-balanced-sampling-">uc511: Spatially balanced sampling.<a class="anchor" aria-label="anchor" href="#uc511-spatially-balanced-sampling-"></a>
 </h2>
@@ -119,19 +112,497 @@
 <span><span class="co">#&gt;  [1] 48 33 44 22 62 32 13 20 31 68  9 82 88 30 86 84 95 14  4 78</span></span></code></pre></div>
 </div>
 </div>
-<div class="section level4">
-<h4 id="uc511srs-from-the-uc511-shiny-app">uc511::SRS() from the uc511 Shiny App<a class="anchor" aria-label="anchor" href="#uc511srs-from-the-uc511-shiny-app"></a>
-</h4>
-<p>The uc511 Shiny App has a menu option (SRS) to invoke Simple Random Sampling.</p>
-</div>
 </div>
 <div class="section level3">
 <h3 id="balanced-acceptance-sampling-bas">Balanced acceptance sampling (BAS)<a class="anchor" aria-label="anchor" href="#balanced-acceptance-sampling-bas"></a>
 </h3>
+<div class="section level5">
+<h5 id="load-shape-file">Load Shape File<a class="anchor" aria-label="anchor" href="#load-shape-file"></a>
+</h5>
+<div class="section level6">
+<h6 id="load-shape-file-1">Load Shape File<a class="anchor" aria-label="anchor" href="#load-shape-file-1"></a>
+</h6>
+</div>
+<div class="section level6">
+<h6 id="select-shape-file-from-datafile">Select shape file from datafile<a class="anchor" aria-label="anchor" href="#select-shape-file-from-datafile"></a>
+</h6>
+</div>
+</div>
+<div class="section level5">
+<h5 id="specify-parameters">Specify Parameters<a class="anchor" aria-label="anchor" href="#specify-parameters"></a>
+</h5>
+<div class="section level6">
+<h6 id="sample-size">Sample Size<a class="anchor" aria-label="anchor" href="#sample-size"></a>
+</h6>
+</div>
+<div class="section level6">
+<h6 id="random-seed-options">Random Seed Options<a class="anchor" aria-label="anchor" href="#random-seed-options"></a>
+</h6>
+</div>
+<div class="section level6">
+<h6 id="use-st_transform">Use st_transform<a class="anchor" aria-label="anchor" href="#use-st_transform"></a>
+</h6>
+</div>
+<div class="section level6">
+<h6 id="minimum-distance">Minimum Distance<a class="anchor" aria-label="anchor" href="#minimum-distance"></a>
+</h6>
+</div>
+</div>
+<div class="section level5">
+<h5 id="generate-sample">Generate Sample<a class="anchor" aria-label="anchor" href="#generate-sample"></a>
+</h5>
+<div class="section level6">
+<h6 id="generate-bas-sample">Generate BAS Sample<a class="anchor" aria-label="anchor" href="#generate-bas-sample"></a>
+</h6>
+</div>
+<div class="section level6">
+<h6 id="download-bas-sample">Download BAS Sample<a class="anchor" aria-label="anchor" href="#download-bas-sample"></a>
+</h6>
+</div>
+</div>
+<div class="section level5">
+<h5 id="visualize-sample">Visualize Sample<a class="anchor" aria-label="anchor" href="#visualize-sample"></a>
+</h5>
+<div class="section level6">
+<h6 id="visualize-bas-sample-on-map">Visualize BAS Sample on Map<a class="anchor" aria-label="anchor" href="#visualize-bas-sample-on-map"></a>
+</h6>
+</div>
+<div class="section level6">
+<h6 id="visualize-bas-sample-points">Visualize BAS Sample Points<a class="anchor" aria-label="anchor" href="#visualize-bas-sample-points"></a>
+</h6>
+</div>
+</div>
+</div>
+<div class="section level3">
+<h3 id="halton-iterative-partitioning-hip">Halton Iterative Partitioning (HIP)<a class="anchor" aria-label="anchor" href="#halton-iterative-partitioning-hip"></a>
+</h3>
+<p>Halton iterative partitioning (HIP) extends Basic acceptance sampling (BAS) to point resources. It partitions the resource into <span class="math inline">\(B ≥ n\)</span> boxes that have the same nested structure as in BAS, but different sizes. These boxes are then uniquely numbered using a random-start Halton sequence of length <span class="math inline">\(B\)</span>. The HIP sample is obtained by randomly drawing one point from each of the boxes numbered <span class="math inline">\(1, 2, . . . , n\)</span>.</p>
+<p>This function invokes <strong>uc511::cppRSHalton_br()</strong> to generate the Halton points.</p>
+<div class="section level4">
+<h4 id="uc511hip">uc511::HIP()<a class="anchor" aria-label="anchor" href="#uc511hip"></a>
+</h4>
+<p>Describe HIP() and its parameters.</p>
+<p>The <strong>uc511::HIP()</strong> function accepts the following parameters:</p>
+<div class="section level5">
+<h5 id="population">population<a class="anchor" aria-label="anchor" href="#population"></a>
+</h5>
+<p>The <strong>population</strong> parameter is required (there is no default), this is a list of points comprising the population from which the sample will be drawn.</p>
+</div>
+<div class="section level5">
+<h5 id="n">n<a class="anchor" aria-label="anchor" href="#n"></a>
+</h5>
+<p>The <strong>n</strong> parameter is the number of points to draw from the population. The default value is <strong>20</strong>.</p>
+</div>
+<div class="section level5">
+<h5 id="iterations">iterations<a class="anchor" aria-label="anchor" href="#iterations"></a>
+</h5>
+<p>The <strong>iterations</strong> parameter is the number of levels of partitioning required. The default value is <strong>7</strong>.</p>
+</div>
+</div>
+<div class="section level4">
+<h4 id="uc511hip-output">uc511::HIP() output<a class="anchor" aria-label="anchor" href="#uc511hip-output"></a>
+</h4>
+<p>The <strong>uc511::HIP</strong> function returns the following output in the form of a list of variables. The variable names and what they contain are as follows:</p>
+<ul>
+<li>
+<strong>sampleI</strong> - indices of the selected sample points from the population.</li>
+<li>
+<strong>popIndex</strong> - <strong><em>what are these used for?</em></strong>
+</li>
+<li>
+<strong>Order</strong> - <strong><em>what are these used for?</em></strong>
+</li>
+<li>
+<strong>HaltonIndex</strong> - The Halton indices for all the population points.</li>
+</ul>
+</div>
+<div class="section level4">
+<h4 id="uc511hip-code-example">uc511::HIP() code example<a class="anchor" aria-label="anchor" href="#uc511hip-code-example"></a>
+</h4>
+<p>The following is sample code to demonstrate the use of the <strong>uc511::HIP()</strong> function. Here we are generating <span class="math inline">\(20\)</span> points from a population of <span class="math inline">\(5,000\)</span> (random) points with <span class="math inline">\(7\)</span> levels of partitioning (<span class="math inline">\(4\)</span> in the first dimension and <span class="math inline">\(3\)</span> in the second) to give <span class="math inline">\(2^4 = 32\)</span> by <span class="math inline">\(3^3 = 27\)</span> boxes.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># set random seed</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># define HIP parameters.</span></span>
+<span><span class="va">pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">5000</span><span class="op">*</span><span class="fl">2</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">5000</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">20</span></span>
+<span><span class="va">its</span> <span class="op">&lt;-</span> <span class="fl">7</span></span>
+<span></span>
+<span><span class="co"># generate HIP sample.</span></span>
+<span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">uc511</span><span class="fu">::</span><span class="fu"><a href="../reference/HIP.html">HIP</a></span><span class="op">(</span>population <span class="op">=</span> <span class="va">pop</span>, n <span class="op">=</span> <span class="va">n</span>, iterations <span class="op">=</span> <span class="va">its</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># sampleI - indices of the selected samples from the population.</span></span>
+<span><span class="va">sampleI</span> <span class="op">&lt;-</span> <span class="va">result</span><span class="op">$</span><span class="va">sampleI</span></span>
+<span><span class="va">sampleI</span></span>
+<span><span class="co">#&gt;  [1] 4118 1278 1570 3068 4061 4347 4313 4909  299 4274 1000 4654 4297   76  192</span></span>
+<span><span class="co">#&gt; [16] 3783 1351  387  284 3285</span></span>
+<span></span>
+<span><span class="co"># popIndex</span></span>
+<span><span class="va">popIndex</span> <span class="op">&lt;-</span> <span class="va">result</span><span class="op">$</span><span class="va">popIndex</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">popIndex</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 1 2 3 4 5 6</span></span>
+<span></span>
+<span><span class="co"># Order</span></span>
+<span><span class="va">Order</span> <span class="op">&lt;-</span> <span class="va">result</span><span class="op">$</span><span class="va">Order</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">Order</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 1354  978 1099 2573 3844 1117</span></span>
+<span></span>
+<span><span class="co"># HaltonIndex</span></span>
+<span><span class="va">HaltonIndex</span> <span class="op">&lt;-</span> <span class="va">result</span><span class="op">$</span><span class="va">HaltonIndex</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">HaltonIndex</span><span class="op">)</span></span>
+<span><span class="co">#&gt; HaltonIndex</span></span>
+<span><span class="co">#&gt;   0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19 </span></span>
+<span><span class="co">#&gt;  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11 </span></span>
+<span><span class="co">#&gt;  20  21  22  23  24  25  26  27  28  29  30  31  32  33  34  35  36  37  38  39 </span></span>
+<span><span class="co">#&gt;  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11 </span></span>
+<span><span class="co">#&gt;  40  41  42  43  44  45  46  47  48  49  50  51  52  53  54  55  56  57  58  59 </span></span>
+<span><span class="co">#&gt;  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11 </span></span>
+<span><span class="co">#&gt;  60  61  62  63  64  65  66  67  68  69  70  71  72  73  74  75  76  77  78  79 </span></span>
+<span><span class="co">#&gt;  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11 </span></span>
+<span><span class="co">#&gt;  80  81  82  83  84  85  86  87  88  89  90  91  92  93  94  95  96  97  98  99 </span></span>
+<span><span class="co">#&gt;  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11 </span></span>
+<span><span class="co">#&gt; 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 </span></span>
+<span><span class="co">#&gt;  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11 </span></span>
+<span><span class="co">#&gt; 120 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138 139 </span></span>
+<span><span class="co">#&gt;  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11 </span></span>
+<span><span class="co">#&gt; 140 141 142 143 144 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159 </span></span>
+<span><span class="co">#&gt;  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11 </span></span>
+<span><span class="co">#&gt; 160 161 162 163 164 165 166 167 168 169 170 171 172 173 174 175 176 177 178 179 </span></span>
+<span><span class="co">#&gt;  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11 </span></span>
+<span><span class="co">#&gt; 180 181 182 183 184 185 186 187 188 189 190 191 192 193 194 195 196 197 198 199 </span></span>
+<span><span class="co">#&gt;  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11 </span></span>
+<span><span class="co">#&gt; 200 201 202 203 204 205 206 207 208 209 210 211 212 213 214 215 216 217 218 219 </span></span>
+<span><span class="co">#&gt;  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11 </span></span>
+<span><span class="co">#&gt; 220 221 222 223 224 225 226 227 228 229 230 231 232 233 234 235 236 237 238 239 </span></span>
+<span><span class="co">#&gt;  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11 </span></span>
+<span><span class="co">#&gt; 240 241 242 243 244 245 246 247 248 249 250 251 252 253 254 255 256 257 258 259 </span></span>
+<span><span class="co">#&gt;  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11 </span></span>
+<span><span class="co">#&gt; 260 261 262 263 264 265 266 267 268 269 270 271 272 273 274 275 276 277 278 279 </span></span>
+<span><span class="co">#&gt;  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11 </span></span>
+<span><span class="co">#&gt; 280 281 282 283 284 285 286 287 288 289 290 291 292 293 294 295 296 297 298 299 </span></span>
+<span><span class="co">#&gt;  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11 </span></span>
+<span><span class="co">#&gt; 300 301 302 303 304 305 306 307 308 309 310 311 312 313 314 315 316 317 318 319 </span></span>
+<span><span class="co">#&gt;  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11 </span></span>
+<span><span class="co">#&gt; 320 321 322 323 324 325 326 327 328 329 330 331 332 333 334 335 336 337 338 339 </span></span>
+<span><span class="co">#&gt;  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11 </span></span>
+<span><span class="co">#&gt; 340 341 342 343 344 345 346 347 348 349 350 351 352 353 354 355 356 357 358 359 </span></span>
+<span><span class="co">#&gt;  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11 </span></span>
+<span><span class="co">#&gt; 360 361 362 363 364 365 366 367 368 369 370 371 372 373 374 375 376 377 378 379 </span></span>
+<span><span class="co">#&gt;  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11 </span></span>
+<span><span class="co">#&gt; 380 381 382 383 384 385 386 387 388 389 390 391 392 393 394 395 396 397 398 399 </span></span>
+<span><span class="co">#&gt;  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11 </span></span>
+<span><span class="co">#&gt; 400 401 402 403 404 405 406 407 408 409 410 411 412 413 414 415 416 417 418 419 </span></span>
+<span><span class="co">#&gt;  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11  11 </span></span>
+<span><span class="co">#&gt; 420 421 422 423 424 425 426 427 428 429 430 431 </span></span>
+<span><span class="co">#&gt;  11  11  11  11  11  11  11  11  11  11  11  11</span></span></code></pre></div>
+</div>
 </div>
 <div class="section level3">
 <h3 id="halton-frames-hf">Halton Frames (HF)<a class="anchor" aria-label="anchor" href="#halton-frames-hf"></a>
 </h3>
+<p>A Halton frame is a useful grid structure, it is a collection of Halton boxes that intersect a resource.</p>
+<div class="section level4">
+<h4 id="uc511haltonframe">uc511::HaltonFrame()<a class="anchor" aria-label="anchor" href="#uc511haltonframe"></a>
+</h4>
+<p>This function invokes <strong>uc511::cppRSHalton_br()</strong> to generate Halton points.</p>
+<p>The following parameters are supported:</p>
+<ul>
+<li>
+<strong>J</strong> - The ??????. The default is <span class="math inline">\(c(3, 2)\)</span>.</li>
+<li>
+<strong>bases</strong> - The co-prime base for the Halton sequence. The default is <span class="math inline">\(c(2, 3)\)</span>.</li>
+<li>
+<strong>n</strong> - The number of Halton points to generate. The default is (<span class="math inline">\(bases[1]^{J[1]} * bases[2]^{J[2]}\)</span>).</li>
+</ul>
+<p>All parameter values must be numeric and have values greater than zero. The <strong>J</strong> and <strong>bases</strong> parameters must each be a list of length two.</p>
+<div class="section level5">
+<h5 id="uc511haltonframe-code-example">uc511::HaltonFrame() code example<a class="anchor" aria-label="anchor" href="#uc511haltonframe-code-example"></a>
+</h5>
+<p>Function <strong>uc511::HaltonFrame()</strong> returns a list of variables, the variables have the following names:</p>
+<ul>
+<li>
+<strong>halton_frame</strong> the generated Halton frame.</li>
+<li>
+<strong>halton_sequence</strong> the generated Halton sequence.</li>
+<li>
+<strong>Z</strong> something.</li>
+<li>
+<strong>halton_seq_dev</strong> the <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> axis values that can be used when plotting to sub-divide the Halton frame.</li>
+</ul>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Define parameters.</span></span>
+<span><span class="va">J</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="va">bases</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="va">n</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">bases</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">^</span><span class="va">J</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="va">bases</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">^</span><span class="va">J</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># generate Halton frame.</span></span>
+<span><span class="va">hf_</span> <span class="op">&lt;-</span> <span class="fu">uc511</span><span class="fu">::</span><span class="fu"><a href="../reference/HaltonFrame.html">HaltonFrame</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">n</span>, J <span class="op">=</span> <span class="va">J</span>, bases <span class="op">=</span> <span class="va">bases</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># retrieve the Halton sequence.</span></span>
+<span><span class="va">halton_seq</span> <span class="op">&lt;-</span> <span class="va">hf_</span><span class="op">$</span><span class="va">halton_seq</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">halton_seq</span><span class="op">)</span></span>
+<span><span class="co">#&gt;           [,1]      [,2]</span></span>
+<span><span class="co">#&gt; [1,] 0.7909851 0.4146895</span></span>
+<span><span class="co">#&gt; [2,] 0.1659851 0.7480228</span></span>
+<span><span class="co">#&gt; [3,] 0.6659851 0.1924673</span></span>
+<span><span class="co">#&gt; [4,] 0.4159851 0.5258006</span></span>
+<span><span class="co">#&gt; [5,] 0.9159851 0.8591339</span></span>
+<span><span class="co">#&gt; [6,] 0.1034851 0.3035784</span></span>
+<span></span>
+<span><span class="co"># retrieve the x-axis division values.</span></span>
+<span><span class="va">halton_seq_x_divisions</span> <span class="op">&lt;-</span> <span class="va">hf_</span><span class="op">$</span><span class="va">halton_seq_div</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
+<span><span class="va">halton_seq_x_divisions</span></span>
+<span><span class="co">#&gt; [[1]]</span></span>
+<span><span class="co">#&gt; [1] 0.0 0.5</span></span>
+<span></span>
+<span><span class="co"># retrieve the y-axis division values.</span></span>
+<span><span class="va">halton_seq_y_divisions</span> <span class="op">&lt;-</span> <span class="va">hf_</span><span class="op">$</span><span class="va">halton_seq_div</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span>
+<span><span class="va">halton_seq_y_divisions</span></span>
+<span><span class="co">#&gt; [[1]]</span></span>
+<span><span class="co">#&gt; [1] 0.0000000 0.3333333 0.6666667</span></span>
+<span></span>
+<span><span class="co"># retrieve the Z values.</span></span>
+<span><span class="va">z</span> <span class="op">&lt;-</span> <span class="va">hf_</span><span class="op">$</span><span class="va">Z</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">z</span><span class="op">)</span></span>
+<span><span class="co">#&gt;            [,1]      [,2]</span></span>
+<span><span class="co">#&gt; [1,] 0.82028198 0.3982286</span></span>
+<span><span class="co">#&gt; [2,] 0.19528198 0.7315619</span></span>
+<span><span class="co">#&gt; [3,] 0.69528198 0.1760064</span></span>
+<span><span class="co">#&gt; [4,] 0.44528198 0.5093397</span></span>
+<span><span class="co">#&gt; [5,] 0.94528198 0.8426730</span></span>
+<span><span class="co">#&gt; [6,] 0.06246948 0.2871175</span></span>
+<span></span>
+<span><span class="co"># retrieve the Halton frame.</span></span>
+<span><span class="va">halton_frame</span> <span class="op">&lt;-</span> <span class="va">hf_</span><span class="op">$</span><span class="va">halton_frame</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">halton_frame</span><span class="op">)</span></span>
+<span><span class="co">#&gt;       x_dim     y_dim</span></span>
+<span><span class="co">#&gt; [1,] 0.8125 0.3888889</span></span>
+<span><span class="co">#&gt; [2,] 0.1875 0.7222222</span></span>
+<span><span class="co">#&gt; [3,] 0.6875 0.1666667</span></span>
+<span><span class="co">#&gt; [4,] 0.4375 0.5000000</span></span>
+<span><span class="co">#&gt; [5,] 0.9375 0.8333333</span></span>
+<span><span class="co">#&gt; [6,] 0.0625 0.2777778</span></span></code></pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="the-uc511-shiny-app-for-spatially-balanced-sampling-">The uc511 Shiny App for Spatially balanced sampling.<a class="anchor" aria-label="anchor" href="#the-uc511-shiny-app-for-spatially-balanced-sampling-"></a>
+</h2>
+<p>Part of the uc511 package is the uc511 Shiny App, this provides a user interface to the uc511 package. Currently the following options are supported:</p>
+<ul>
+<li>
+<strong>SRS</strong> Simple random sampling using the <strong>uc511::SRS()</strong> function.</li>
+<li>
+<strong>BAS</strong> Balanced acceptance sampling using the <strong>uc511::BAS()</strong> function.</li>
+<li>
+<strong>HIP</strong> Balanced acceptance sampling using the <strong>uc511::HIP()</strong> function.</li>
+</ul>
+<p>The following sections detail how to use the supported features in the uc511 Shiny App.</p>
+<div class="section level3">
+<h3 id="uc511srs-from-the-uc511-shiny-app">uc511::SRS() from the uc511 Shiny App<a class="anchor" aria-label="anchor" href="#uc511srs-from-the-uc511-shiny-app"></a>
+</h3>
+<p>The <strong>uc511</strong> <strong>R</strong> package also includes a Shiny App, this has a menu option (SRS) to invoke Simple Random Sampling. The <em>SRS</em> menu option supports the following sub-menu’s, <strong>Load Auxillary File</strong>, <strong>Specify Parameters</strong>, <strong>Generate SRS Sample</strong>, <strong>something</strong> and <strong>something</strong>. We will now look in turn at the options provided by each menu item. Each menu item will not enable until all relevant options on a previous menu item have been appropriately selected or provided.</p>
+<div class="section level4">
+<h4 id="load-auxillary-file">Load Auxillary File<a class="anchor" aria-label="anchor" href="#load-auxillary-file"></a>
+</h4>
+<p>Here the user selects the “Browse…” button to initiate the file selection dialog. The selection of a single CSV file is supported. The application assumes that the first row of the CSV contains column headings. Once a CSV file has been selected and loaded the <strong>Specify Parameters</strong> menu item is enabled.</p>
+</div>
+<div class="section level4">
+<h4 id="specify-parameters-1">Specify Parameters<a class="anchor" aria-label="anchor" href="#specify-parameters-1"></a>
+</h4>
+<p>With this menu item, the user is able to specify parameters that will be subsequently passed to the <strong>uc511::SRS</strong> function. The <strong>Specify Parameters</strong> menu item supports the following tab panels: <strong>Sample source</strong>, <strong>Sample size</strong>, <strong>Random seed options</strong>, <strong>Select X and Y columns</strong>, and <strong>Projected coordinate system</strong>. We will now look at each option in turn, to see what they do and how they are used.</p>
+<div class="section level5">
+<h5 id="sample-source">Sample source<a class="anchor" aria-label="anchor" href="#sample-source"></a>
+</h5>
+<p>The <strong>Sample source</strong> option controls what type of sample is generated from the auxillary file. At the time of writing only two options are supported:</p>
+<ul>
+<li><p><strong>Sample from Auxillary File</strong> This is the default. When this option is selected, the user wants to create a random sample from the previously loaded auxillary file.</p></li>
+<li><p><strong>Create Master Frame and take sample</strong> When this option is selected, a Master Frame (need to define this) is created from the auxillary file and then a random sample is then created from the Master Frame.</p></li>
+</ul>
+</div>
+<div class="section level5">
+<h5 id="sample-size-1">Sample size<a class="anchor" aria-label="anchor" href="#sample-size-1"></a>
+</h5>
+<p>The <strong>Sample size</strong> option controls the size of the generated sample. At the time of writing only two options are supported:</p>
+<ul>
+<li><p><strong>Sample size as a percentage</strong> This is the default. If this option is selected, a slider is displayed. Use the slider to select the percentage of the auxillary file to be used as the sample. The corresponding sample size is displayed as an integer in a textbox to the right of the slider.</p></li>
+<li><p><strong>User specified sample size</strong> (Rename this option in the app and update here!). If this option is selected, the user is able to specify a specific sample size in a text inputbox. A sample size in the range one upto the number of rows in the auxillary file is supported.</p></li>
+</ul>
+<p>The <strong>Generate Sample</strong> menu item will only enable once the application user has specified a sample size.</p>
+</div>
+<div class="section level5">
+<h5 id="random-seed-options-1">Random seed options<a class="anchor" aria-label="anchor" href="#random-seed-options-1"></a>
+</h5>
+<p>The <strong>Random seed options</strong> option controls how the random seed is set. At the time of writing only two options are supported:</p>
+<ul>
+<li><p><strong>Set seed randomly</strong> This is the default. If this option is selected, the shiny app. will generate a random seed in the range <strong>1-10,000</strong> (verify this!).</p></li>
+<li><p><strong>User specified seed</strong> If this option is selected, a textinput box is displayed, which gives the user the opportunity to specify their own seed. Any valid integer is acceptable (check if I validate this!). A default of <strong>42</strong> is provided.</p></li>
+</ul>
+</div>
+<div class="section level5">
+<h5 id="select-x-and-y-columns">Select X and Y columns<a class="anchor" aria-label="anchor" href="#select-x-and-y-columns"></a>
+</h5>
+<p>The <strong>Select X and Y columns</strong> option gives the user the chance to select the columns to use for both the X and Y axes on the <strong>Visualize Sample</strong> menu option.</p>
+<ul>
+<li><p><strong>Select column to use for X</strong> From the drop down box select a single column name to use as the X-axis.</p></li>
+<li><p><strong>Select column to use for Y</strong> From the drop down box select a single column name to use as the Y-axis.</p></li>
+</ul>
+<p>Both drop down boxes are populated using the column names obtained from the auxillary file.</p>
+</div>
+<div class="section level5">
+<h5 id="projected-coordinate-system">Projected coordinate system<a class="anchor" aria-label="anchor" href="#projected-coordinate-system"></a>
+</h5>
+<p>This parameter is only used when the <strong>Visualize Sample</strong> option is selected. It provides the EPSG projected coordinate system to be used to create the <strong>proj4string</strong> (need to explain context).</p>
+<ul>
+<li>
+<strong>Use CRS EPSG transform</strong> Check the check-box to have the option to specify a CRS EPSG code value. The default value is 28992 (where is this?).</li>
+</ul>
+<p>If the checkbox is not checked, no coordinate system transform will be performed.</p>
+</div>
+</div>
+<div class="section level4">
+<h4 id="generate-srs-sample">Generate SRS Sample<a class="anchor" aria-label="anchor" href="#generate-srs-sample"></a>
+</h4>
+<p>With this menu item, the user is able to generate the random sample using the parameters previously specified. The <strong>Generate SRS Sample</strong> menu item supports the following tab panels: <strong>Generate SRS sample</strong>, <strong>Download SRS sample</strong>, <strong>Download Master Sample Indices</strong> and <strong>Download Master Sample</strong>. We will now look at each option in turn, to see what they do and how they are used.</p>
+<div class="section level5">
+<h5 id="generate-srs-sample-1">Generate SRS sample<a class="anchor" aria-label="anchor" href="#generate-srs-sample-1"></a>
+</h5>
+<p>To generate the SRS sample, click the <strong>Generate SRS Sample</strong> button. The random seed used to generate the sample is displayed in a textbox to the right of screen. If the user wants to generate a new sample with a new seed, then they will have to change the seed from the <strong>Random seed options</strong> panel and then generate a new sample. The generated sample is displayed in a datatable for ease of perusal.</p>
+</div>
+<div class="section level5">
+<h5 id="download-srs-sample">Download SRS sample<a class="anchor" aria-label="anchor" href="#download-srs-sample"></a>
+</h5>
+<p>Use this option if you want to save the generated sample to a CSV file. Click the <strong>Download</strong> button to initiate the file save process through a standard file save dialog. The default file name generated by the application has the form:</p>
+<ul>
+<li><strong>dataset-srs-sample-yyyy-mm-dd-seed.csv</strong></li>
+</ul>
+<p>Where <strong>yyyy</strong> is the year, <strong>mm</strong> the month, <strong>dd</strong> the day and <strong>seed</strong> the seed used to generate the sample. The user is of course free to change the file name and the location of where the file will be saved.</p>
+</div>
+<div class="section level5">
+<h5 id="download-master-sample-indices">Download Master Sample Indices<a class="anchor" aria-label="anchor" href="#download-master-sample-indices"></a>
+</h5>
+<p>Use this option if you want to save the master sample indices to a CSV file. Click the <strong>Download</strong> button to initiate the file save process through a standard file save dialog. The default file name generated by the application has the form:</p>
+<ul>
+<li>
+<strong>dataset-srs-master-sample-indices-yyyy-mm-dd-seed.csv</strong> (need to add seed in code)</li>
+</ul>
+<p>Where <strong>yyyy</strong> is the year, <strong>mm</strong> the month, <strong>dd</strong> the day and <strong>seed</strong> the seed used to generate the sample. The user is of course free to change the file name and the location of where the file will be saved.</p>
+</div>
+<div class="section level5">
+<h5 id="download-master-sample">Download Master Sample<a class="anchor" aria-label="anchor" href="#download-master-sample"></a>
+</h5>
+<p>Use this option if you want to save the master sample to a CSV file. Click the <strong>Download</strong> button to initiate the file save process through a standard file save dialog. The default file name generated by the application has the form:</p>
+<ul>
+<li>
+<strong>dataset-srs-master-frame-yyyy-mm-dd-seed.csv</strong> (need to add seed in code)</li>
+</ul>
+<p>Where <strong>yyyy</strong> is the year, <strong>mm</strong> the month, <strong>dd</strong> the day and <strong>seed</strong> the seed used to generate the sample. The user is of course free to change the file name and the location of where the file will be saved.</p>
+</div>
+</div>
+<div class="section level4">
+<h4 id="visualize-sample-1">Visualize Sample<a class="anchor" aria-label="anchor" href="#visualize-sample-1"></a>
+</h4>
+<p>With this menu item, the user is able to generate a Leaflet map, the map is generated automatically when the <strong>Visualize Sample</strong> menu option is selected.</p>
+<p>For the map to be generated successfully, the user would have had to use the <strong>Specify Parameters</strong> menu option to specify the column names to use as the <strong>X</strong> and <strong>Y</strong> axes, using the <strong>Select X and Y columns</strong> option and have specified a CRS EPSG transform code using the <strong>Projected coordinate system</strong> option.</p>
+<p>By default, both the original data points (black) and the sample points (red) are displayed on the map. The leaflet map control [—] provides the user the ability to select which set of points are displayed.</p>
+<p>The user can click on any point and a popup message box will display the latitude and logitude of that point.</p>
+<div class="section level5">
+<h5 id="save-image">Save Image<a class="anchor" aria-label="anchor" href="#save-image"></a>
+</h5>
+<p>Clicking on the <strong>Save Image</strong> button will initiate process through a standard file save dialog. The default image file name generated by the application has the form:</p>
+<ul>
+<li>
+<strong>map-srs-sample-yyyy-mm-dd-seed.jpeg</strong> (need to add seed in code, check if default is jpeg)</li>
+</ul>
+<p>What is being displayed on the map at the time the <strong>Save Image</strong> button is clicked is what is saved in the image file.</p>
+</div>
+</div>
+</div>
+<div class="section level3">
+<h3 id="uc511haltonframe-from-the-uc511-shiny-app">uc511::HaltonFrame() from the uc511 Shiny App<a class="anchor" aria-label="anchor" href="#uc511haltonframe-from-the-uc511-shiny-app"></a>
+</h3>
+<p>The <strong>uc511</strong> <strong>R</strong> package also includes a Shiny App, this has a menu option (Halton Frame) used to create a sample of Halton Points. The <em>Halton Frame</em> menu option supports the following sub-menu’s, <strong>Load Shape File</strong>, <strong>Specify Parameters</strong>, <strong>Generate Sample</strong>, <strong>Visualize Frame</strong> and <strong>Visualize Sample???</strong>. We will now look in turn at the options provided by each menu item. Each menu item will not enable until all relevant options on a previous menu item have been appropriately selected or provided.</p>
+<div class="section level4">
+<h4 id="load-shape-file-2">Load Shape File<a class="anchor" aria-label="anchor" href="#load-shape-file-2"></a>
+</h4>
+</div>
+<div class="section level4">
+<h4 id="specify-parameters-2">Specify Parameters<a class="anchor" aria-label="anchor" href="#specify-parameters-2"></a>
+</h4>
+<p>With this menu item, the user is able to specify parameters that will be subsequently passed to the <strong>uc511::HaltonFrame</strong> function. The <strong>Specify Parameters</strong> menu item supports the following tab panels: <strong>Sample size</strong>, <strong>J</strong>, <strong>Bases</strong>, <strong>Random seed options</strong> and <strong>Use st_transform</strong>. We will now look at each option in turn, to see what they do and how they are used.</p>
+<div class="section level5">
+<h5 id="sample-size-2">Sample size<a class="anchor" aria-label="anchor" href="#sample-size-2"></a>
+</h5>
+<p>The <strong>Sample size</strong> option controls the size of the generated sample. At the time of writing only two options are supported:</p>
+<ul>
+<li><p><strong>Sample size as a percentage</strong> This is the default. If this option is selected, a slider is displayed. Use the slider to select the percentage of the auxillary file to be used as the sample. The corresponding sample size is displayed as an integer in a textbox to the right of the slider.</p></li>
+<li><p><strong>User specified sample size</strong> (Rename this option in the app and update here!). If this option is selected, the user is able to specify a specific sample size in a text inputbox. A sample size in the range one upto the number of rows in the auxillary file is supported.</p></li>
+</ul>
+<p>The <strong>Generate Sample</strong> menu item will only enable once the application user has specified a sample size.</p>
+</div>
+<div class="section level5">
+<h5 id="j">J<a class="anchor" aria-label="anchor" href="#j"></a>
+</h5>
+<p>The <strong>J</strong> option controls the… The default value is <strong>(3, 2)</strong>. The <strong>J</strong> parameter is a list of two values.</p>
+</div>
+<div class="section level5">
+<h5 id="bases">Bases<a class="anchor" aria-label="anchor" href="#bases"></a>
+</h5>
+<p>The <strong>Bases</strong> option is used to specify the values for the co-prime base for the Halton sequence. The default value is <strong>(2, 3)</strong>. The <strong>Bases</strong> parameter is a list of two values.</p>
+</div>
+<div class="section level5">
+<h5 id="random-seed-options-2">Random seed options<a class="anchor" aria-label="anchor" href="#random-seed-options-2"></a>
+</h5>
+<p>The <strong>Random seed options</strong> option controls how the random seed is set. At the time of writing only two options are supported:</p>
+<ul>
+<li><p><strong>Set seed randomly</strong> This is the default. If this option is selected, the shiny app. will generate a random seed in the range <strong>1-10,000</strong> (verify this!).</p></li>
+<li><p><strong>User specified seed</strong> If this option is selected, a textinput box is displayed, which gives the user the opportunity to specify their own seed. Any valid integer is acceptable (check if I validate this!). A default of <strong>42</strong> is provided.</p></li>
+</ul>
+</div>
+<div class="section level5">
+<h5 id="use-st_transform-1">Use st_transform<a class="anchor" aria-label="anchor" href="#use-st_transform-1"></a>
+</h5>
+</div>
+</div>
+<div class="section level4">
+<h4 id="generate-sample-1">Generate Sample<a class="anchor" aria-label="anchor" href="#generate-sample-1"></a>
+</h4>
+<p>With this menu item, the user is able to generate the random sample using the parameters previously specified. The <strong>Generate Sample</strong> menu item supports the following tab panels: <strong>Generate Halton Frame</strong> <strong>Download Halton Frame Sample</strong>. We will now look at each option in turn, to see what they do and how they are used.</p>
+<div class="section level5">
+<h5 id="generate-halton-frame">Generate Halton Frame<a class="anchor" aria-label="anchor" href="#generate-halton-frame"></a>
+</h5>
+<p>To generate the SRS sample, click the <strong>Generate SRS Sample</strong> button. The random seed used to generate the sample is displayed in a textbox to the right of screen. If the user wants to generate a new sample with a new seed, then they will have to change the seed from the <strong>Random seed options</strong> panel and then generate a new sample. The generated sample is displayed in a datatable for ease of perusal.</p>
+</div>
+<div class="section level5">
+<h5 id="download-halton-frame-sample">Download Halton Frame sample<a class="anchor" aria-label="anchor" href="#download-halton-frame-sample"></a>
+</h5>
+<p>Use this option if you want to save the generated sample to a CSV file. Click the <strong>Download</strong> button to initiate the file save process through a standard file save dialog. The default file name generated by the application has the form:</p>
+<ul>
+<li><strong>dataset-srs-sample-yyyy-mm-dd-seed.csv</strong></li>
+</ul>
+<p>Where <strong>yyyy</strong> is the year, <strong>mm</strong> the month, <strong>dd</strong> the day and <strong>seed</strong> the seed used to generate the sample. The user is of course free to change the file name and the location of where the file will be saved.</p>
+</div>
+</div>
+<div class="section level4">
+<h4 id="visualize-sample-2">Visualize Sample<a class="anchor" aria-label="anchor" href="#visualize-sample-2"></a>
+</h4>
+<p>With this menu item, the user is able to generate a Leaflet map, the map is generated automatically when the <strong>Visualize Sample</strong> menu option is selected.</p>
+<p>For the map to be generated successfully, the user would have had to use the <strong>Specify Parameters</strong> menu option to specify the column names to use as the <strong>X</strong> and <strong>Y</strong> axes, using the <strong>Select X and Y columns</strong> option and have specified a CRS EPSG transform code using the <strong>Projected coordinate system</strong> option.</p>
+<p>By default, both the original data points (black) and the sample points (red) are displayed on the map. The leaflet map control [—] provides the user the ability to select which set of points are displayed.</p>
+<p>The user can click on any point and a popup message box will display the latitude and longitude of that point.</p>
+<div class="section level5">
+<h5 id="save-image-1">Save Image<a class="anchor" aria-label="anchor" href="#save-image-1"></a>
+</h5>
+<p>Clicking on the <strong>Save Image</strong> button will initiate process through a standard file save dialog. The default image file name generated by the application has the form:</p>
+<ul>
+<li>
+<strong>map-srs-sample-yyyy-mm-dd-seed.jpeg</strong> (need to add seed in code, check if default is jpeg)</li>
+</ul>
+<p>What is being displayed on the map at the time the <strong>Save Image</strong> button is clicked is what is saved in the image file.</p>
+</div>
+</div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

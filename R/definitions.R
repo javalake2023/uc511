@@ -30,7 +30,7 @@
 #' @export
 buildMS <- function(shp, d = 2, showOutput = TRUE, rotate = TRUE)
 {
-  seed <- floor(stats::runif(d, 0, 10000))
+  seed <- base::floor(stats::runif(d, 0, 10000))
   # We always use base 2,3
   base <- c(2,3,5)[1:d]
 
@@ -54,10 +54,10 @@ buildMS <- function(shp, d = 2, showOutput = TRUE, rotate = TRUE)
   if(showOutput){
     msg <- "uc511(buildMS) Seed: %s.\n"
     msgs <- sprintf(msg, seed)
-    message(msgs)
+    base::message(msgs)
     msg <- "uc511(buildMS) Rotation: %s Radians.\n"
     msgs <- sprintf(msg, theta)
-    message(msgs)
+    base::message(msgs)
   }
   return(build.bb)
 }

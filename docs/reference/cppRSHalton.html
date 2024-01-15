@@ -95,11 +95,31 @@ package BASMasterSample. Subsequently it was written in C/C++ by Phil Davies.</p
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># First 10 points in the Halton Sequence for base 2,3</span></span></span>
 <span class="r-in"><span><span class="fu">uc511</span><span class="fu">::</span><span class="fu">cppRSHalton</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in uc511::cppRSHalton(n = 10):</span> object '_uc511_cppRSHalton' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       [,1]   [,2]       [,3]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1,]    1 0.0000 0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [2,]    2 0.5000 0.33333333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3,]    3 0.2500 0.66666667</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [4,]    4 0.7500 0.11111111</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5,]    5 0.1250 0.44444444</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6,]    6 0.6250 0.77777778</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7,]    7 0.3750 0.22222222</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [8,]    8 0.8750 0.55555556</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9,]    9 0.0625 0.88888889</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [10,]   10 0.5625 0.03703704</span>
 <span class="r-in"><span><span class="co"># First 10 points in the Halton Sequence for base 2,3 with</span></span></span>
 <span class="r-in"><span><span class="co"># starting point at the 15th and 22nd index.</span></span></span>
 <span class="r-in"><span><span class="fu">uc511</span><span class="fu">::</span><span class="fu">cppRSHalton</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">10</span>, seeds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">14</span>, <span class="fl">21</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in uc511::cppRSHalton(n = 10, seeds = c(14, 21)):</span> object '_uc511_cppRSHalton' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       [,1]    [,2]       [,3]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1,]    1 0.43750 0.18518519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [2,]    2 0.93750 0.51851852</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3,]    3 0.03125 0.85185185</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [4,]    4 0.53125 0.29629630</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5,]    5 0.28125 0.62962963</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6,]    6 0.78125 0.96296296</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7,]    7 0.15625 0.01234568</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [8,]    8 0.65625 0.34567901</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9,]    9 0.40625 0.67901235</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [10,]   10 0.90625 0.12345679</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

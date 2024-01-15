@@ -26,7 +26,7 @@ makeFrame <- function(base = c(2,3), J = c(2,2), bb, rotate = FALSE)
 {
   b.bounds <- sf::st_bbox(bb)
   B <- prod(base^J)
-  halt.grid <- raster::raster(raster::extent(matrix( b.bounds, 2, 2 )), nrow=base[2]^J[2], ncol=base[1]^J[1])
+  halt.grid <- raster::raster(raster::extent(base::matrix( b.bounds, 2, 2 )), nrow=base[2]^J[2], ncol=base[1]^J[1])
   halt.grid <- raster::rasterToPolygons(halt.grid)
   raster::projection(halt.grid) <- sf::st_crs(bb)$proj4string
   if(rotate) return(rotate.shp(sf::st_as_sf(halt.grid), bb))
@@ -76,7 +76,7 @@ shape2Frame <- function(shp, bb = NULL, base = c(2,3), J = c(2,2), projstring = 
 
   if( is.null(projstring)) {
     projstring <- getProj()
-    message("uc511(shape2Frame) Assuming Projection\n")
+    base::message("uc511(shape2Frame) Assuming Projection\n")
   }
   if(sf::st_crs(shp) != sf::st_crs(projstring)) shp <- sf::st_transform(shp, projstring)
 
@@ -84,15 +84,15 @@ shape2Frame <- function(shp, bb = NULL, base = c(2,3), J = c(2,2), projstring = 
   shp2 <- rotate.shp(shp, bb, back = FALSE)
   bb2 <- sf::st_bbox(shp)
   xy <- (bb2 - shift.bas[c(1,2,1,2)])/scale.bas[c(1,2,1,2)]
-  lx <- floor(xy[1] / (1/base[1]^J[1]))/(base[1]^J[1])
-  ly <- floor(xy[2] / (1/base[2]^J[2]))/(base[2]^J[2])
-  ux <- ceiling(xy[3] /(1/base[1]^J[1]))/(base[1]^J[1])
-  uy <- ceiling(xy[4] /(1/base[2]^J[2]))/(base[2]^J[2])
+  lx <- base::floor(xy[1] / (1/base[1]^J[1]))/(base[1]^J[1])
+  ly <- base::floor(xy[2] / (1/base[2]^J[2]))/(base[2]^J[2])
+  ux <- base::ceiling(xy[3] /(1/base[1]^J[1]))/(base[1]^J[1])
+  uy <- base::ceiling(xy[4] /(1/base[2]^J[2]))/(base[2]^J[2])
   nx <- (ux-lx)*base[1]^J[1]
   ny <- (uy-ly)*base[2]^J[2]
 
   bb.new <- c(lx,ly, ux, uy)*scale.bas[c(1,2,1,2)] + shift.bas[c(1,2,1,2)]
-  halt.frame <- raster::raster(raster::extent(matrix( bb.new , 2, 2)), nrow=ny, ncol=nx)
+  halt.frame <- raster::raster(raster::extent(base::matrix( bb.new , 2, 2)), nrow=ny, ncol=nx)
   raster::projection(halt.frame) <- projstring
   halt.poly <- raster::rasterToPolygons(halt.frame)
   if(rotate) return(rotate.shp(sf::st_as_sf(halt.poly), bb))

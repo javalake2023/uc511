@@ -21,9 +21,7 @@ Encoding: UTF-8
 Imports:
     raster,
     sf,
-    Rcpp,
-    rgeos,
-    sp
+    Rcpp
 LazyData: true
 SystemRequirements: C++11
 Suggests: 

@@ -4,19 +4,9 @@
 ########################
 
 #' @import raster
-#' @import sp
 #' @import sf
-#' @import rgeos
 #' @import Rcpp
-# @import rgdal
-#' @import raster
-NULL
-
-## usethis namespace: start
-# @useDynLib uc511, .registration = TRUE
-# @importFrom Rcpp sourceCpp
-## usethis namespace: end
-NULL
+#' @useDynLib uc511, .registration = TRUE
 
 
 #' @name masterSampleSelect
@@ -44,7 +34,7 @@ masterSampleSelect <- function(shp, N = 100, bb = NULL, nExtra = 5000, printJ = 
   # We always use base 2,3
   base <- c(2,3)
 
-  if(is.null(inclSeed)) inclSeed <- floor(stats::runif(1,1,10000))
+  if(is.null(inclSeed)) inclSeed <- base::floor(stats::runif(1,1,10000))
 
   # Updating to work for sf only. Start here...
   if (class(shp)[1] != "sf")
@@ -61,7 +51,7 @@ masterSampleSelect <- function(shp, N = 100, bb = NULL, nExtra = 5000, printJ = 
     seed <- getSeed()
   }else{
     msproj <- sf::st_crs(bb)$proj4string
-    seed <- attr(bb, "seed")[1:2]	# 3rd dimension is not yet supported...
+    seed <- base::attr(bb, "seed")[1:2]	# 3rd dimension is not yet supported...
   }
 
   orig.crs <- NULL
@@ -76,8 +66,8 @@ masterSampleSelect <- function(shp, N = 100, bb = NULL, nExtra = 5000, printJ = 
   scale.bas <- bb.bounds[3:4] - bb.bounds[1:2]
   shift.bas <- bb.bounds[1:2]
 
-  cntrd <- attr(bb, "centroid")
-  theta <- attr(bb, "rotation")
+  cntrd <- base::attr(bb, "centroid")
+  theta <- base::attr(bb, "rotation")
 
   #We can use Halton Boxes to speed up code when the polygons are small and all over the place.
   #Kind of like magic!
@@ -115,16 +105,16 @@ masterSampleSelect <- function(shp, N = 100, bb = NULL, nExtra = 5000, printJ = 
   print(length(hal.pts))
 
   # Find the corner Halton Pts
-  box.lower <- t(apply(hal.pts, 1, FUN = function(x){(x - shift.bas)/scale.bas}))
+  box.lower <- t(base::apply(hal.pts, 1, FUN = function(x){(x - shift.bas)/scale.bas}))
   A <- uc511::GetBoxIndices(box.lower, base, J)
   halt.rep <- uc511::SolveCongruence(A, base, J)
-  B <- prod(c(2, 3) ^ J)
+  B <- base::prod(c(2, 3) ^ J)
 
   # I like to know how many divisions we had to make...
   if(printJ){
     msg <- "uc511(masterSampleSelect) Number of divisions made (J=) %s.\n"
-    msgs <- sprintf(msg, J)
-    message(msgs)
+    msgs <- base::sprintf(msg, J)
+    base::message(msgs)
   }
 
   getSample <- function(k = 0, endPoint = 0){
@@ -138,8 +128,8 @@ masterSampleSelect <- function(shp, N = 100, bb = NULL, nExtra = 5000, printJ = 
     #pts <- pts[1:draw,]
     res <- uc511::cppRSHalton_br(n = draw, seeds = seedshift, bases = c(2, 3, 5))
     pts <- res$pts
-    siteid <- seq(from = 1, to = draw, by = 1)
-    pts <- cbind(siteid, pts)
+    siteid <- base::seq(from = 1, to = draw, by = 1)
+    pts <- base::cbind(siteid, pts)
 
     #print("dim(cpp pts)")
     #print(dim(pts))
@@ -151,7 +141,7 @@ masterSampleSelect <- function(shp, N = 100, bb = NULL, nExtra = 5000, printJ = 
     #print(dim(pts))
     #print(pts[1:10,])
 
-    xy <- cbind(pts[,2]*scale.bas[1] + shift.bas[1], pts[,3]*scale.bas[2] + shift.bas[2])
+    xy <- base::cbind(pts[,2]*scale.bas[1] + shift.bas[1], pts[,3]*scale.bas[2] + shift.bas[2])
     if(theta != 0) xy <- sweep ( sweep(xy, 2,  cntrd, FUN = "-") %*% uc511::rot(-theta), 2,  cntrd, FUN = "+")
     pts.coord <- sf::st_as_sf(data.frame(SiteID = pts[,1] + endPoint, xy, inclProb = pts[,4]), coords = c(2,3))
     sf::st_crs(pts.coord) <- sf::st_crs(bb)
@@ -171,7 +161,7 @@ masterSampleSelect <- function(shp, N = 100, bb = NULL, nExtra = 5000, printJ = 
     print("nrow(pts.sample)")
     last.pt <- pts.sample$SiteID[nrow(pts.sample)]
     new.pts <- getSample(k = di, endPoint = last.pt)
-    if(nrow(new.pts) > 0) pts.sample <- rbind(pts.sample, new.pts)
+    if(nrow(new.pts) > 0) pts.sample <- base::rbind(pts.sample, new.pts)
     di <- di + 1
   }
 
@@ -225,7 +215,7 @@ masterSampleSelect <- function(shp, N = 100, bb = NULL, nExtra = 5000, printJ = 
 #' @export
 getBASMasterSample <- function(shp, N = 100, bb = NULL, stratum = NULL, nExtra = 10000, quiet = FALSE, inclSeed = NULL)
 {
-  if(is.null(inclSeed)) inclSeed <- floor(stats::runif(1,1,10000))
+  if(is.null(inclSeed)) inclSeed <- base::floor(stats::runif(1,1,10000))
   if(is.null(stratum)){
     smp <- masterSampleSelect(shp = shp, N = N, bb = bb, nExtra = nExtra, inclSeed = inclSeed)
   }else{
@@ -234,27 +224,27 @@ getBASMasterSample <- function(shp, N = 100, bb = NULL, stratum = NULL, nExtra =
 
     if(!quiet){
       msg <- "uc511(getBASMasterSample) Stratum: %s.\n"
-      msgs <- sprintf(msg, strata.levels[1])
-      message(msgs)
+      msgs <- base::sprintf(msg, strata.levels[1])
+      base::message(msgs)
     }
     k.indx <- which(shp[, stratum, drop = TRUE] == strata.levels[1])
     shp.stratum <- shp[k.indx,] #%>% st_union()	# ? Not sure if this is necessary... slowed things down too much!
     smp <- masterSampleSelect(shp.stratum, N = N[1], bb = bb, nExtra = nExtra, printJ = !quiet, inclSeed)
     smp[stratum] <- strata.levels[1]
 
-    if(length(N) > 1){
-      for(k in 2:length(N))
+    if(base::length(N) > 1){
+      for(k in 2:base::length(N))
       {
         if(!quiet){
           msg <- "uc511(getBASMasterSample) Stratum: %s."
-          msgs <- sprintf(msg, strata.levels[k])
-          message(msgs)
+          msgs <- base::sprintf(msg, strata.levels[k])
+          base::message(msgs)
         }
         k.indx <- which(shp[, stratum, drop = TRUE] == strata.levels[k])
         shp.stratum <- shp[k.indx,] ## %>% st_union()	# Needed?
         smp.s <- masterSampleSelect(shp = shp.stratum, N = N[k], bb = bb, nExtra = nExtra, printJ = !quiet, inclSeed = inclSeed)
         smp.s[stratum] <- strata.levels[k]
-        smp <- rbind(smp, smp.s)
+        smp <- base::rbind(smp, smp.s)
       }
     }
   }
@@ -315,7 +305,7 @@ point2Frame <- function(pts, bb = NULL, base = c(2,3), J = NULL, size = 100)
     seed <- getSeed()
   }else{
     msproj <- sf::st_crs(bb)$proj4string
-    seed <- attr(bb, "seed")[1:2]	# 3rd dimension is not yet supported...
+    seed <- base::attr(bb, "seed")[1:2]	# 3rd dimension is not yet supported...
   }
 
   orig.crs <- NULL
@@ -330,34 +320,34 @@ point2Frame <- function(pts, bb = NULL, base = c(2,3), J = NULL, size = 100)
   scale.bas <- bb.bounds[3:4] - bb.bounds[1:2]
   shift.bas <- bb.bounds[1:2]
 
-  cntrd <- attr(bb, "centroid")
-  theta <- attr(bb, "rotation")
+  cntrd <- base::attr(bb, "centroid")
+  theta <- base::attr(bb, "rotation")
 
-  if(is.null(J)) J <- ceiling(log(scale.bas/size)/log(base))
+  if(is.null(J)) J <- base::ceiling(base::log(scale.bas/size)/base::log(base))
 
   xy.r <- rotate.shp(pts, bb, back = FALSE)
   xy <- sf::st_coordinates(xy.r)
-  xy <- cbind((xy[,1] - shift.bas[1])/scale.bas[1], (xy[,2] - shift.bas[2])/scale.bas[2])
-  lx <- floor(xy[,1] / (1/base[1]^J[1]))/(base[1]^J[1])
-  ly <- floor(xy[,2] / (1/base[2]^J[2]))/(base[2]^J[2])
-  A <- GetBoxIndices(cbind(lx,ly), base, J)
+  xy <- base::cbind((xy[,1] - shift.bas[1])/scale.bas[1], (xy[,2] - shift.bas[2])/scale.bas[2])
+  lx <- base::floor(xy[,1] / (1/base[1]^J[1]))/(base[1]^J[1])
+  ly <- base::floor(xy[,2] / (1/base[2]^J[2]))/(base[2]^J[2])
+  A <- GetBoxIndices(base::cbind(lx,ly), base, J)
 
   #Only build the boxes for unique ones.
-  frame.order <- SolveCongruence(A, base, J)
+  frame.order <- uc511::SolveCongruence(A, base, J)
 
-  dupli <- duplicated(frame.order)
+  dupli <- base::duplicated(frame.order)
 
   lx <- lx*scale.bas[1] + shift.bas[1]
   ly <- ly*scale.bas[2] + shift.bas[2]
 
   # Adjust everything for the Master Sample random seed.
   a1 <- seed[1:2] %% base^J
-  boxInit <- SolveCongruence(matrix(a1, ncol = 2), base = base, J = J)
-  B <- prod(base^J)
+  boxInit <- uc511::SolveCongruence(base::matrix(a1, ncol = 2), base = base, J = J)
+  B <- base::prod(base^J)
   # Adjusted index:
   frame.order <- ifelse( frame.order < boxInit, B + ( frame.order - boxInit),  frame.order - boxInit)
 
-  polys <- cbind("xmin" = lx, "ymin" = ly, "xmax" = lx + scale.bas[1]/base[1]^J[1], "ymax" = ly + scale.bas[2]/base[2]^J[2])
+  polys <- base::cbind("xmin" = lx, "ymin" = ly, "xmax" = lx + scale.bas[1]/base[1]^J[1], "ymax" = ly + scale.bas[2]/base[2]^J[2])
   halt.boxes <- do.call("c", apply(polys[!dupli,] , 1, FUN = function(x){sf::st_as_sfc(sf::st_bbox(x))}))
   sf::st_crs(halt.boxes) <- sf::st_crs(bb)
   halt.rot <- rotate.shp(halt.boxes, bb, back = TRUE)
@@ -421,7 +411,7 @@ getIndividualBoxIndices <- function(pts, J = NULL, bb, size = 100)
     seed <- getSeed()
   }else{
     msproj <- sf::st_crs(bb)$proj4string
-    seed <- attr(bb, "seed")[1:2]	# 3rd dimension is not yet supported...
+    seed <- base::attr(bb, "seed")[1:2]	# 3rd dimension is not yet supported...
   }
 
   orig.crs <- NULL
@@ -436,28 +426,28 @@ getIndividualBoxIndices <- function(pts, J = NULL, bb, size = 100)
   scale.bas <- bb.bounds[3:4] - bb.bounds[1:2]
   shift.bas <- bb.bounds[1:2]
 
-  cntrd <- attr(bb, "centroid")
-  theta <- attr(bb, "rotation")
+  cntrd <- base::attr(bb, "centroid")
+  theta <- base::attr(bb, "rotation")
 
-  if(is.null(J)) J <- ceiling(log(scale.bas/size)/log(base))
+  if(is.null(J)) J <- base::ceiling(base::log(scale.bas/size)/base::log(base))
 
-  B <- prod(base^J)
+  B <- base::prod(base^J)
 
   Bx <- base[1]^J[1]
   By <- base[2]^J[2]
 
   xy <- sf::st_coordinates(pts)
   # Rotate pts to the bounding box:
-  if(theta != 0) xy <- sweep ( sweep(xy, 2,  cntrd, FUN = "-") %*% rot(theta), 2,  cntrd, FUN = "+")
+  if(theta != 0) xy <- base::sweep(base::sweep(xy, 2,  cntrd, FUN = "-") %*% rot(theta), 2,  cntrd, FUN = "+")
   # Scale to 0-1
-  xy <- cbind((xy[,1] - shift.bas[1])/scale.bas[1], (xy[,2] - shift.bas[2])/scale.bas[2])
-  Axy <- cbind(floor((xy[,1] + 2*.Machine$double.eps)*Bx), floor((xy[,2] + 2*.Machine$double.eps)*By))
+  xy <- base::cbind((xy[,1] - shift.bas[1])/scale.bas[1], (xy[,2] - shift.bas[2])/scale.bas[2])
+  Axy <- base::cbind(floor((xy[,1] + 2*.Machine$double.eps)*Bx), base::floor((xy[,2] + 2*.Machine$double.eps)*By))
 
-  haltonIndex <- SolveCongruence(Axy, base = base, J = J)
+  haltonIndex <- uc511::SolveCongruence(Axy, base = base, J = J)
 
   # Adjust everything for the Master Sample random seed.
   a1 <- seed[1:2] %% base^J
-  boxInit <- SolveCongruence(matrix(a1, ncol = 2), base = base, J = J)
+  boxInit <- uc511::SolveCongruence(base::matrix(a1, ncol = 2), base = base, J = J)
 
   # Adjusted index:
   haltonIndex <- ifelse(haltonIndex < boxInit, B + (haltonIndex - boxInit), haltonIndex - boxInit)

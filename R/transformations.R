@@ -19,7 +19,7 @@
 #' @export
 rot <- function(a)
 {
-  matrix(c(cos(a), sin(a), -sin(a), cos(a)), 2, 2)
+  matrix(c(base::cos(a), base::sin(a), -base::sin(a), base::cos(a)), 2, 2)
 }
 
 
@@ -97,7 +97,7 @@ rotate.scale.coords <- function(coords, bb, back = TRUE)
   cntrd <- attr(bb, "centroid")
 
   bb.bounds <- sf::st_bbox(bb)
-  bb.scale <- diag(2) * (bb.bounds[3:4] - bb.bounds[1:2])
+  bb.scale <- base::diag(2) * (bb.bounds[3:4] - bb.bounds[1:2])
 
   #coords <- sf::st_multipoint(coords, dim = "XY") %>% sf::st_geometry()
   coords.tmp <- sf::st_multipoint(coords, dim = "XY")

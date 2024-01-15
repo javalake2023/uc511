@@ -7,8 +7,8 @@
 #' @param parm1 A parameter.
 #' @return something useful.
 #'
-#' @importFrom Rcpp evalCpp
-#' @useDynLib uc511, .registration = TRUE
+# @importFrom Rcpp evalCpp
+# @useDynLib uc511, .registration = TRUE
 #BASMastersample <- function(parm1) {
 #  message("Hello from BASMastersample.")
 #  cppBASMastersample()
