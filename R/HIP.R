@@ -338,12 +338,15 @@ HIP <- function(population, n = 20, iterations = 7) {
   validate_parameters("hipN", c(n))
   # must be numeric, greater than 1 and less than or equal to 13.
   validate_parameters("hipIterations", c(iterations))
+
   # population can be either a matrix or sf point object
   sf_points_object <- FALSE
   if (is_sf_points(population)) {
     print("It's an sf points object!")
     sf_points_object <- TRUE
+    # save original population
     sf_population <- population
+    # just get coordinates from the population
     population <- sf::st_coordinates(population)
   } else if (is.matrix(pop)) {
     print("It's not an sf points object.")
@@ -402,10 +405,17 @@ HIP <- function(population, n = 20, iterations = 7) {
     sf_points <- population
   }
   # create PopulationSample from sampleI and return as a sf point object.
-  selected_points <- sf_points[sampleI, ]
+  ###selected_points <- sf_points[sampleI, ]
   # Convert the selected points into a new SF points object
   #PopulationSample <- sf::st_as_sf(data.frame(selected_points), coords = c("X1", "X2"))
-  PopulationSample <- sf::st_as_sf(data.frame(selected_points), coords = c("X", "Y"))
+  ###PopulationSample <- sf::st_as_sf(data.frame(selected_points), coords = c("X", "Y"))
+  PopulationSample <- sf_population[sampleI,]
+
+  # need to add the following to the sf_population sf points object:
+  # the Order and HaltonIndex.
+  PopulationSample$PopulationIndex <- popIndex[sampleI]
+  PopulationSample$Order <- Order[sampleI]
+  PopulationSample$HaltonIndex <- HaltonIndex[sampleI]
 
   return(list(sampleI          = sampleI,
               popIndex         = popIndex,
