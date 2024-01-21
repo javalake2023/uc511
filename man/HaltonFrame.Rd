@@ -15,7 +15,7 @@ HaltonFrame(
 \arguments{
 \item{n}{The number of points in the frame to generate.}
 
-\item{J}{A list of 2 values. The default value is c(3, 2), we could also use c(5, 3).}
+\item{J}{The number of grid cells. A list of 2 values. The default value is c(3, 2), we could also use c(5, 3).}
 
 \item{bases}{Co-prime base for the Halton Sequence. The default value is c(2, 3).}
 

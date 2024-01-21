@@ -19,6 +19,7 @@ sampleI - indices of the sample points to use.
 popIndex - ???
 Order - ???
 HaltonIndex - Halton indices for all population points.
+Population - ???
 }
 \description{
 A description.

@@ -57,7 +57,7 @@ validate_parameters <- function(parm, parm_value){
 #' @details This function was written by Phil Davies.
 #'
 #' @param n The number of points in the frame to generate.
-#' @param J A list of 2 values. The default value is c(3, 2), we could also use c(5, 3).
+#' @param J The number of grid cells. A list of 2 values. The default value is c(3, 2), we could also use c(5, 3).
 #' @param bases Co-prime base for the Halton Sequence. The default value is c(2, 3).
 #' @param shapefile something
 #' @param crs something
@@ -149,7 +149,7 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
 #' @details This function was written by Phil Davies.
 #'
 #' @param n The number of points in the frame to generate.
-#' @param J A list of 2 values. The default value is c(3, 2), we could also use c(5, 3).
+#' @param J The number of grid cells. A list of 2 values. The default value is c(3, 2), we could also use c(5, 3).
 #' @param bases Co-prime base for the Halton Sequence. The default value is c(2, 3).
 #'
 #' @return A list containing the following four variables:

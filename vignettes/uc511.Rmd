@@ -39,7 +39,16 @@ This vignette is intended to provide details of the functions and methods in the
 
 This vignette is divided into the following sections:
 
+- Simple Random Sampling (SRS)
+- Balanced acceptance sampling (BAS)
+- Halton Iterative Partitioning (HIP)
+- Halton Frames (HF)
+
+Lets start by looking at Simple Random Sampling (SRS).
+
 ## Simple Random Sampling (SRS)
+
+Explain SRS here...
 
 ### uc511::SRS()
 
@@ -58,12 +67,14 @@ All parameter values must be numeric and have values greater than zero, __sample
 Function __uc511::SRS()__ returns a list of size __sample_size__.
 
 ```{r}
-# Create a random sample with a seed of 99.
+# Create a random sample of 20 with a seed of 99 from a population of 100.
 rand_samp <- uc511::SRS(seed = 99, total_rows = 100, sample_size = 20)
 rand_samp
 ```
 
 ## Balanced acceptance sampling (BAS)
+
+Explain BAS here...
 
 #### Load Shape File
 
@@ -95,13 +106,11 @@ This function invokes __uc511::cppRSHalton_br()__ to generate the Halton points.
 
 ### uc511::HIP()
 
-Describe HIP() and its parameters.
-
 The __uc511::HIP()__ function accepts the following parameters:
 
 #### population
 
-The __population__ parameter is required (there is no default), this is a list of points comprising the population from which the sample will be drawn.
+The __population__ parameter is required (there is no default), this is a list of points comprising the population from which the sample will be drawn. The __population__ parameter can be specified as either a __sf__ points object or a dataframe.
 
 #### n
 
@@ -119,7 +128,7 @@ The __uc511::HIP__ function returns the following output in the form of a list o
 + __popIndex__ - __*what are these used for?*__
 + __Order__ - __*what are these used for?*__
 + __HaltonIndex__ - The Halton indices for all the population points.
-
++ __PopulationSample__ - The sample drawn from the population, it is returned to the user as a __sf__ points object with the __PopulationIndex__, __Order__ and __HaltonIndex__ added as new features to the sample.
 
 ### uc511::HIP() code example
 
@@ -127,15 +136,21 @@ The following is sample code to demonstrate the use of the __uc511::HIP()__ func
 
 ```{r}
 # set random seed
-set.seed(1)
+set.seed(1110)
 
 # define HIP parameters.
-pop <- matrix(runif(5000*2), nrow = 5000, ncol = 2)
-n <- 20
-its <- 7
+pop <- matrix(runif(500*2), nrow = 500, ncol = 2)
+n <- 36
+its <- 3
+
+# Convert the population matrix to an sf point object.
+sf_points <- sf::st_as_sf(data.frame(pop), coords = c("X1", "X2"))
+dim(sf::st_coordinates(sf_points))
 
 # generate HIP sample.
-result <- uc511::HIP(population = pop, n = n, iterations = its)
+result <- uc511::HIP(population = sf_points, 
+                     n = n, 
+                     iterations =  its)
 
 # sampleI - indices of the selected samples from the population.
 sampleI <- result$sampleI
@@ -152,20 +167,23 @@ head(Order)
 # HaltonIndex
 HaltonIndex <- result$HaltonIndex
 table(HaltonIndex)
-```
 
+# Population Sample
+PopulationSample <- result$PopulationSample
+PopulationSample
+```
 
 ## Halton Frames (HF)
 
 A Halton frame is a useful grid structure, it is a collection of Halton boxes that intersect a resource.
 
-### uc511::HaltonFrame()
+### uc511::HaltonFrameBase()
 
 This function invokes __uc511::cppRSHalton_br()__ to generate Halton points. 
 
 The following parameters are supported:
 
-+ __J__ - The ??????. The default is $c(3, 2)$.
++ __J__ - The number of grid cells. The default is $c(3, 2)$.
 + __bases__ - The co-prime base for the Halton sequence. The default is $c(2, 3)$.
 + __n__ - The number of Halton points to generate. The default is ($bases[1]^{J[1]} * bases[2]^{J[2]}$).
 
@@ -187,7 +205,9 @@ bases <- c(2, 3)
 n <- (bases[1]^J[1]) * (bases[2]^J[2])
 
 # generate Halton frame.
-hf_ <- uc511::HaltonFrame(n = n, J = J, bases = bases)
+hf_ <- uc511::HaltonFrameBase(n = n, 
+                              J = J, 
+                              bases = bases)
 
 # retrieve the Halton sequence.
 halton_seq <- hf_$halton_seq
@@ -351,7 +371,7 @@ The __Generate Sample__ menu item will only enable once the application user has
 
 #### J
 
-The __J__ option controls the... The default value is __(3, 2)__. The __J__ parameter is a list of two values.
+The __J__ option controls the number of grid cells. The default value is __(3, 2)__. The __J__ parameter is a list of two values.
 
 #### Bases
 
