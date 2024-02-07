@@ -5,8 +5,10 @@ date: "19/11/2023"
 
 always_allow_html: true
 
-#output: rmarkdown::html_vignette
-output:
+#output:
+#  pdf_document
+  
+output: 
   bookdown::html_document2:
     toc: true
     toc_float:
@@ -52,13 +54,13 @@ Explain SRS here...
 
 ### uc511::SRS()
 
-This function invokes __base::sample()__ to draw a random sample using a user specified random seed. 
+This function invokes __base::sample()__ to draw a random sample using a user specified random seed. Returned is a list of random positive integers of length __sample_size__, in the range 1 to __total_rows__, these can then be used to index the original population data.
 
 The following parameters are supported:
 
 + __seed__ - The random seed to be used to draw the current sample. The default is 42.
-+ __total_rows__ - The total number of rows in our input dataset.
-+ __sample_size__ - The number of rows wanted in our random sample.
++ __total_rows__ - The total number of rows in your population.
++ __sample_size__ - The number of rows wanted in the random sample.
 
 All parameter values must be numeric and have values greater than zero, __sample_size__ must be less than __total_rows__.
 
@@ -76,37 +78,156 @@ rand_samp
 
 Explain BAS here...
 
+### Load Shape File : Input Options for BAS
+
+BAS offers flexibility in data input, allowing you to choose between two options:
+
+ 1. __Load Shape File__: With this option, you can directly import data from shape files. This method is suitable when your data is stored in geographic information system (GIS) format and is ready to be used for analysis within the BAS option.
+
+ 2. __Select Shape File from Datafile__: Alternatively, you can choose to import data from an R datafile. This option is useful when you have your data stored in an R-compatible format. It provides a seamless way to access and analyze your data within the BAS option.
+
+These input options enable you to work with your data in the most convenient and compatible format, making it easier to perform BAS analysis and visualization.
+
 #### Load Shape File
 
-##### Load Shape File
-##### Select shape file from datafile
+From this option select .... to find the location of your shape files, holding the __Ctrl__ key down while clicking on the shapefile files enables the selection of multiple files, click __OK__ when you have selected all required files. The app will load the files. Once loaded, the .... are added to the __Select Shapefile column__ dropdown box.
 
-#### Specify Parameters
+The user then selects a ... from the __Select Shapefile column__ dropdown box, this populates the __Select Region of Interest__ dropdown boxes with region from the shapefile. From this dropdown box the user can now select one or more regions.
 
-##### Sample Size
-##### Random Seed Options
-##### Use st_transform
-##### Minimum Distance
+Once one or more regions have been selected the __Specify Parameters__ menu option will become enabled allowing the user to specify or update BAS parameters.
 
-#### Generate Sample
+#### Select shape file from datafile
 
-##### Generate BAS Sample
-##### Download BAS Sample
+Need to rework this...
 
-#### Visualize Sample
+From this option select .... to find the location of your shape files, holding the __Ctrl__ key down while clicking on the desired shapefile files enables the selection of multiple files, click __OK__ when you have selected all the required files. The app will load the files. Once loaded, the .... are added to the __Select Shapefile column__ dropdown box.
 
-##### Visualize BAS Sample on Map
-##### Visualize BAS Sample Points
+The user then selects a ... from the __Select Shapefile column__ dropdown box, this populates the __Select Region of Interest__ dropdown boxes with region from the shapefile. From this dropdown box the user can now select one or more regions.
+
+Once one or more regions have been selected the __Specify Parameters__ menu option will become enabled allowing the user to specify or update BAS parameters.
+
+### Specify Parameters
+
+Once you have chosen your input source, whether it's from shape files using the "Load Shape File" option or from an R datafile using the "Select Shape File from Datafile" option, the next step is to configure BAS parameters.
+
+At this point, the "Specify Parameters" menu option becomes enabled, allowing you to customize and fine-tune the parameters for your analysis. You can specify or update these parameters to tailor the analysis to your specific needs, ensuring that you obtain meaningful results from your data. 
+
+#### Sample Size : Control Your Sample
+
+The __Sample Size__ option empowers you to define the size of the sample you need for your analysis. You have two choices when specifying the sample size:
+
+ 1. Percentage of Population Size: You can set the sample size as a percentage of the total population size.
+
+ 2. Explicit Number: Alternatively, you can specify the sample size as an exact number.
+
+Once you have determined the sample size, the __Generate Sample__ menu option will become active. This enables you to create a BAS sample with the specified size. This feature ensures that you have the flexibility to tailor your analysis to the exact sample size you require, making your results more precise and meaningful.
+
+#### Random Seed Options : Reproducibility
+
+The __Random Seed Options__ feature allows you to control the randomness in your analysis. By specifying a random seed, you can ensure reproducibility in your results. This seed value will be used by the __set.seed()__ function before generating the BAS sample.
+
+By default, the Shiny app sets a random seed within the range of $1$ to $10,000$. However, if you want to use a specific seed of your choice, follow these steps:
+
+ 1. Select the __User specified seed__ option.
+ 2. Enter your desired seed value in the input box labeled __Specify the seed to use__.
+
+Please note that only positive integer values within the range of $1$ to $10,000$ are accepted. This allows you to have fine-grained control over the randomness in your analysis while maintaining reproducibility.
+
+#### Use st_transform : Shapefile Data Transformation
+
+The __st_transform__ is essential when you want to apply a transformation to your shapefile data before visualizing it using the __Visualize Sample__ option.
+
+Here's how you can use the __st_transform__ feature:
+
+ 1. Ensure that you've checked the __Use st_transform__ checkbox.
+ 2. In the __Use this st_transform code__ text box, specify the transformation code you want to apply to your data.
+
+The default transformation code is set to $4326$. However, you can customize this code to match your specific transformation requirements. This functionality allows you to adapt your shapefile data to different coordinate systems or projections, ensuring that it aligns correctly with your visualization needs.
+
+#### Minimum Distance
+
+Fill this in.
+
+### Generate Sample : Generate Sample Menu Options
+
+The __Generate Sample__ menu option offers the following user choices:
+
+ 1. __Generate a BAS Sample__: You can use this option to create a BAS sample with the specified parameters. This sample is essential for conducting various analyses and visualizations within the application.
+
+ 2. __Download BAS Sample__: After generating a sample, you have the option to save it. This allows you to store the sample data for future reference or for use in external analyses. Saving the sample enables you to maintain a record of your analysis results and enhances data management.
+
+#### Generate BAS Sample : Generating the BAS Sample
+
+To create the BAS sample, follow these steps:
+
+ 1. Click on the __Generate Sample__ button.
+
+Upon clicking this button, the Shiny app will generate a BAS sample according to your specified parameters. After the sample is generated, the following information will be displayed:
+
+ - __First Ten Data Points__: You will be able to view the first ten data points from the sample. This allows you to get a quick overview of the data.
+
+ - __Random Seed__: The random seed that was used for generating the sample will also be provided. This seed is crucial for ensuring reproducibility in your analysis. You can record this seed for future reference if needed.
+
+By providing access to the initial sample data and the random seed used, the BAS app helps you verify and reproduce your analysis results with transparency and accuracy.
+
+#### Download BAS Sample : Saving the Generated Sample to a CSV File
+
+If you wish to save the generated sample as a CSV file, follow these steps:
+
+ 1. Use this option when you want to store the sample data for future reference or further analysis.
+
+ 2. Click the __Download__ button to initiate the file-saving process. This action will open a standard file save dialog.
+
+The default file name generated by the application follows this format:
+
+ - dataset-bas-sample-yyyy-mm-dd-seed-ssss.csv
+
+Here's what each part of the default file name represents:
+
+ - __yyyy__: The year when the sample was generated.
+ - __mm__: The month when the sample was generated.
+ - __dd__: The day when the sample was generated.
+ - __ssss__: The seed used to generate the sample.
+
+However, you have the freedom to customize both the file name and the location where the file will be saved. This flexibility allows you to organize your data according to your preferences, making it easier to manage and work with your BAS samples. 
+
+### Visualize Sample : Visualize Sample Menu Options
+
+The __Visualize Sample__ menu option offers the following user choices:
+
+ 1. __Visualize BAS Sample on Map__: Selecting this option allows you to generate an interactive Leaflet map that displays your BAS sample. This map provides a visual representation of your data points and enables you to explore and analyze them spatially.
+
+ 2. __Save Image__: After visualizing the BAS sample on the map, you have the option to save the map image. This feature allows you to preserve the visualization for future reference or to include it in reports and presentations. Saving the image enhances your ability to communicate and share your analysis results effectively.
+
+#### Visualize BAS Sample on Map
+
+With the __Visualize BAS Sample on Map__ menu item, users can effortlessly generate an interactive Leaflet map. This map is automatically generated when you select the __Visualize Sample__ menu option.
+
+To ensure successful map generation, follow these prerequisites:
+
+ 1. __Specify Parameters__: Use the __Specify Parameters__ menu option to specify the column names to be used as the X and Y axes. This can be done by choosing the __Select X and Y columns__ option.
+
+ 2. Coordinate System Transformation: Specify a Coordinate Reference System (CRS) EPSG transform code using the "Projected coordinate system" option. This step ensures that your data aligns correctly on the map.
+
+By default, the map displays both the original data points in black and the sample points in red. You can control which sets of points are displayed on the map using the Leaflet map control called __addLayersControl__. This feature allows you to toggle between displaying the original data and the sample data, providing flexibility in your visualization.
+
+Additionally, when you click on any point on the map, a popup message box will appear, displaying the latitude and longitude coordinates of that specific point. This interactive functionality allows you to explore and analyze individual data points directly on the map, enhancing your data visualization experience.
+
+
+#### Visualize BAS Sample Points
+
+Do we really need this?
+
 
 ## Halton Iterative Partitioning (HIP)
 
 Halton iterative partitioning (HIP) extends Basic acceptance sampling (BAS) to point resources. It partitions the resource into $B ≥ n$ boxes that have the same nested structure as in BAS, but different sizes. These boxes are then uniquely numbered using a random-start Halton sequence of length $B$. The HIP sample is obtained by randomly drawing one point from each of the boxes numbered $1, 2, . . . , n$.
 
-This function invokes __uc511::cppRSHalton_br()__ to generate the Halton points.
+The __uc511::HIP()__ function invokes __uc511::cppRSHalton_br()__ to generate the Halton points.
 
 ### uc511::HIP()
 
-The __uc511::HIP()__ function accepts the following parameters:
+To generate a HIP sample use the __uc511::HIP()__ function, it accepts the following parameters:
 
 #### population
 
@@ -128,11 +249,11 @@ The __uc511::HIP__ function returns the following output in the form of a list o
 + __popIndex__ - __*what are these used for?*__
 + __Order__ - __*what are these used for?*__
 + __HaltonIndex__ - The Halton indices for all the population points.
-+ __PopulationSample__ - The sample drawn from the population, it is returned to the user as a __sf__ points object with the __PopulationIndex__, __Order__ and __HaltonIndex__ added as new features to the sample.
++ __PopulationSample__ - The sample drawn from the population, it is returned to the user as a __sf__ points object with the __PopulationIndex__, __Order__ and __HaltonIndex__ variables added as new features to the sample.
 
 ### uc511::HIP() code example
 
-The following is sample code to demonstrate the use of the __uc511::HIP()__ function. Here we are generating $20$ points from a population of $5,000$ (random) points with $7$ levels of partitioning ($4$ in the first dimension and $3$ in the second) to give $2^4 = 32$ by $3^3 = 27$ boxes.
+The following sample code to demonstrate the use of the __uc511::HIP()__ function. Here we are generating $20$ points from a population of $5,000$ (random) points with $7$ levels of partitioning ($4$ in the first dimension and $3$ in the second) to give $2^4 = 32$ by $3^3 = 27$ boxes.
 
 ```{r}
 # set random seed
@@ -183,13 +304,13 @@ This function invokes __uc511::cppRSHalton_br()__ to generate Halton points.
 
 The following parameters are supported:
 
-+ __J__ - The number of grid cells. The default is $c(3, 2)$.
++ __J__ - The number of grid cells required. The default is $c(3, 2)$.
 + __bases__ - The co-prime base for the Halton sequence. The default is $c(2, 3)$.
 + __n__ - The number of Halton points to generate. The default is ($bases[1]^{J[1]} * bases[2]^{J[2]}$).
 
 All parameter values must be numeric and have values greater than zero. The __J__ and __bases__ parameters must each be a list of length two.
 
-#### uc511::HaltonFrame() code example
+#### uc511::HaltonFrameBase() code example
 
 Function __uc511::HaltonFrame()__ returns a list of variables, the variables have the following names:
 
@@ -237,13 +358,13 @@ Part of the uc511 package is the uc511 Shiny App, this provides a user interface
 
 + __SRS__ Simple random sampling using the __uc511::SRS()__ function.
 + __BAS__ Balanced acceptance sampling using the __uc511::BAS()__ function.
-+ __HIP__ Balanced acceptance sampling using the __uc511::HIP()__ function.
++ __HIP__ Halton Iterative Partitioning using the __uc511::HIP()__ function.
 
 The following sections detail how to use the supported features in the uc511 Shiny App.
 
 ## uc511::SRS() from the uc511 Shiny App
 
-The __uc511__ __R__ package also includes a Shiny App, this has a menu option (SRS) to invoke Simple Random Sampling. The _SRS_ menu option supports the following sub-menu's, __Load Auxillary File__, __Specify Parameters__, __Generate SRS Sample__, __something__ and __something__. We will now look in turn at the options provided by each menu item. Each menu item will not enable until all relevant options on a previous menu item have been appropriately selected or provided.
+The __uc511__ __R__ package also includes a Shiny App, this has a menu option (SRS) to invoke Simple Random Sampling. The _SRS_ menu option supports the following sub-menu's, __Load Auxillary File__, __Specify Parameters__, __Generate SRS Sample__, __something__ and __something__. We will now look in turn at the options provided by each menu item. Each menu item will not enable until all relevant options on the previous menu item have been appropriately selected or provided.
 
 ### Load Auxillary File
 
@@ -351,77 +472,153 @@ What is being displayed on the map at the time the __Save Image__ button is clic
 
 ## uc511::HaltonFrame() from the uc511 Shiny App
 
-The __uc511__ __R__ package also includes a Shiny App, this has a menu option (Halton Frame) used to create a sample of Halton Points. The _Halton Frame_ menu option supports the following sub-menu's, __Load Shape File__, __Specify Parameters__, __Generate Sample__, __Visualize Frame__ and __Visualize Sample???__. We will now look in turn at the options provided by each menu item. Each menu item will not enable until all relevant options on a previous menu item have been appropriately selected or provided.
+The uc511 R package includes a Shiny App with a comprehensive set of menu options, one of them is primarily focused on creating a sample of Halton Points. The __Halton Frame__ menu option serves as the central feature and supports the following sub-menus:
+
+__Load Shape File__: This sub-menu allows you to load shape files into the application, providing the spatial data foundation for your Halton Point sample.
+
+__Specify Parameters__: After loading the shape files, you can utilize this sub-menu to specify various parameters, customizing how your Halton Point sample will be generated and visualized.
+
+__Generate Sample__: Once you have appropriately configured the parameters, you can use this sub-menu to generate your Halton Point sample.
+
+__Visualize Frame__: This sub-menu enables you to visualize the Halton Point frame, offering insights into the spatial distribution of the generated points.
+
+__Visualize Sample__: Finally, this sub-menu allows you to visualize the Halton Point sample, helping you explore the selected points.
+
+Please note that each menu option becomes enabled only when all relevant options on a previous menu have been appropriately selected or provided. This ensures a structured and efficient workflow, guiding users through the necessary steps to create and analyze Halton Point samples effectively.
 
 ### Load Shape File
 
 ### Specify Parameters
 
-With this menu item, the user is able to specify parameters that will be subsequently passed to the __uc511::HaltonFrame__ function. The __Specify Parameters__ menu item supports the following tab panels: __Sample size__, __J__, __Bases__, __Random seed options__ and __Use st_transform__. We will now look at each option in turn, to see what they do and how they are used.
+The __Specify Parameters__ menu item allows users to define parameters that will be later passed to the __uc511::HaltonFrame__ function. This menu item offers several tab panels to facilitate the parameter configuration process, including:
 
-#### Sample size
+__Sample Size__: In this tab panel, you can specify the desired sample size, either as a percentage of the population or as an explicit number. This parameter controls the number of Halton Points to be generated.
 
-The __Sample size__ option controls the size of the generated sample. At the time of writing only two options are supported:
+__J__: The __J__ tab panel allows you to set the number of dimensions for the Halton sequence. This parameter defines the spatial dimensions in which the Halton Points will be generated.
 
-* __Sample size as a percentage__ This is the default. If this option is selected, a slider is displayed. Use the slider to select the percentage of the auxillary file to be used as the sample. The corresponding sample size is displayed as an integer in a textbox to the right of the slider.
+__Bases__: Here, you can configure the bases for the Halton sequence in each dimension. The bases determine how the points are distributed within the specified dimensions.
 
-* __User specified sample size__ (Rename this option in the app and update here!). If this option is selected, the user is able to specify a specific sample size in a text inputbox. A sample size in the range one upto the number of rows in the auxillary file is supported.
+__Random Seed Options__: This tab panel provides options to set a random seed for reproducibility. You can choose to use the default seed range or specify a custom seed value.
 
-The __Generate Sample__ menu item will only enable once the application user has specified a sample size.
+__Use st_transform__: In this tab panel, you can apply a spatial transformation to your Halton Points using the __st_transform__ function. This option is useful when you want to reproject your points into a different coordinate system or perform other spatial transformations.
 
-#### J
+Each of these tab panels allows you to fine-tune the parameters according to your specific requirements. They play a crucial role in shaping the characteristics of the Halton Point sample generated by the __uc511::HaltonFrame__ function, ensuring that the resulting points align with your analysis objectives and spatial context.
 
-The __J__ option controls the number of grid cells. The default value is __(3, 2)__. The __J__ parameter is a list of two values.
+#### Sample size : Sample Size Configuration
 
-#### Bases
+The __Sample size__ option provides control over the size of the generated sample. As of the current version, two options are supported:
 
-The __Bases__ option is used to specify the values for the co-prime base for the Halton sequence. The default value is __(2, 3)__. The __Bases__ parameter is a list of two values.
+ 1. __Sample size as a percentage__ (Default): When you choose this option, a slider will be displayed. Use the slider to select the desired percentage of the auxiliary file that you want to use as your sample. The corresponding sample size will be shown as an integer in a textbox next to the slider.
 
-#### Random seed options
+ 2. __User-specified sample size__ (Rename this option in the app and update here!): Selecting this option allows you to specify an exact sample size by entering a specific number in a text input box. You can set a sample size ranging from one up to the total number of rows in the auxiliary file.
 
-The __Random seed options__ option controls how the random seed is set. At the time of writing only two options are supported:
+Please note that the __Generate Sample__ menu item will only become enabled once you have specified a sample size. This ensures that the application user defines the sample size before proceeding with the sample generation, providing clarity and control over the process.
 
-* __Set seed randomly__ This is the default. If this option is selected, the shiny app. will generate a random seed in the range __1-10,000__ (verify this!).
+#### J : Number of Grid Cells
 
-* __User specified seed__ If this option is selected, a textinput box is displayed, which gives the user the opportunity to specify their own seed. Any valid integer is acceptable (check if I validate this!). A default of __42__ is provided.
+The __J__ option allows you to control the number of grid cells used in your analysis. By default, the value is set to __(3, 2)__. The __J__ parameter is represented as a list containing two values.
+
+You can adjust these values to customize the granularity of your grid cells, which can have a significant impact on the spatial resolution and precision of your analysis. Experimenting with different __J__ values can help you find the optimal configuration for your specific requirements.
+
+#### Bases : Specifying Co-prime Bases
+
+The __Bases__ option allows you to define the co-prime base values for the Halton sequence. The default values for this parameter are set to __(2, 3)__, and the __Bases__ parameter is represented as a list containing two values.
+
+These co-prime bases determine how the Halton Points are distributed within each dimension of the sequence. By adjusting the __Bases__ parameter, you can fine-tune the distribution pattern of your Halton Points, allowing you to achieve the desired spatial characteristics for your analysis. Experimenting with different base values can help you tailor the sequence to meet your specific needs.
+
+#### Random seed options : Setting the Random Seed Options
+
+The __Random seed options__ option allows you to control how the random seed is established. As of the current version, two options are available:
+
+ 1. __Set seed randomly__ (Default): This is the default choice. When selected, the Shiny app generates a random seed within the range of $1$ to $10,000$.
+
+ 2. __User-specified seed__: By choosing this option, a text input box will be displayed, allowing you to input your own seed value. Any valid integer is acceptable. A default value of __42__ is provided, but you can replace it with a different integer of your choice.
+
+Selecting the appropriate random seed option is important, as it can influence the reproducibility and consistency of your results. The flexibility to set a custom seed ensures that you can control the randomness of your analysis when needed.
 
 #### Use st_transform
 
+Fill this in.
 
 ### Generate Sample
 
-With this menu item, the user is able to generate the random sample using the parameters previously specified. The __Generate Sample__ menu item supports the following tab panels: __Generate Halton Frame__ __Download Halton Frame Sample__. We will now look at each option in turn, to see what they do and how they are used.
+The __Generate Sample__ menu item empowers you to create a random sample using the parameters you have specified. This menu item includes two tab panels: __Generate Halton Frame__ and __Download Halton Frame Sample__. Let's explore the purpose and functionality of each:
+
+ 1. __Generate Halton Frame__: In this tab panel, you can trigger the generation of your random sample based on the previously defined parameters. This step initiates the process of creating a Halton Frame sample according to your specifications.
+
+ 2. __Download Halton Frame Sample__: Once the random sample has been generated, you can use this tab panel to download the sample data. By selecting this option, you can save the generated Halton Frame sample to a file for further analysis or storage.
+
+These tab panels ensure a streamlined and organized workflow for generating and managing your random samples. They enable you to efficiently create, access, and utilize the Halton Frame samples in your data analysis tasks.
 
 #### Generate Halton Frame
 
-To generate the SRS sample, click the __Generate SRS Sample__ button. The random seed used to generate the sample is displayed in a textbox to the right of screen. If the user wants to generate a new sample with a new seed, then they will have to change the seed from the __Random seed options__ panel and then generate a new sample. The generated sample is displayed in a datatable for ease of perusal.
+Generating the SRS Sample
 
-#### Download Halton Frame sample
+To create the Simple Random Sample (SRS) sample, follow these steps:
 
-Use this option if you want to save the generated sample to a CSV file. Click the __Download__ button to initiate the file save process through a standard file save dialog. The default file name generated by the application has the form:
+ 1. Click on the __Generate ??? Sample__ button.
 
-* __dataset-srs-sample-yyyy-mm-dd-seed.csv__
+Upon clicking this button, the SRS sample will be generated, and the random seed used for this specific sample will be displayed in a textbox to the right of the screen. If you wish to generate a new sample with a different seed, you can change the seed from the "Random seed options" panel and then initiate the sample generation process again.
 
-Where __yyyy__ is the year, __mm__ the month, __dd__ the day and __seed__ the seed used to generate the sample. The user is of course free to change the file name and the location of where the file will be saved.
+The generated SRS sample will be displayed in a datatable for easy examination and analysis. This format allows you to review and work with your sample data conveniently, facilitating further exploration and insights.
+
+#### Download Halton Frame sample : Saving the Generated Sample
+
+If you wish to save the generated sample as a CSV file, follow these steps:
+
+ 1. Click on the __Download__ button. This action will initiate the file-saving process, opening a standard file save dialog.
+
+The default file name generated by the application follows this format:
+
+ - dataset-hf-sample-yyyy-mm-dd-seed-ssss.csv
+
+Here's what each part of the default file name represents:
+
+ * __dataset__: Indicates that this file contains a dataset.
+ * __hf-sample__: Signifies that the dataset is derived from a Halton Frame sample.
+ * __yyyy__: The year when the sample was generated.
+ * __mm__: The month when the sample was generated.
+ * __dd__: The day when the sample was generated.
+ * __ssss__: The seed used for generating the sample associated with the file.
+
+However, you have the freedom to customize both the file name and the location where the file will be saved. This flexibility allows you to organize and store your sample data according to your preferences, making it more accessible for future analysis and reference.
 
 
-### Visualize Sample
+### Visualize Sample : Generating Leaflet Maps
 
-With this menu item, the user is able to generate a Leaflet map, the map is generated automatically when the __Visualize Sample__ menu option is selected. 
+With the __Generate Leaflet Map__ menu item, users can effortlessly generate an interactive Leaflet map. The map is automatically created when you select the __Visualize Sample__ menu option.
 
-For the map to be generated successfully, the user would have had to use the __Specify Parameters__ menu option to specify the column names to use as the __X__ and __Y__ axes, using the __Select X and Y columns__ option and have specified a CRS EPSG transform code using the __Projected coordinate system__ option.
+For a successful map generation, follow these prerequisites:
 
-By default, both the original data points (black) and the sample points (red) are displayed on the map. The leaflet map control [---] provides the user the ability to select which set of points are displayed.
+ * __Specify Parameters__ : Utilize the __Specify Parameters__ menu option to define the column names for the __X__ and __Y__ axes. This can be done using the __Select X and Y columns__ option. This step is crucial for correctly positioning your data on the map.
 
-The user can click on any point and a popup message box will display the latitude and longitude of that point.
+ * __Coordinate System Transformation__: Specify a Coordinate Reference System (CRS) EPSG transform code by using the __Projected coordinate system__ option. This ensures that your data aligns accurately on the map.
 
-#### Save Image
+By default, the map displays both the original data points in black and the sample points in red. The Leaflet map control, known as __addLayersControl__, empowers you to toggle between displaying the original data and the sample data, granting you flexibility in your visualization.
 
-Clicking on the __Save Image__ button will initiate process through a standard file save dialog. The default image file name generated by the application has the form:
+Additionally, the map allows users to interact with the data points. Clicking on any point will trigger a popup message box that displays the latitude and longitude coordinates of that specific point. This interactive feature enhances your ability to explore and analyze individual data points directly on the map, making your data visualization experience more informative and engaging.
 
-* __map-srs-sample-yyyy-mm-dd-seed.jpeg__ (need to add seed in code, check if default is jpeg)
+#### Save Image : Saving Map Images
 
-What is being displayed on the map at the time the __Save Image__ button is clicked is what is saved in the image file.
+To save images from the map, follow these steps:
+
+ 1. Click on the __Save Image__ button, which will initiate a standard file save dialog.
+
+The default image file name generated by the application follows this format:
+
+ - map-hf-sample-yyyy-mm-dd-seed-ssss.jpeg
+
+Here's what each part of the default file name represents:
+
+   - __map__: Indicates that this file contains a map image.
+   - __hf__: Represents the HF option was used for the map.
+   - __sample__: Refers to the fact that the image is derived from your HF sample data.
+   - __yyyy__: The year when the image is being saved.
+   - __mm__: The month when the image is being saved.
+   - __dd__: The day when the image is being saved.
+   - __ssss__: The seed used for generating the sample associated with the image.
+
+It's important to note that the content displayed on the map at the moment you click the "Save Image" button is what will be saved in the image file. This feature allows you to capture specific visualizations or representations of your data for future reference, reporting, or sharing purposes.
 
 
-
+## The End

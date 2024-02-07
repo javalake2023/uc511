@@ -248,7 +248,9 @@ getBASMasterSample <- function(shp, N = 100, bb = NULL, stratum = NULL, nExtra =
       }
     }
   }
-  return(smp)
+  result <- base::list(sample = smp,
+                       seed = inclSeed)
+  return(result)
 }
 
 

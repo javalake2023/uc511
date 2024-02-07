@@ -60,7 +60,7 @@ validate_parameters <- function(parm, parm_value){
 #' @param J The number of grid cells. A list of 2 values. The default value is c(3, 2), we could also use c(5, 3).
 #' @param bases Co-prime base for the Halton Sequence. The default value is c(2, 3).
 #' @param shapefile something
-#' @param crs something
+#' @param crs The co-ordinate reference system.
 #'
 #' @return A list containing the following four variables:
 #' halton_seq -
@@ -116,9 +116,17 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
     # make the assumption (that the attribute is constant throughout the geometry) explicit# make the assumption (that the attribute is constant throughout the geometry)
     #sf::st_agr(shp.ashb) <- "constant"
     #sf::st_agr(pts.shp) <- "constant"
-    diff_ <- sf::st_intersection(shapefile, pts.shp)
+
+    # need to change this to ensure unique points.
+    diff_ <- sf::st_intersection(sf::st_union(sf::st_geometry(shapefile)),
+                                 sf::st_union(sf::st_geometry(pts.shp)))
     # find number of points within our shapefile.
-    pts_in_intersection <- lengths(diff_$geometry)
+    pts_in_intersection <- length(sf::st_cast(sf::st_union(diff_), "POINT"))
+    #pts_in_intersection <- lengths(diff_$geometry)
+    msg <- "uc511(HaltonFrame) points in intersection: %s."
+    msgs <- sprintf(msg, pts_in_intersection)
+    message(msgs)
+
     i <- i + 1
   }
 
