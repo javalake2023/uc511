@@ -6,9 +6,9 @@
 \usage{
 masterSampleSelect(
   shp,
-  N = 100,
+  n = 100,
   bb = NULL,
-  nExtra = 5000,
+  nExtra = 0,
   printJ = FALSE,
   inclSeed = NULL
 )
@@ -16,7 +16,7 @@ masterSampleSelect(
 \arguments{
 \item{shp}{Shape file as a polygon to select sites for.}
 
-\item{N}{Number of sites to select.}
+\item{n}{Number of sites to select.}
 
 \item{bb}{Bounding box which defines the Master Sample. Default is BC Marine Master Sample.}
 

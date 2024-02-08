@@ -21,7 +21,7 @@ HaltonFrame(
 
 \item{shapefile}{something}
 
-\item{crs}{something}
+\item{crs}{The co-ordinate reference system.}
 }
 \value{
 A list containing the following four variables:

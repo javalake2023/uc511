@@ -28,7 +28,7 @@ the first master sample point does indeed fall within the largest scale of the m
 }
 \details{
 This function was first written by Paul van Dam-Bates for the
-package BASMasterSample.
+package BASMasterSample and later ported to this package, uc511.
 }
 \examples{
 \dontrun{

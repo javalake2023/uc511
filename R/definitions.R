@@ -9,7 +9,7 @@
 #' the first master sample point does indeed fall within the largest scale of the master sample use.
 #'
 #' @details This function was first written by Paul van Dam-Bates for the
-#' package BASMasterSample.
+#' package BASMasterSample and later ported to this package, uc511.
 #'
 #' @param shp Spatial feature that defines the boundary of the area to define a bounding box over.
 #' @param d Dimension of the new Master Sample, at this stage we only work with d=2.
@@ -30,19 +30,19 @@
 #' @export
 buildMS <- function(shp, d = 2, showOutput = TRUE, rotate = TRUE)
 {
+  # generate 2 seed values.
   seed <- base::floor(stats::runif(d, 0, 10000))
   # We always use base 2,3
-  base <- c(2,3,5)[1:d]
+  base <- c(2, 3, 5)[1:d]
 
   if(rotate) {
-    theta <- stats::runif(1, -pi, pi)
+    theta <- stats::runif(1, -base::pi, base::pi)
   }else{
     theta <- 0
   }
 
   # Just work with sf:
-  if (class(shp)[1] != "sf")
-  {
+  if (class(shp)[1] != "sf"){
     shp <- sf::st_as_sf(shp)
   }
 
@@ -70,7 +70,7 @@ buildMS <- function(shp, d = 2, showOutput = TRUE, rotate = TRUE)
 #' @description Default projection of the master sample. Needed for consistency for the entire bounding box.
 #'
 #' @details This function was first written by Paul van Dam-Bates for the
-#' package BASMasterSample.
+#' package BASMasterSample and later ported to this package, uc511.
 #'
 #' @return Spatial object projection.
 #'
@@ -90,7 +90,7 @@ getProj <- function()
 #' @description Bounding box under NAD83/BC Albers.
 #'
 #' @details This function was first written by Paul van Dam-Bates for the
-#' package BASMasterSample.
+#' package BASMasterSample and later ported to this package, uc511.
 #'
 #' @return The bounding box.
 #'
@@ -115,7 +115,7 @@ getBB <- function()
 #' @description Defines the random seed specific to the Western Canada Marine Master Sample.
 #'
 #' @details This function was first written by Paul van Dam-Bates for the
-#' package BASMasterSample.
+#' package BASMasterSample and later ported to this package, uc511.
 #'
 #' @return The random seeds for the Western Canada Marine Master Sample.
 #'
@@ -134,7 +134,7 @@ getSeed <- function()
 #' @description Defines the random rotation specific to the Western Canada Marine Master Sample.
 #'
 #' @details This function was first written by Paul van Dam-Bates for the
-#' package BASMasterSample.
+#' package BASMasterSample and later ported to this package, uc511.
 #'
 #' @return The radians of rotation of the bounding box.
 #'

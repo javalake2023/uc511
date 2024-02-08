@@ -14,5 +14,5 @@ Bounding box under NAD83/BC Albers.
 }
 \details{
 This function was first written by Paul van Dam-Bates for the
-package BASMasterSample.
+package BASMasterSample and later ported to this package, uc511.
 }

@@ -14,5 +14,5 @@ Default projection of the master sample. Needed for consistency for the entire b
 }
 \details{
 This function was first written by Paul van Dam-Bates for the
-package BASMasterSample.
+package BASMasterSample and later ported to this package, uc511.
 }

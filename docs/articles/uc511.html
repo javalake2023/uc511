@@ -98,15 +98,15 @@
 <div class="section level4">
 <h4 id="uc511srs">uc511::SRS()<a class="anchor" aria-label="anchor" href="#uc511srs"></a>
 </h4>
-<p>This function invokes <strong>base::sample()</strong> to draw a random sample using a user specified random seed.</p>
+<p>This function invokes <strong>base::sample()</strong> to draw a random sample using a user specified random seed. Returned is a list of random positive integers of length <strong>sample_size</strong>, in the range 1 to <strong>total_rows</strong>, these can then be used to index the original population data.</p>
 <p>The following parameters are supported:</p>
 <ul>
 <li>
 <strong>seed</strong> - The random seed to be used to draw the current sample. The default is 42.</li>
 <li>
-<strong>total_rows</strong> - The total number of rows in our input dataset.</li>
+<strong>total_rows</strong> - The total number of rows in your population.</li>
 <li>
-<strong>sample_size</strong> - The number of rows wanted in our random sample.</li>
+<strong>sample_size</strong> - The number of rows wanted in the random sample.</li>
 </ul>
 <p>All parameter values must be numeric and have values greater than zero, <strong>sample_size</strong> must be less than <strong>total_rows</strong>.</p>
 <div class="section level5">
@@ -125,60 +125,146 @@
 <h3 id="balanced-acceptance-sampling-bas">Balanced acceptance sampling (BAS)<a class="anchor" aria-label="anchor" href="#balanced-acceptance-sampling-bas"></a>
 </h3>
 <p>Explain BAS here…</p>
+<div class="section level4">
+<h4 id="load-shape-file-input-options-for-bas">Load Shape File : Input Options for BAS<a class="anchor" aria-label="anchor" href="#load-shape-file-input-options-for-bas"></a>
+</h4>
+<p>BAS offers flexibility in data input, allowing you to choose between two options:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Load Shape File</strong>: With this option, you can directly import data from shape files. This method is suitable when your data is stored in geographic information system (GIS) format and is ready to be used for analysis within the BAS option.</p></li>
+<li><p><strong>Select Shape File from Datafile</strong>: Alternatively, you can choose to import data from an R datafile. This option is useful when you have your data stored in an R-compatible format. It provides a seamless way to access and analyze your data within the BAS option.</p></li>
+</ol>
+<p>These input options enable you to work with your data in the most convenient and compatible format, making it easier to perform BAS analysis and visualization.</p>
 <div class="section level5">
 <h5 id="load-shape-file">Load Shape File<a class="anchor" aria-label="anchor" href="#load-shape-file"></a>
 </h5>
-<div class="section level6">
-<h6 id="load-shape-file-1">Load Shape File<a class="anchor" aria-label="anchor" href="#load-shape-file-1"></a>
-</h6>
-</div>
-<div class="section level6">
-<h6 id="select-shape-file-from-datafile">Select shape file from datafile<a class="anchor" aria-label="anchor" href="#select-shape-file-from-datafile"></a>
-</h6>
-</div>
+<p>From this option select …. to find the location of your shape files, holding the <strong>Ctrl</strong> key down while clicking on the shapefile files enables the selection of multiple files, click <strong>OK</strong> when you have selected all required files. The app will load the files. Once loaded, the …. are added to the <strong>Select Shapefile column</strong> dropdown box.</p>
+<p>The user then selects a … from the <strong>Select Shapefile column</strong> dropdown box, this populates the <strong>Select Region of Interest</strong> dropdown boxes with region from the shapefile. From this dropdown box the user can now select one or more regions.</p>
+<p>Once one or more regions have been selected the <strong>Specify Parameters</strong> menu option will become enabled allowing the user to specify or update BAS parameters.</p>
 </div>
 <div class="section level5">
-<h5 id="specify-parameters">Specify Parameters<a class="anchor" aria-label="anchor" href="#specify-parameters"></a>
+<h5 id="select-shape-file-from-datafile">Select shape file from datafile<a class="anchor" aria-label="anchor" href="#select-shape-file-from-datafile"></a>
 </h5>
-<div class="section level6">
-<h6 id="sample-size">Sample Size<a class="anchor" aria-label="anchor" href="#sample-size"></a>
-</h6>
+<p>Need to rework this…</p>
+<p>From this option select …. to find the location of your shape files, holding the <strong>Ctrl</strong> key down while clicking on the desired shapefile files enables the selection of multiple files, click <strong>OK</strong> when you have selected all the required files. The app will load the files. Once loaded, the …. are added to the <strong>Select Shapefile column</strong> dropdown box.</p>
+<p>The user then selects a … from the <strong>Select Shapefile column</strong> dropdown box, this populates the <strong>Select Region of Interest</strong> dropdown boxes with region from the shapefile. From this dropdown box the user can now select one or more regions.</p>
+<p>Once one or more regions have been selected the <strong>Specify Parameters</strong> menu option will become enabled allowing the user to specify or update BAS parameters.</p>
 </div>
-<div class="section level6">
-<h6 id="random-seed-options">Random Seed Options<a class="anchor" aria-label="anchor" href="#random-seed-options"></a>
-</h6>
 </div>
-<div class="section level6">
-<h6 id="use-st_transform">Use st_transform<a class="anchor" aria-label="anchor" href="#use-st_transform"></a>
-</h6>
-</div>
-<div class="section level6">
-<h6 id="minimum-distance">Minimum Distance<a class="anchor" aria-label="anchor" href="#minimum-distance"></a>
-</h6>
-</div>
+<div class="section level4">
+<h4 id="specify-parameters">Specify Parameters<a class="anchor" aria-label="anchor" href="#specify-parameters"></a>
+</h4>
+<p>Once you have chosen your input source, whether it’s from shape files using the “Load Shape File” option or from an R datafile using the “Select Shape File from Datafile” option, the next step is to configure BAS parameters.</p>
+<p>At this point, the “Specify Parameters” menu option becomes enabled, allowing you to customize and fine-tune the parameters for your analysis. You can specify or update these parameters to tailor the analysis to your specific needs, ensuring that you obtain meaningful results from your data.</p>
+<div class="section level5">
+<h5 id="sample-size-control-your-sample">Sample Size : Control Your Sample<a class="anchor" aria-label="anchor" href="#sample-size-control-your-sample"></a>
+</h5>
+<p>The <strong>Sample Size</strong> option empowers you to define the size of the sample you need for your analysis. You have two choices when specifying the sample size:</p>
+<ol style="list-style-type: decimal">
+<li><p>Percentage of Population Size: You can set the sample size as a percentage of the total population size.</p></li>
+<li><p>Explicit Number: Alternatively, you can specify the sample size as an exact number.</p></li>
+</ol>
+<p>Once you have determined the sample size, the <strong>Generate Sample</strong> menu option will become active. This enables you to create a BAS sample with the specified size. This feature ensures that you have the flexibility to tailor your analysis to the exact sample size you require, making your results more precise and meaningful.</p>
 </div>
 <div class="section level5">
-<h5 id="generate-sample">Generate Sample<a class="anchor" aria-label="anchor" href="#generate-sample"></a>
+<h5 id="random-seed-options-reproducibility">Random Seed Options : Reproducibility<a class="anchor" aria-label="anchor" href="#random-seed-options-reproducibility"></a>
 </h5>
-<div class="section level6">
-<h6 id="generate-bas-sample">Generate BAS Sample<a class="anchor" aria-label="anchor" href="#generate-bas-sample"></a>
-</h6>
-</div>
-<div class="section level6">
-<h6 id="download-bas-sample">Download BAS Sample<a class="anchor" aria-label="anchor" href="#download-bas-sample"></a>
-</h6>
-</div>
+<p>The <strong>Random Seed Options</strong> feature allows you to control the randomness in your analysis. By specifying a random seed, you can ensure reproducibility in your results. This seed value will be used by the <strong>set.seed()</strong> function before generating the BAS sample.</p>
+<p>By default, the Shiny app sets a random seed within the range of <span class="math inline">\(1\)</span> to <span class="math inline">\(10,000\)</span>. However, if you want to use a specific seed of your choice, follow these steps:</p>
+<ol style="list-style-type: decimal">
+<li>Select the <strong>User specified seed</strong> option.</li>
+<li>Enter your desired seed value in the input box labeled <strong>Specify the seed to use</strong>.</li>
+</ol>
+<p>Please note that only positive integer values within the range of <span class="math inline">\(1\)</span> to <span class="math inline">\(10,000\)</span> are accepted. This allows you to have fine-grained control over the randomness in your analysis while maintaining reproducibility.</p>
 </div>
 <div class="section level5">
-<h5 id="visualize-sample">Visualize Sample<a class="anchor" aria-label="anchor" href="#visualize-sample"></a>
+<h5 id="use-st_transform-shapefile-data-transformation">Use st_transform : Shapefile Data Transformation<a class="anchor" aria-label="anchor" href="#use-st_transform-shapefile-data-transformation"></a>
 </h5>
-<div class="section level6">
-<h6 id="visualize-bas-sample-on-map">Visualize BAS Sample on Map<a class="anchor" aria-label="anchor" href="#visualize-bas-sample-on-map"></a>
-</h6>
+<p>The <strong>st_transform</strong> is essential when you want to apply a transformation to your shapefile data before visualizing it using the <strong>Visualize Sample</strong> option.</p>
+<p>Here’s how you can use the <strong>st_transform</strong> feature:</p>
+<ol style="list-style-type: decimal">
+<li>Ensure that you’ve checked the <strong>Use st_transform</strong> checkbox.</li>
+<li>In the <strong>Use this st_transform code</strong> text box, specify the transformation code you want to apply to your data.</li>
+</ol>
+<p>The default transformation code is set to <span class="math inline">\(4326\)</span>. However, you can customize this code to match your specific transformation requirements. This functionality allows you to adapt your shapefile data to different coordinate systems or projections, ensuring that it aligns correctly with your visualization needs.</p>
 </div>
-<div class="section level6">
-<h6 id="visualize-bas-sample-points">Visualize BAS Sample Points<a class="anchor" aria-label="anchor" href="#visualize-bas-sample-points"></a>
-</h6>
+<div class="section level5">
+<h5 id="minimum-distance">Minimum Distance<a class="anchor" aria-label="anchor" href="#minimum-distance"></a>
+</h5>
+<p>Fill this in.</p>
+</div>
+</div>
+<div class="section level4">
+<h4 id="generate-sample-generate-sample-menu-options">Generate Sample : Generate Sample Menu Options<a class="anchor" aria-label="anchor" href="#generate-sample-generate-sample-menu-options"></a>
+</h4>
+<p>The <strong>Generate Sample</strong> menu option offers the following user choices:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Generate a BAS Sample</strong>: You can use this option to create a BAS sample with the specified parameters. This sample is essential for conducting various analyses and visualizations within the application.</p></li>
+<li><p><strong>Download BAS Sample</strong>: After generating a sample, you have the option to save it. This allows you to store the sample data for future reference or for use in external analyses. Saving the sample enables you to maintain a record of your analysis results and enhances data management.</p></li>
+</ol>
+<div class="section level5">
+<h5 id="generate-bas-sample-generating-the-bas-sample">Generate BAS Sample : Generating the BAS Sample<a class="anchor" aria-label="anchor" href="#generate-bas-sample-generating-the-bas-sample"></a>
+</h5>
+<p>To create the BAS sample, follow these steps:</p>
+<ol style="list-style-type: decimal">
+<li>Click on the <strong>Generate Sample</strong> button.</li>
+</ol>
+<p>Upon clicking this button, the Shiny app will generate a BAS sample according to your specified parameters. After the sample is generated, the following information will be displayed:</p>
+<ul>
+<li><p><strong>First Ten Data Points</strong>: You will be able to view the first ten data points from the sample. This allows you to get a quick overview of the data.</p></li>
+<li><p><strong>Random Seed</strong>: The random seed that was used for generating the sample will also be provided. This seed is crucial for ensuring reproducibility in your analysis. You can record this seed for future reference if needed.</p></li>
+</ul>
+<p>By providing access to the initial sample data and the random seed used, the BAS app helps you verify and reproduce your analysis results with transparency and accuracy.</p>
+</div>
+<div class="section level5">
+<h5 id="download-bas-sample-saving-the-generated-sample-to-a-csv-file">Download BAS Sample : Saving the Generated Sample to a CSV File<a class="anchor" aria-label="anchor" href="#download-bas-sample-saving-the-generated-sample-to-a-csv-file"></a>
+</h5>
+<p>If you wish to save the generated sample as a CSV file, follow these steps:</p>
+<ol style="list-style-type: decimal">
+<li><p>Use this option when you want to store the sample data for future reference or further analysis.</p></li>
+<li><p>Click the <strong>Download</strong> button to initiate the file-saving process. This action will open a standard file save dialog.</p></li>
+</ol>
+<p>The default file name generated by the application follows this format:</p>
+<ul>
+<li>dataset-bas-sample-yyyy-mm-dd-seed-ssss.csv</li>
+</ul>
+<p>Here’s what each part of the default file name represents:</p>
+<ul>
+<li>
+<strong>yyyy</strong>: The year when the sample was generated.</li>
+<li>
+<strong>mm</strong>: The month when the sample was generated.</li>
+<li>
+<strong>dd</strong>: The day when the sample was generated.</li>
+<li>
+<strong>ssss</strong>: The seed used to generate the sample.</li>
+</ul>
+<p>However, you have the freedom to customize both the file name and the location where the file will be saved. This flexibility allows you to organize your data according to your preferences, making it easier to manage and work with your BAS samples.</p>
+</div>
+</div>
+<div class="section level4">
+<h4 id="visualize-sample-visualize-sample-menu-options">Visualize Sample : Visualize Sample Menu Options<a class="anchor" aria-label="anchor" href="#visualize-sample-visualize-sample-menu-options"></a>
+</h4>
+<p>The <strong>Visualize Sample</strong> menu option offers the following user choices:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Visualize BAS Sample on Map</strong>: Selecting this option allows you to generate an interactive Leaflet map that displays your BAS sample. This map provides a visual representation of your data points and enables you to explore and analyze them spatially.</p></li>
+<li><p><strong>Save Image</strong>: After visualizing the BAS sample on the map, you have the option to save the map image. This feature allows you to preserve the visualization for future reference or to include it in reports and presentations. Saving the image enhances your ability to communicate and share your analysis results effectively.</p></li>
+</ol>
+<div class="section level5">
+<h5 id="visualize-bas-sample-on-map">Visualize BAS Sample on Map<a class="anchor" aria-label="anchor" href="#visualize-bas-sample-on-map"></a>
+</h5>
+<p>With the <strong>Visualize BAS Sample on Map</strong> menu item, users can effortlessly generate an interactive Leaflet map. This map is automatically generated when you select the <strong>Visualize Sample</strong> menu option.</p>
+<p>To ensure successful map generation, follow these prerequisites:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Specify Parameters</strong>: Use the <strong>Specify Parameters</strong> menu option to specify the column names to be used as the X and Y axes. This can be done by choosing the <strong>Select X and Y columns</strong> option.</p></li>
+<li><p>Coordinate System Transformation: Specify a Coordinate Reference System (CRS) EPSG transform code using the “Projected coordinate system” option. This step ensures that your data aligns correctly on the map.</p></li>
+</ol>
+<p>By default, the map displays both the original data points in black and the sample points in red. You can control which sets of points are displayed on the map using the Leaflet map control called <strong>addLayersControl</strong>. This feature allows you to toggle between displaying the original data and the sample data, providing flexibility in your visualization.</p>
+<p>Additionally, when you click on any point on the map, a popup message box will appear, displaying the latitude and longitude coordinates of that specific point. This interactive functionality allows you to explore and analyze individual data points directly on the map, enhancing your data visualization experience.</p>
+</div>
+<div class="section level5">
+<h5 id="visualize-bas-sample-points">Visualize BAS Sample Points<a class="anchor" aria-label="anchor" href="#visualize-bas-sample-points"></a>
+</h5>
+<p>Do we really need this?</p>
 </div>
 </div>
 </div>
@@ -186,11 +272,11 @@
 <h3 id="halton-iterative-partitioning-hip">Halton Iterative Partitioning (HIP)<a class="anchor" aria-label="anchor" href="#halton-iterative-partitioning-hip"></a>
 </h3>
 <p>Halton iterative partitioning (HIP) extends Basic acceptance sampling (BAS) to point resources. It partitions the resource into <span class="math inline">\(B ≥ n\)</span> boxes that have the same nested structure as in BAS, but different sizes. These boxes are then uniquely numbered using a random-start Halton sequence of length <span class="math inline">\(B\)</span>. The HIP sample is obtained by randomly drawing one point from each of the boxes numbered <span class="math inline">\(1, 2, . . . , n\)</span>.</p>
-<p>This function invokes <strong>uc511::cppRSHalton_br()</strong> to generate the Halton points.</p>
+<p>The <strong>uc511::HIP()</strong> function invokes <strong>uc511::cppRSHalton_br()</strong> to generate the Halton points.</p>
 <div class="section level4">
 <h4 id="uc511hip">uc511::HIP()<a class="anchor" aria-label="anchor" href="#uc511hip"></a>
 </h4>
-<p>The <strong>uc511::HIP()</strong> function accepts the following parameters:</p>
+<p>To generate a HIP sample use the <strong>uc511::HIP()</strong> function, it accepts the following parameters:</p>
 <div class="section level5">
 <h5 id="population">population<a class="anchor" aria-label="anchor" href="#population"></a>
 </h5>
@@ -223,13 +309,13 @@
 <li>
 <strong>HaltonIndex</strong> - The Halton indices for all the population points.</li>
 <li>
-<strong>PopulationSample</strong> - The sample drawn from the population, it is returned to the user as a <strong>sf</strong> points object with the <strong>PopulationIndex</strong>, <strong>Order</strong> and <strong>HaltonIndex</strong> added as new features to the sample.</li>
+<strong>PopulationSample</strong> - The sample drawn from the population, it is returned to the user as a <strong>sf</strong> points object with the <strong>PopulationIndex</strong>, <strong>Order</strong> and <strong>HaltonIndex</strong> variables added as new features to the sample.</li>
 </ul>
 </div>
 <div class="section level4">
 <h4 id="uc511hip-code-example">uc511::HIP() code example<a class="anchor" aria-label="anchor" href="#uc511hip-code-example"></a>
 </h4>
-<p>The following is sample code to demonstrate the use of the <strong>uc511::HIP()</strong> function. Here we are generating <span class="math inline">\(20\)</span> points from a population of <span class="math inline">\(5,000\)</span> (random) points with <span class="math inline">\(7\)</span> levels of partitioning (<span class="math inline">\(4\)</span> in the first dimension and <span class="math inline">\(3\)</span> in the second) to give <span class="math inline">\(2^4 = 32\)</span> by <span class="math inline">\(3^3 = 27\)</span> boxes.</p>
+<p>The following sample code to demonstrate the use of the <strong>uc511::HIP()</strong> function. Here we are generating <span class="math inline">\(20\)</span> points from a population of <span class="math inline">\(5,000\)</span> (random) points with <span class="math inline">\(7\)</span> levels of partitioning (<span class="math inline">\(4\)</span> in the first dimension and <span class="math inline">\(3\)</span> in the second) to give <span class="math inline">\(2^4 = 32\)</span> by <span class="math inline">\(3^3 = 27\)</span> boxes.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># set random seed</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1110</span><span class="op">)</span></span>
@@ -306,7 +392,7 @@
 <p>The following parameters are supported:</p>
 <ul>
 <li>
-<strong>J</strong> - The number of grid cells. The default is <span class="math inline">\(c(3, 2)\)</span>.</li>
+<strong>J</strong> - The number of grid cells required. The default is <span class="math inline">\(c(3, 2)\)</span>.</li>
 <li>
 <strong>bases</strong> - The co-prime base for the Halton sequence. The default is <span class="math inline">\(c(2, 3)\)</span>.</li>
 <li>
@@ -314,7 +400,7 @@
 </ul>
 <p>All parameter values must be numeric and have values greater than zero. The <strong>J</strong> and <strong>bases</strong> parameters must each be a list of length two.</p>
 <div class="section level5">
-<h5 id="uc511haltonframe-code-example">uc511::HaltonFrame() code example<a class="anchor" aria-label="anchor" href="#uc511haltonframe-code-example"></a>
+<h5 id="uc511haltonframebase-code-example">uc511::HaltonFrameBase() code example<a class="anchor" aria-label="anchor" href="#uc511haltonframebase-code-example"></a>
 </h5>
 <p>Function <strong>uc511::HaltonFrame()</strong> returns a list of variables, the variables have the following names:</p>
 <ul>
@@ -341,13 +427,13 @@
 <span><span class="co"># retrieve the Halton sequence.</span></span>
 <span><span class="va">halton_seq</span> <span class="op">&lt;-</span> <span class="va">hf_</span><span class="op">$</span><span class="va">halton_seq</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">halton_seq</span><span class="op">)</span></span>
-<span><span class="co">#&gt;          [,1]       [,2]</span></span>
-<span><span class="co">#&gt; [1,] 0.811554 0.78870091</span></span>
-<span><span class="co">#&gt; [2,] 0.186554 0.23314535</span></span>
-<span><span class="co">#&gt; [3,] 0.686554 0.56647869</span></span>
-<span><span class="co">#&gt; [4,] 0.436554 0.89981202</span></span>
-<span><span class="co">#&gt; [5,] 0.936554 0.04796017</span></span>
-<span><span class="co">#&gt; [6,] 0.124054 0.38129350</span></span>
+<span><span class="co">#&gt;           [,1]      [,2]</span></span>
+<span><span class="co">#&gt; [1,] 0.5030823 0.9612356</span></span>
+<span><span class="co">#&gt; [2,] 0.2530823 0.1093837</span></span>
+<span><span class="co">#&gt; [3,] 0.7530823 0.4427171</span></span>
+<span><span class="co">#&gt; [4,] 0.1280823 0.7760504</span></span>
+<span><span class="co">#&gt; [5,] 0.6280823 0.2204948</span></span>
+<span><span class="co">#&gt; [6,] 0.3780823 0.5538282</span></span>
 <span></span>
 <span><span class="co"># retrieve the x-axis division values.</span></span>
 <span><span class="va">halton_seq_x_divisions</span> <span class="op">&lt;-</span> <span class="va">hf_</span><span class="op">$</span><span class="va">halton_seq_div</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
@@ -364,24 +450,24 @@
 <span><span class="co"># retrieve the Z values.</span></span>
 <span><span class="va">z</span> <span class="op">&lt;-</span> <span class="va">hf_</span><span class="op">$</span><span class="va">Z</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">z</span><span class="op">)</span></span>
-<span><span class="co">#&gt;            [,1]       [,2]</span></span>
-<span><span class="co">#&gt; [1,] 0.83572388 0.83808363</span></span>
-<span><span class="co">#&gt; [2,] 0.21072388 0.28252807</span></span>
-<span><span class="co">#&gt; [3,] 0.71072388 0.61586140</span></span>
-<span><span class="co">#&gt; [4,] 0.46072388 0.94919474</span></span>
-<span><span class="co">#&gt; [5,] 0.96072388 0.02601229</span></span>
-<span><span class="co">#&gt; [6,] 0.06619263 0.35934563</span></span>
+<span><span class="co">#&gt;           [,1]       [,2]</span></span>
+<span><span class="co">#&gt; [1,] 0.5382385 0.93928771</span></span>
+<span><span class="co">#&gt; [2,] 0.2882385 0.08743586</span></span>
+<span><span class="co">#&gt; [3,] 0.7882385 0.42076919</span></span>
+<span><span class="co">#&gt; [4,] 0.1632385 0.75410253</span></span>
+<span><span class="co">#&gt; [5,] 0.6632385 0.19854697</span></span>
+<span><span class="co">#&gt; [6,] 0.4132385 0.53188030</span></span>
 <span></span>
 <span><span class="co"># retrieve the Halton frame.</span></span>
 <span><span class="va">halton_frame</span> <span class="op">&lt;-</span> <span class="va">hf_</span><span class="op">$</span><span class="va">halton_frame</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">halton_frame</span><span class="op">)</span></span>
 <span><span class="co">#&gt;       x_dim      y_dim</span></span>
-<span><span class="co">#&gt; [1,] 0.8125 0.83333333</span></span>
-<span><span class="co">#&gt; [2,] 0.1875 0.27777778</span></span>
-<span><span class="co">#&gt; [3,] 0.6875 0.61111111</span></span>
-<span><span class="co">#&gt; [4,] 0.4375 0.94444444</span></span>
-<span><span class="co">#&gt; [5,] 0.9375 0.05555556</span></span>
-<span><span class="co">#&gt; [6,] 0.0625 0.38888889</span></span></code></pre></div>
+<span><span class="co">#&gt; [1,] 0.5625 0.94444444</span></span>
+<span><span class="co">#&gt; [2,] 0.3125 0.05555556</span></span>
+<span><span class="co">#&gt; [3,] 0.8125 0.38888889</span></span>
+<span><span class="co">#&gt; [4,] 0.1875 0.72222222</span></span>
+<span><span class="co">#&gt; [5,] 0.6875 0.16666667</span></span>
+<span><span class="co">#&gt; [6,] 0.4375 0.50000000</span></span></code></pre></div>
 </div>
 </div>
 </div>
@@ -396,13 +482,13 @@
 <li>
 <strong>BAS</strong> Balanced acceptance sampling using the <strong>uc511::BAS()</strong> function.</li>
 <li>
-<strong>HIP</strong> Balanced acceptance sampling using the <strong>uc511::HIP()</strong> function.</li>
+<strong>HIP</strong> Halton Iterative Partitioning using the <strong>uc511::HIP()</strong> function.</li>
 </ul>
 <p>The following sections detail how to use the supported features in the uc511 Shiny App.</p>
 <div class="section level3">
 <h3 id="uc511srs-from-the-uc511-shiny-app">uc511::SRS() from the uc511 Shiny App<a class="anchor" aria-label="anchor" href="#uc511srs-from-the-uc511-shiny-app"></a>
 </h3>
-<p>The <strong>uc511</strong> <strong>R</strong> package also includes a Shiny App, this has a menu option (SRS) to invoke Simple Random Sampling. The <em>SRS</em> menu option supports the following sub-menu’s, <strong>Load Auxillary File</strong>, <strong>Specify Parameters</strong>, <strong>Generate SRS Sample</strong>, <strong>something</strong> and <strong>something</strong>. We will now look in turn at the options provided by each menu item. Each menu item will not enable until all relevant options on a previous menu item have been appropriately selected or provided.</p>
+<p>The <strong>uc511</strong> <strong>R</strong> package also includes a Shiny App, this has a menu option (SRS) to invoke Simple Random Sampling. The <em>SRS</em> menu option supports the following sub-menu’s, <strong>Load Auxillary File</strong>, <strong>Specify Parameters</strong>, <strong>Generate SRS Sample</strong>, <strong>something</strong> and <strong>something</strong>. We will now look in turn at the options provided by each menu item. Each menu item will not enable until all relevant options on the previous menu item have been appropriately selected or provided.</p>
 <div class="section level4">
 <h4 id="load-auxillary-file">Load Auxillary File<a class="anchor" aria-label="anchor" href="#load-auxillary-file"></a>
 </h4>
@@ -422,7 +508,7 @@
 </ul>
 </div>
 <div class="section level5">
-<h5 id="sample-size-1">Sample size<a class="anchor" aria-label="anchor" href="#sample-size-1"></a>
+<h5 id="sample-size">Sample size<a class="anchor" aria-label="anchor" href="#sample-size"></a>
 </h5>
 <p>The <strong>Sample size</strong> option controls the size of the generated sample. At the time of writing only two options are supported:</p>
 <ul>
@@ -432,7 +518,7 @@
 <p>The <strong>Generate Sample</strong> menu item will only enable once the application user has specified a sample size.</p>
 </div>
 <div class="section level5">
-<h5 id="random-seed-options-1">Random seed options<a class="anchor" aria-label="anchor" href="#random-seed-options-1"></a>
+<h5 id="random-seed-options">Random seed options<a class="anchor" aria-label="anchor" href="#random-seed-options"></a>
 </h5>
 <p>The <strong>Random seed options</strong> option controls how the random seed is set. At the time of writing only two options are supported:</p>
 <ul>
@@ -501,7 +587,7 @@
 </div>
 </div>
 <div class="section level4">
-<h4 id="visualize-sample-1">Visualize Sample<a class="anchor" aria-label="anchor" href="#visualize-sample-1"></a>
+<h4 id="visualize-sample">Visualize Sample<a class="anchor" aria-label="anchor" href="#visualize-sample"></a>
 </h4>
 <p>With this menu item, the user is able to generate a Leaflet map, the map is generated automatically when the <strong>Visualize Sample</strong> menu option is selected.</p>
 <p>For the map to be generated successfully, the user would have had to use the <strong>Specify Parameters</strong> menu option to specify the column names to use as the <strong>X</strong> and <strong>Y</strong> axes, using the <strong>Select X and Y columns</strong> option and have specified a CRS EPSG transform code using the <strong>Projected coordinate system</strong> option.</p>
@@ -522,86 +608,160 @@
 <div class="section level3">
 <h3 id="uc511haltonframe-from-the-uc511-shiny-app">uc511::HaltonFrame() from the uc511 Shiny App<a class="anchor" aria-label="anchor" href="#uc511haltonframe-from-the-uc511-shiny-app"></a>
 </h3>
-<p>The <strong>uc511</strong> <strong>R</strong> package also includes a Shiny App, this has a menu option (Halton Frame) used to create a sample of Halton Points. The <em>Halton Frame</em> menu option supports the following sub-menu’s, <strong>Load Shape File</strong>, <strong>Specify Parameters</strong>, <strong>Generate Sample</strong>, <strong>Visualize Frame</strong> and <strong>Visualize Sample???</strong>. We will now look in turn at the options provided by each menu item. Each menu item will not enable until all relevant options on a previous menu item have been appropriately selected or provided.</p>
+<p>The uc511 R package includes a Shiny App with a comprehensive set of menu options, one of them is primarily focused on creating a sample of Halton Points. The <strong>Halton Frame</strong> menu option serves as the central feature and supports the following sub-menus:</p>
+<p><strong>Load Shape File</strong>: This sub-menu allows you to load shape files into the application, providing the spatial data foundation for your Halton Point sample.</p>
+<p><strong>Specify Parameters</strong>: After loading the shape files, you can utilize this sub-menu to specify various parameters, customizing how your Halton Point sample will be generated and visualized.</p>
+<p><strong>Generate Sample</strong>: Once you have appropriately configured the parameters, you can use this sub-menu to generate your Halton Point sample.</p>
+<p><strong>Visualize Frame</strong>: This sub-menu enables you to visualize the Halton Point frame, offering insights into the spatial distribution of the generated points.</p>
+<p><strong>Visualize Sample</strong>: Finally, this sub-menu allows you to visualize the Halton Point sample, helping you explore the selected points.</p>
+<p>Please note that each menu option becomes enabled only when all relevant options on a previous menu have been appropriately selected or provided. This ensures a structured and efficient workflow, guiding users through the necessary steps to create and analyze Halton Point samples effectively.</p>
 <div class="section level4">
-<h4 id="load-shape-file-2">Load Shape File<a class="anchor" aria-label="anchor" href="#load-shape-file-2"></a>
+<h4 id="load-shape-file-1">Load Shape File<a class="anchor" aria-label="anchor" href="#load-shape-file-1"></a>
 </h4>
 </div>
 <div class="section level4">
 <h4 id="specify-parameters-2">Specify Parameters<a class="anchor" aria-label="anchor" href="#specify-parameters-2"></a>
 </h4>
-<p>With this menu item, the user is able to specify parameters that will be subsequently passed to the <strong>uc511::HaltonFrame</strong> function. The <strong>Specify Parameters</strong> menu item supports the following tab panels: <strong>Sample size</strong>, <strong>J</strong>, <strong>Bases</strong>, <strong>Random seed options</strong> and <strong>Use st_transform</strong>. We will now look at each option in turn, to see what they do and how they are used.</p>
+<p>The <strong>Specify Parameters</strong> menu item allows users to define parameters that will be later passed to the <strong>uc511::HaltonFrame</strong> function. This menu item offers several tab panels to facilitate the parameter configuration process, including:</p>
+<p><strong>Sample Size</strong>: In this tab panel, you can specify the desired sample size, either as a percentage of the population or as an explicit number. This parameter controls the number of Halton Points to be generated.</p>
+<p><strong>J</strong>: The <strong>J</strong> tab panel allows you to set the number of dimensions for the Halton sequence. This parameter defines the spatial dimensions in which the Halton Points will be generated.</p>
+<p><strong>Bases</strong>: Here, you can configure the bases for the Halton sequence in each dimension. The bases determine how the points are distributed within the specified dimensions.</p>
+<p><strong>Random Seed Options</strong>: This tab panel provides options to set a random seed for reproducibility. You can choose to use the default seed range or specify a custom seed value.</p>
+<p><strong>Use st_transform</strong>: In this tab panel, you can apply a spatial transformation to your Halton Points using the <strong>st_transform</strong> function. This option is useful when you want to reproject your points into a different coordinate system or perform other spatial transformations.</p>
+<p>Each of these tab panels allows you to fine-tune the parameters according to your specific requirements. They play a crucial role in shaping the characteristics of the Halton Point sample generated by the <strong>uc511::HaltonFrame</strong> function, ensuring that the resulting points align with your analysis objectives and spatial context.</p>
 <div class="section level5">
-<h5 id="sample-size-2">Sample size<a class="anchor" aria-label="anchor" href="#sample-size-2"></a>
+<h5 id="sample-size-sample-size-configuration">Sample size : Sample Size Configuration<a class="anchor" aria-label="anchor" href="#sample-size-sample-size-configuration"></a>
 </h5>
-<p>The <strong>Sample size</strong> option controls the size of the generated sample. At the time of writing only two options are supported:</p>
-<ul>
-<li><p><strong>Sample size as a percentage</strong> This is the default. If this option is selected, a slider is displayed. Use the slider to select the percentage of the auxillary file to be used as the sample. The corresponding sample size is displayed as an integer in a textbox to the right of the slider.</p></li>
-<li><p><strong>User specified sample size</strong> (Rename this option in the app and update here!). If this option is selected, the user is able to specify a specific sample size in a text inputbox. A sample size in the range one upto the number of rows in the auxillary file is supported.</p></li>
-</ul>
-<p>The <strong>Generate Sample</strong> menu item will only enable once the application user has specified a sample size.</p>
+<p>The <strong>Sample size</strong> option provides control over the size of the generated sample. As of the current version, two options are supported:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Sample size as a percentage</strong> (Default): When you choose this option, a slider will be displayed. Use the slider to select the desired percentage of the auxiliary file that you want to use as your sample. The corresponding sample size will be shown as an integer in a textbox next to the slider.</p></li>
+<li><p><strong>User-specified sample size</strong> (Rename this option in the app and update here!): Selecting this option allows you to specify an exact sample size by entering a specific number in a text input box. You can set a sample size ranging from one up to the total number of rows in the auxiliary file.</p></li>
+</ol>
+<p>Please note that the <strong>Generate Sample</strong> menu item will only become enabled once you have specified a sample size. This ensures that the application user defines the sample size before proceeding with the sample generation, providing clarity and control over the process.</p>
 </div>
 <div class="section level5">
-<h5 id="j">J<a class="anchor" aria-label="anchor" href="#j"></a>
+<h5 id="j-number-of-grid-cells">J : Number of Grid Cells<a class="anchor" aria-label="anchor" href="#j-number-of-grid-cells"></a>
 </h5>
-<p>The <strong>J</strong> option controls the number of grid cells. The default value is <strong>(3, 2)</strong>. The <strong>J</strong> parameter is a list of two values.</p>
+<p>The <strong>J</strong> option allows you to control the number of grid cells used in your analysis. By default, the value is set to <strong>(3, 2)</strong>. The <strong>J</strong> parameter is represented as a list containing two values.</p>
+<p>You can adjust these values to customize the granularity of your grid cells, which can have a significant impact on the spatial resolution and precision of your analysis. Experimenting with different <strong>J</strong> values can help you find the optimal configuration for your specific requirements.</p>
 </div>
 <div class="section level5">
-<h5 id="bases">Bases<a class="anchor" aria-label="anchor" href="#bases"></a>
+<h5 id="bases-specifying-co-prime-bases">Bases : Specifying Co-prime Bases<a class="anchor" aria-label="anchor" href="#bases-specifying-co-prime-bases"></a>
 </h5>
-<p>The <strong>Bases</strong> option is used to specify the values for the co-prime base for the Halton sequence. The default value is <strong>(2, 3)</strong>. The <strong>Bases</strong> parameter is a list of two values.</p>
+<p>The <strong>Bases</strong> option allows you to define the co-prime base values for the Halton sequence. The default values for this parameter are set to <strong>(2, 3)</strong>, and the <strong>Bases</strong> parameter is represented as a list containing two values.</p>
+<p>These co-prime bases determine how the Halton Points are distributed within each dimension of the sequence. By adjusting the <strong>Bases</strong> parameter, you can fine-tune the distribution pattern of your Halton Points, allowing you to achieve the desired spatial characteristics for your analysis. Experimenting with different base values can help you tailor the sequence to meet your specific needs.</p>
 </div>
 <div class="section level5">
-<h5 id="random-seed-options-2">Random seed options<a class="anchor" aria-label="anchor" href="#random-seed-options-2"></a>
+<h5 id="random-seed-options-setting-the-random-seed-options">Random seed options : Setting the Random Seed Options<a class="anchor" aria-label="anchor" href="#random-seed-options-setting-the-random-seed-options"></a>
 </h5>
-<p>The <strong>Random seed options</strong> option controls how the random seed is set. At the time of writing only two options are supported:</p>
-<ul>
-<li><p><strong>Set seed randomly</strong> This is the default. If this option is selected, the shiny app. will generate a random seed in the range <strong>1-10,000</strong> (verify this!).</p></li>
-<li><p><strong>User specified seed</strong> If this option is selected, a textinput box is displayed, which gives the user the opportunity to specify their own seed. Any valid integer is acceptable (check if I validate this!). A default of <strong>42</strong> is provided.</p></li>
-</ul>
+<p>The <strong>Random seed options</strong> option allows you to control how the random seed is established. As of the current version, two options are available:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Set seed randomly</strong> (Default): This is the default choice. When selected, the Shiny app generates a random seed within the range of <span class="math inline">\(1\)</span> to <span class="math inline">\(10,000\)</span>.</p></li>
+<li><p><strong>User-specified seed</strong>: By choosing this option, a text input box will be displayed, allowing you to input your own seed value. Any valid integer is acceptable. A default value of <strong>42</strong> is provided, but you can replace it with a different integer of your choice.</p></li>
+</ol>
+<p>Selecting the appropriate random seed option is important, as it can influence the reproducibility and consistency of your results. The flexibility to set a custom seed ensures that you can control the randomness of your analysis when needed.</p>
 </div>
 <div class="section level5">
-<h5 id="use-st_transform-1">Use st_transform<a class="anchor" aria-label="anchor" href="#use-st_transform-1"></a>
+<h5 id="use-st_transform">Use st_transform<a class="anchor" aria-label="anchor" href="#use-st_transform"></a>
 </h5>
+<p>Fill this in.</p>
 </div>
 </div>
 <div class="section level4">
-<h4 id="generate-sample-1">Generate Sample<a class="anchor" aria-label="anchor" href="#generate-sample-1"></a>
+<h4 id="generate-sample">Generate Sample<a class="anchor" aria-label="anchor" href="#generate-sample"></a>
 </h4>
-<p>With this menu item, the user is able to generate the random sample using the parameters previously specified. The <strong>Generate Sample</strong> menu item supports the following tab panels: <strong>Generate Halton Frame</strong> <strong>Download Halton Frame Sample</strong>. We will now look at each option in turn, to see what they do and how they are used.</p>
+<p>The <strong>Generate Sample</strong> menu item empowers you to create a random sample using the parameters you have specified. This menu item includes two tab panels: <strong>Generate Halton Frame</strong> and <strong>Download Halton Frame Sample</strong>. Let’s explore the purpose and functionality of each:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Generate Halton Frame</strong>: In this tab panel, you can trigger the generation of your random sample based on the previously defined parameters. This step initiates the process of creating a Halton Frame sample according to your specifications.</p></li>
+<li><p><strong>Download Halton Frame Sample</strong>: Once the random sample has been generated, you can use this tab panel to download the sample data. By selecting this option, you can save the generated Halton Frame sample to a file for further analysis or storage.</p></li>
+</ol>
+<p>These tab panels ensure a streamlined and organized workflow for generating and managing your random samples. They enable you to efficiently create, access, and utilize the Halton Frame samples in your data analysis tasks.</p>
 <div class="section level5">
 <h5 id="generate-halton-frame">Generate Halton Frame<a class="anchor" aria-label="anchor" href="#generate-halton-frame"></a>
 </h5>
-<p>To generate the SRS sample, click the <strong>Generate SRS Sample</strong> button. The random seed used to generate the sample is displayed in a textbox to the right of screen. If the user wants to generate a new sample with a new seed, then they will have to change the seed from the <strong>Random seed options</strong> panel and then generate a new sample. The generated sample is displayed in a datatable for ease of perusal.</p>
+<p>Generating the SRS Sample</p>
+<p>To create the Simple Random Sample (SRS) sample, follow these steps:</p>
+<ol style="list-style-type: decimal">
+<li>Click on the <strong>Generate ??? Sample</strong> button.</li>
+</ol>
+<p>Upon clicking this button, the SRS sample will be generated, and the random seed used for this specific sample will be displayed in a textbox to the right of the screen. If you wish to generate a new sample with a different seed, you can change the seed from the “Random seed options” panel and then initiate the sample generation process again.</p>
+<p>The generated SRS sample will be displayed in a datatable for easy examination and analysis. This format allows you to review and work with your sample data conveniently, facilitating further exploration and insights.</p>
 </div>
 <div class="section level5">
-<h5 id="download-halton-frame-sample">Download Halton Frame sample<a class="anchor" aria-label="anchor" href="#download-halton-frame-sample"></a>
+<h5 id="download-halton-frame-sample-saving-the-generated-sample">Download Halton Frame sample : Saving the Generated Sample<a class="anchor" aria-label="anchor" href="#download-halton-frame-sample-saving-the-generated-sample"></a>
 </h5>
-<p>Use this option if you want to save the generated sample to a CSV file. Click the <strong>Download</strong> button to initiate the file save process through a standard file save dialog. The default file name generated by the application has the form:</p>
+<p>If you wish to save the generated sample as a CSV file, follow these steps:</p>
+<ol style="list-style-type: decimal">
+<li>Click on the <strong>Download</strong> button. This action will initiate the file-saving process, opening a standard file save dialog.</li>
+</ol>
+<p>The default file name generated by the application follows this format:</p>
 <ul>
-<li><strong>dataset-srs-sample-yyyy-mm-dd-seed.csv</strong></li>
+<li>dataset-hf-sample-yyyy-mm-dd-seed-ssss.csv</li>
 </ul>
-<p>Where <strong>yyyy</strong> is the year, <strong>mm</strong> the month, <strong>dd</strong> the day and <strong>seed</strong> the seed used to generate the sample. The user is of course free to change the file name and the location of where the file will be saved.</p>
+<p>Here’s what each part of the default file name represents:</p>
+<ul>
+<li>
+<strong>dataset</strong>: Indicates that this file contains a dataset.</li>
+<li>
+<strong>hf-sample</strong>: Signifies that the dataset is derived from a Halton Frame sample.</li>
+<li>
+<strong>yyyy</strong>: The year when the sample was generated.</li>
+<li>
+<strong>mm</strong>: The month when the sample was generated.</li>
+<li>
+<strong>dd</strong>: The day when the sample was generated.</li>
+<li>
+<strong>ssss</strong>: The seed used for generating the sample associated with the file.</li>
+</ul>
+<p>However, you have the freedom to customize both the file name and the location where the file will be saved. This flexibility allows you to organize and store your sample data according to your preferences, making it more accessible for future analysis and reference.</p>
 </div>
 </div>
 <div class="section level4">
-<h4 id="visualize-sample-2">Visualize Sample<a class="anchor" aria-label="anchor" href="#visualize-sample-2"></a>
+<h4 id="visualize-sample-generating-leaflet-maps">Visualize Sample : Generating Leaflet Maps<a class="anchor" aria-label="anchor" href="#visualize-sample-generating-leaflet-maps"></a>
 </h4>
-<p>With this menu item, the user is able to generate a Leaflet map, the map is generated automatically when the <strong>Visualize Sample</strong> menu option is selected.</p>
-<p>For the map to be generated successfully, the user would have had to use the <strong>Specify Parameters</strong> menu option to specify the column names to use as the <strong>X</strong> and <strong>Y</strong> axes, using the <strong>Select X and Y columns</strong> option and have specified a CRS EPSG transform code using the <strong>Projected coordinate system</strong> option.</p>
-<p>By default, both the original data points (black) and the sample points (red) are displayed on the map. The leaflet map control [—] provides the user the ability to select which set of points are displayed.</p>
-<p>The user can click on any point and a popup message box will display the latitude and longitude of that point.</p>
+<p>With the <strong>Generate Leaflet Map</strong> menu item, users can effortlessly generate an interactive Leaflet map. The map is automatically created when you select the <strong>Visualize Sample</strong> menu option.</p>
+<p>For a successful map generation, follow these prerequisites:</p>
+<ul>
+<li><p><strong>Specify Parameters</strong> : Utilize the <strong>Specify Parameters</strong> menu option to define the column names for the <strong>X</strong> and <strong>Y</strong> axes. This can be done using the <strong>Select X and Y columns</strong> option. This step is crucial for correctly positioning your data on the map.</p></li>
+<li><p><strong>Coordinate System Transformation</strong>: Specify a Coordinate Reference System (CRS) EPSG transform code by using the <strong>Projected coordinate system</strong> option. This ensures that your data aligns accurately on the map.</p></li>
+</ul>
+<p>By default, the map displays both the original data points in black and the sample points in red. The Leaflet map control, known as <strong>addLayersControl</strong>, empowers you to toggle between displaying the original data and the sample data, granting you flexibility in your visualization.</p>
+<p>Additionally, the map allows users to interact with the data points. Clicking on any point will trigger a popup message box that displays the latitude and longitude coordinates of that specific point. This interactive feature enhances your ability to explore and analyze individual data points directly on the map, making your data visualization experience more informative and engaging.</p>
 <div class="section level5">
-<h5 id="save-image-1">Save Image<a class="anchor" aria-label="anchor" href="#save-image-1"></a>
+<h5 id="save-image-saving-map-images">Save Image : Saving Map Images<a class="anchor" aria-label="anchor" href="#save-image-saving-map-images"></a>
 </h5>
-<p>Clicking on the <strong>Save Image</strong> button will initiate process through a standard file save dialog. The default image file name generated by the application has the form:</p>
+<p>To save images from the map, follow these steps:</p>
+<ol style="list-style-type: decimal">
+<li>Click on the <strong>Save Image</strong> button, which will initiate a standard file save dialog.</li>
+</ol>
+<p>The default image file name generated by the application follows this format:</p>
+<ul>
+<li>map-hf-sample-yyyy-mm-dd-seed-ssss.jpeg</li>
+</ul>
+<p>Here’s what each part of the default file name represents:</p>
 <ul>
 <li>
-<strong>map-srs-sample-yyyy-mm-dd-seed.jpeg</strong> (need to add seed in code, check if default is jpeg)</li>
+<strong>map</strong>: Indicates that this file contains a map image.</li>
+<li>
+<strong>hf</strong>: Represents the HF option was used for the map.</li>
+<li>
+<strong>sample</strong>: Refers to the fact that the image is derived from your HF sample data.</li>
+<li>
+<strong>yyyy</strong>: The year when the image is being saved.</li>
+<li>
+<strong>mm</strong>: The month when the image is being saved.</li>
+<li>
+<strong>dd</strong>: The day when the image is being saved.</li>
+<li>
+<strong>ssss</strong>: The seed used for generating the sample associated with the image.</li>
 </ul>
-<p>What is being displayed on the map at the time the <strong>Save Image</strong> button is clicked is what is saved in the image file.</p>
+<p>It’s important to note that the content displayed on the map at the moment you click the “Save Image” button is what will be saved in the image file. This feature allows you to capture specific visualizations or representations of your data for future reference, reporting, or sharing purposes.</p>
 </div>
 </div>
+</div>
+<div class="section level3">
+<h3 id="the-end">The End<a class="anchor" aria-label="anchor" href="#the-end"></a>
+</h3>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

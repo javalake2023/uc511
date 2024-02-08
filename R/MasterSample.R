@@ -20,7 +20,7 @@
 #' package BASMasterSample.
 #'
 #' @param shp Shape file as a polygon to select sites for.
-#' @param N Number of sites to select.
+#' @param n Number of sites to select.
 #' @param bb Bounding box which defines the Master Sample. Default is BC Marine Master Sample.
 #' @param nExtra An efficiency problem of how many extra samples to draw before spatial clipping to shp.
 #' @param printJ Boolean if you want to see J, how many cuts of space are required to generate the sample efficiently.
@@ -29,7 +29,10 @@
 #' @returns Sample points.
 #'
 #' @export
-masterSampleSelect <- function(shp, N = 100, bb = NULL, nExtra = 5000, printJ = FALSE, inclSeed = NULL){
+masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FALSE, inclSeed = NULL){
+
+  # future option: optInclProb - return include probabilities or not.
+  optInclProb <- FALSE
 
   # We always use base 2,3
   base <- c(2,3)
@@ -37,15 +40,13 @@ masterSampleSelect <- function(shp, N = 100, bb = NULL, nExtra = 5000, printJ = 
   if(is.null(inclSeed)) inclSeed <- base::floor(stats::runif(1,1,10000))
 
   # Updating to work for sf only. Start here...
-  if (class(shp)[1] != "sf")
-  {
+  if (class(shp)[1] != "sf"){
     shp <- sf::st_as_sf(shp)
   }
 
   # Set up Western Canada Marine Master Sample as default, general for any.
   # bb now includes its rotation as well.
-  if(is.null(bb))
-  {
+  if(is.null(bb)){
     bb <- getBB()
     msproj <- getProj()
     seed <- getSeed()
@@ -55,8 +56,7 @@ masterSampleSelect <- function(shp, N = 100, bb = NULL, nExtra = 5000, printJ = 
   }
 
   orig.crs <- NULL
-  if(sf::st_crs(shp) != sf::st_crs(msproj))
-  {
+  if(sf::st_crs(shp) != sf::st_crs(msproj)){
     orig.crs <- sf::st_crs(shp)$proj4string
     shp <- sf::st_transform(shp, msproj)
   }
@@ -69,18 +69,17 @@ masterSampleSelect <- function(shp, N = 100, bb = NULL, nExtra = 5000, printJ = 
   cntrd <- base::attr(bb, "centroid")
   theta <- base::attr(bb, "rotation")
 
-  #We can use Halton Boxes to speed up code when the polygons are small and all over the place.
-  #Kind of like magic!
-  draw <- N + nExtra
+  # We can use Halton Boxes to speed up code when the polygons are small and all over the place.
+  # Kind of like magic!
+  draw <- n + nExtra
 
   J <- c(0, 0)
   # Tricky here to figure out where the shape is on the vertical Halton box.
   shp.rot <- rotate.shp(shp, bb, back = FALSE)
   hal.frame <- shape2Frame(shp.rot, J = J, bb = bb, projstring = msproj)
-  area.shp <- as.numeric(sum(sf::st_area(shp)))
+  area.shp <- as.numeric(base::sum(sf::st_area(shp)))
   # Subset again:
-  while(area.shp < 0.25*as.numeric(sf::st_area(hal.frame))[1])
-  {
+  while(area.shp < 0.25*as.numeric(sf::st_area(hal.frame))[1]){
     if(base[2]^J[2] > base[1]^J[1]){
       J[1] <- J[1] + 1
     }else{
@@ -91,18 +90,12 @@ masterSampleSelect <- function(shp, N = 100, bb = NULL, nExtra = 5000, printJ = 
 
   hal.fr2 <- uc511::rotate.shp(hal.frame, bb)
   hal.indx <- which(raster::rowSums(sf::st_intersects(hal.fr2, shp, sparse = FALSE)) > 0)
+  # need to remove prior to submitting to CRAN.
   if(length(hal.indx) < 2){browser()}
 
   #hal.pts <- (sf::st_centroid(hal.frame) %>% sf::st_coordinates())[hal.indx,]	## Hack to react to changes in sf. Need to get coordinates and then subset now. Fix it better in the future.
   hal.tmp <- sf::st_centroid(hal.fr2) #hal.frame ???? #[hal.indx,]
   hal.pts <- sf::st_coordinates(hal.tmp)[hal.indx,]
-
-  print("hal.indx:")
-  print(hal.indx)
-  print("len hal.indx:")
-  print(length(hal.indx))
-  print("len hal.pts:")
-  print(length(hal.pts))
 
   # Find the corner Halton Pts
   box.lower <- t(base::apply(hal.pts, 1, FUN = function(x){(x - shift.bas)/scale.bas}))
@@ -110,7 +103,7 @@ masterSampleSelect <- function(shp, N = 100, bb = NULL, nExtra = 5000, printJ = 
   halt.rep <- uc511::SolveCongruence(A, base, J)
   B <- base::prod(c(2, 3) ^ J)
 
-  # I like to know how many divisions we had to make...
+  # We like to know how many divisions we had to make...
   if(printJ){
     msg <- "uc511(masterSampleSelect) Number of divisions made (J=) %s.\n"
     msgs <- base::sprintf(msg, J)
@@ -124,6 +117,8 @@ masterSampleSelect <- function(shp, N = 100, bb = NULL, nExtra = 5000, printJ = 
     }else {
       seedshift <- endPoint + seed
     }
+    print("seedshift:")
+    print(seedshift)
     #pts <- uc511::cppRSHalton(n = draw, seeds = seedshift, bases = c(2, 3, 5), boxes = halt.rep, J = J)
     #pts <- pts[1:draw,]
     res <- uc511::cppRSHalton_br(n = draw, seeds = seedshift, bases = c(2, 3, 5))
@@ -131,43 +126,34 @@ masterSampleSelect <- function(shp, N = 100, bb = NULL, nExtra = 5000, printJ = 
     siteid <- base::seq(from = 1, to = draw, by = 1)
     pts <- base::cbind(siteid, pts)
 
-    #print("dim(cpp pts)")
-    #print(dim(pts))
-    #print(pts[1:10,])
-    #xpts <- RSHalton(n = draw, seeds = seedshift, bases = c(2,3,5), boxes = halt.rep, J = J)
-    #print("YIKES:")
-    #all.equal(pts, xpts)
-    #print("dim(r pts)")
-    #print(dim(pts))
-    #print(pts[1:10,])
-
     xy <- base::cbind(pts[,2]*scale.bas[1] + shift.bas[1], pts[,3]*scale.bas[2] + shift.bas[2])
     if(theta != 0) xy <- sweep ( sweep(xy, 2,  cntrd, FUN = "-") %*% uc511::rot(-theta), 2,  cntrd, FUN = "+")
-    pts.coord <- sf::st_as_sf(data.frame(SiteID = pts[,1] + endPoint, xy, inclProb = pts[,4]), coords = c(2,3))
+    if(optInclProb){
+      pts.coord <- sf::st_as_sf(data.frame(SiteID = pts[,1] + endPoint, xy, inclProb = pts[,4]), coords = c(2,3))
+    } else {
+      pts.coord <- sf::st_as_sf(data.frame(SiteID = pts[,1] + endPoint, xy), coords = c(2,3))
+    }
     sf::st_crs(pts.coord) <- sf::st_crs(bb)
     pts.coord <- pts.coord[shp,]
     return(pts.coord)
   }
 
   pts.sample <- getSample()
-  print(pts.sample)
-  while(nrow(pts.sample) == 0) {
+  while(nrow(pts.sample) == 0){
     draw <- draw * 2
     pts.sample <- getSample()
   }
 
   di <- 1
-  while(nrow(pts.sample) < N){
-    print("nrow(pts.sample)")
-    last.pt <- pts.sample$SiteID[nrow(pts.sample)]
+  while(nrow(pts.sample) < n){
+    last.pt <- pts.sample$SiteID[base::nrow(pts.sample)]
     new.pts <- getSample(k = di, endPoint = last.pt)
     if(nrow(new.pts) > 0) pts.sample <- base::rbind(pts.sample, new.pts)
     di <- di + 1
   }
 
-  smp <- pts.sample[1:N,]
-  if(!is.null(orig.crs))
-  {
+  smp <- pts.sample[1:n,]
+  if(!is.null(orig.crs)){
     smp <- sf::st_transform(smp, orig.crs)
   }
   return(smp)
@@ -186,7 +172,7 @@ masterSampleSelect <- function(shp, N = 100, bb = NULL, nExtra = 5000, printJ = 
 #' package BASMasterSample.
 #'
 #' @param shp Shape file as a polygon (sp or sf) to select sites for.
-#' @param N Number of sites to select. If using stratification it is a named vector containing sample sizes of each group.
+#' @param n Number of sites to select. If using stratification it is a named vector containing sample sizes of each group.
 #' @param bb Bounding box which defines the Master Sample. Default is BC Marine Master Sample.
 #' @param stratum Name of column of data.frame attached to shapefile that makes up the strata.
 #' @param nExtra An efficiency problem of how many extra samples to draw before spatial clipping to shp.
@@ -213,14 +199,14 @@ masterSampleSelect <- function(shp, N = 100, bb = NULL, nExtra = 5000, printJ = 
 #' }
 #'
 #' @export
-getBASMasterSample <- function(shp, N = 100, bb = NULL, stratum = NULL, nExtra = 10000, quiet = FALSE, inclSeed = NULL)
+getBASMasterSample <- function(shp, n = 100, bb = NULL, stratum = NULL, nExtra = 0, quiet = FALSE, inclSeed = NULL)
 {
   if(is.null(inclSeed)) inclSeed <- base::floor(stats::runif(1,1,10000))
   if(is.null(stratum)){
-    smp <- masterSampleSelect(shp = shp, N = N, bb = bb, nExtra = nExtra, inclSeed = inclSeed)
+    smp <- masterSampleSelect(shp = shp, n = n, bb = bb, nExtra = nExtra, inclSeed = inclSeed)
   }else{
-    if(is.null(names(N))) return("Need design sample size as N = named vector")
-    strata.levels <- names(N)
+    if(is.null(names(n))) return("Need design sample size as n = named vector")
+    strata.levels <- names(n)
 
     if(!quiet){
       msg <- "uc511(getBASMasterSample) Stratum: %s.\n"
@@ -229,12 +215,11 @@ getBASMasterSample <- function(shp, N = 100, bb = NULL, stratum = NULL, nExtra =
     }
     k.indx <- which(shp[, stratum, drop = TRUE] == strata.levels[1])
     shp.stratum <- shp[k.indx,] #%>% st_union()	# ? Not sure if this is necessary... slowed things down too much!
-    smp <- masterSampleSelect(shp.stratum, N = N[1], bb = bb, nExtra = nExtra, printJ = !quiet, inclSeed)
+    smp <- masterSampleSelect(shp.stratum, n = n[1], bb = bb, nExtra = nExtra, printJ = !quiet, inclSeed)
     smp[stratum] <- strata.levels[1]
 
-    if(base::length(N) > 1){
-      for(k in 2:base::length(N))
-      {
+    if(base::length(n) > 1){
+      for(k in 2:base::length(n)){
         if(!quiet){
           msg <- "uc511(getBASMasterSample) Stratum: %s."
           msgs <- base::sprintf(msg, strata.levels[k])
@@ -242,14 +227,14 @@ getBASMasterSample <- function(shp, N = 100, bb = NULL, stratum = NULL, nExtra =
         }
         k.indx <- which(shp[, stratum, drop = TRUE] == strata.levels[k])
         shp.stratum <- shp[k.indx,] ## %>% st_union()	# Needed?
-        smp.s <- masterSampleSelect(shp = shp.stratum, N = N[k], bb = bb, nExtra = nExtra, printJ = !quiet, inclSeed = inclSeed)
+        smp.s <- masterSampleSelect(shp = shp.stratum, n = n[k], bb = bb, nExtra = nExtra, printJ = !quiet, inclSeed = inclSeed)
         smp.s[stratum] <- strata.levels[k]
         smp <- base::rbind(smp, smp.s)
       }
     }
-  }
+  } # end is.null(stratum)
   result <- base::list(sample = smp,
-                       seed = inclSeed)
+                       seed   = inclSeed)
   return(result)
 }
 
@@ -293,15 +278,13 @@ getBASMasterSample <- function(shp, N = 100, bb = NULL, stratum = NULL, nExtra =
 point2Frame <- function(pts, bb = NULL, base = c(2,3), J = NULL, size = 100)
 {
   # Updating to work for sf only. Start here...
-  if (class(pts)[1] != "sf")
-  {
+  if (class(pts)[1] != "sf"){
     pts <-  sf::st_as_sf(pts)
   }
 
   # Set up Western Canada Marine Master Sample as default, general for any.
   # bb now includes its rotation as well.
-  if(is.null(bb))
-  {
+  if(is.null(bb)){
     bb <- getBB()
     msproj <- getProj()
     seed <- getSeed()
@@ -311,8 +294,7 @@ point2Frame <- function(pts, bb = NULL, base = c(2,3), J = NULL, size = 100)
   }
 
   orig.crs <- NULL
-  if(sf::st_crs(pts) != sf::st_crs(msproj))
-  {
+  if(sf::st_crs(pts) != sf::st_crs(msproj)){
     orig.crs <- sf::st_crs(pts)$proj4string
     pts <- sf::st_transform(pts, msproj)
   }
@@ -399,15 +381,13 @@ getIndividualBoxIndices <- function(pts, J = NULL, bb, size = 100)
   base <- c(2,3)
 
   # Updating to work for sf only. Start here...
-  if (class(pts)[1] != "sf")
-  {
+  if (class(pts)[1] != "sf"){
     pts <-  sf::st_as_sf(pts)
   }
 
   # Set up Western Canada Marine Master Sample as default, general for any.
   # bb now includes its rotation as well.
-  if(is.null(bb))
-  {
+  if(is.null(bb)){
     bb <- getBB()
     msproj <- getProj()
     seed <- getSeed()
@@ -417,13 +397,12 @@ getIndividualBoxIndices <- function(pts, J = NULL, bb, size = 100)
   }
 
   orig.crs <- NULL
-  if(sf::st_crs(pts) != sf::st_crs(msproj))
-  {
+  if(sf::st_crs(pts) != sf::st_crs(msproj)){
     orig.crs <- sf::st_crs(pts)$proj4string
     pts <- sf::st_transform(pts, msproj)
   }
 
-  #Scale and shift Halton to fit into bounding box
+  # Scale and shift Halton to fit into bounding box
   bb.bounds <- sf::st_bbox(bb)
   scale.bas <- bb.bounds[3:4] - bb.bounds[1:2]
   shift.bas <- bb.bounds[1:2]

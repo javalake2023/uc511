@@ -14,5 +14,5 @@ Defines the random seed specific to the Western Canada Marine Master Sample.
 }
 \details{
 This function was first written by Paul van Dam-Bates for the
-package BASMasterSample.
+package BASMasterSample and later ported to this package, uc511.
 }

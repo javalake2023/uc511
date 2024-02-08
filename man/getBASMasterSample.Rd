@@ -6,10 +6,10 @@
 \usage{
 getBASMasterSample(
   shp,
-  N = 100,
+  n = 100,
   bb = NULL,
   stratum = NULL,
-  nExtra = 10000,
+  nExtra = 0,
   quiet = FALSE,
   inclSeed = NULL
 )
@@ -17,7 +17,7 @@ getBASMasterSample(
 \arguments{
 \item{shp}{Shape file as a polygon (sp or sf) to select sites for.}
 
-\item{N}{Number of sites to select. If using stratification it is a named vector containing sample sizes of each group.}
+\item{n}{Number of sites to select. If using stratification it is a named vector containing sample sizes of each group.}
 
 \item{bb}{Bounding box which defines the Master Sample. Default is BC Marine Master Sample.}
 
