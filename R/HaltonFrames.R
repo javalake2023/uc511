@@ -77,12 +77,29 @@ validate_parameters <- function(parm, parm_value){
 HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
                         J = c(3, 2),
                         bases = c(2, 3),
-                        shapefile = NULL,
-                        crs = NULL){
+                        shapefile = NULL){
   # validate our parameters.
   uc511::validate_parameters("J", J)
   uc511::validate_parameters("bases", bases)
   uc511::validate_parameters("n", c(n))
+
+  # validate the shapefile (if specified) has an associated CRS.
+  crs <- NULL
+  # Check if the shapefile has an associated CRS
+  if (!is.null(shapefile)){
+    if (is.null(st_crs(shapefile))) {
+      stop("uc511(HaltonFrame) Shapefile does not have an associated CRS.")
+    } else {
+      msg <- "uc511(HaltonFrame) Shapefile has an associated CRS."
+      msgs <- sprintf(msg)
+      message(msgs)
+      crs <- st_crs(shapefile)
+    }
+  } else {
+    # shapefile is null, ie. not specified, so just call HaltonFrameBase
+    hf_ <- uc511::HaltonFrameBase(J = c(J[1], J[2]), bases = bases)
+    return(hf_)
+  }
 
   # number of points currently in the area of interest.
   pts_in_intersection <- 0

@@ -117,8 +117,8 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
     }else {
       seedshift <- endPoint + seed
     }
-    print("seedshift:")
-    print(seedshift)
+    #print("seedshift:")
+    #print(seedshift)
     #pts <- uc511::cppRSHalton(n = draw, seeds = seedshift, bases = c(2, 3, 5), boxes = halt.rep, J = J)
     #pts <- pts[1:draw,]
     res <- uc511::cppRSHalton_br(n = draw, seeds = seedshift, bases = c(2, 3, 5))
@@ -139,13 +139,16 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
   }
 
   pts.sample <- getSample()
-  while(nrow(pts.sample) == 0){
+  while(base::nrow(pts.sample) == 0){
     draw <- draw * 2
     pts.sample <- getSample()
+    msg <- "uc511(masterSampleSelect) after getSample %s.\n"
+    msgs <- base::sprintf(msg, base::nrow(pts.sample))
+    base::message(msgs)
   }
 
   di <- 1
-  while(nrow(pts.sample) < n){
+  while(base::nrow(pts.sample) < n){
     last.pt <- pts.sample$SiteID[base::nrow(pts.sample)]
     new.pts <- getSample(k = di, endPoint = last.pt)
     if(nrow(new.pts) > 0) pts.sample <- base::rbind(pts.sample, new.pts)
@@ -199,7 +202,7 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
 #' }
 #'
 #' @export
-getBASMasterSample <- function(shp, n = 100, bb = NULL, stratum = NULL, nExtra = 0, quiet = FALSE, inclSeed = NULL)
+getBASMasterSample <- function(shp, n = 100, bb = NULL, stratum = NULL, nExtra = 1000, quiet = FALSE, inclSeed = NULL)
 {
   if(is.null(inclSeed)) inclSeed <- base::floor(stats::runif(1,1,10000))
   if(is.null(stratum)){

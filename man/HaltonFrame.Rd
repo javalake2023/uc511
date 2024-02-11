@@ -8,8 +8,7 @@ HaltonFrame(
   n = (bases[1]^J[1]) * (bases[2]^J[2]),
   J = c(3, 2),
   bases = c(2, 3),
-  shapefile = NULL,
-  crs = NULL
+  shapefile = NULL
 )
 }
 \arguments{

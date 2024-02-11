@@ -9,7 +9,7 @@ getBASMasterSample(
   n = 100,
   bb = NULL,
   stratum = NULL,
-  nExtra = 0,
+  nExtra = 1000,
   quiet = FALSE,
   inclSeed = NULL
 )
