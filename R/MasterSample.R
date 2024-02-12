@@ -163,13 +163,13 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
 }
 
 
-#' @name getBASMasterSample
+#' @name getBAS
 #'
 #' @title Select points from a polygon using a BAS Master Sample.
 #'
 #' @description This is the main function for selecting sites using the BAS master
 #' sample. It assumes that you have already defined the master sample using the
-#' buildMS() function or will be selecting a marine master sample site in BC.
+#' BoundingBox() function or will be selecting a marine master sample site in BC.
 #'
 #' @details This function was first written by Paul van Dam-Bates for the
 #' package BASMasterSample.
@@ -196,13 +196,13 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
 #' # make it explicit that it is different.
 #' shp.MPAs <- Fed_MPAs_clipped[Fed_MPAs_clipped$ZONEDESC_E != "Core Protection Zone", ]
 #' # Select the Master Sample sites:
-#' smp.str <- uc511::getBASMasterSample(shp.MPAs, N = N_Zone, stratum = "ZONEDESC_E", quiet = FALSE)
+#' smp.str <- uc511::getBAS(shp.MPAs, N = N_Zone, stratum = "ZONEDESC_E", quiet = FALSE)
 #' plot(sf::st_geometry(shp.MPAs))
 #' plot(sf::st_geometry(smp.str), add = T, col= "red", pch = 16)
 #' }
 #'
 #' @export
-getBASMasterSample <- function(shp, n = 100, bb = NULL, stratum = NULL, nExtra = 1000, quiet = FALSE, inclSeed = NULL)
+getBAS <- function(shp, n = 100, bb = NULL, stratum = NULL, nExtra = 1000, quiet = FALSE, inclSeed = NULL)
 {
   if(is.null(inclSeed)) inclSeed <- base::floor(stats::runif(1,1,10000))
   if(is.null(stratum)){
@@ -212,7 +212,7 @@ getBASMasterSample <- function(shp, n = 100, bb = NULL, stratum = NULL, nExtra =
     strata.levels <- names(n)
 
     if(!quiet){
-      msg <- "uc511(getBASMasterSample) Stratum: %s.\n"
+      msg <- "uc511(getBAS) Stratum: %s.\n"
       msgs <- base::sprintf(msg, strata.levels[1])
       base::message(msgs)
     }
@@ -224,7 +224,7 @@ getBASMasterSample <- function(shp, n = 100, bb = NULL, stratum = NULL, nExtra =
     if(base::length(n) > 1){
       for(k in 2:base::length(n)){
         if(!quiet){
-          msg <- "uc511(getBASMasterSample) Stratum: %s."
+          msg <- "uc511(getBAS) Stratum: %s."
           msgs <- base::sprintf(msg, strata.levels[k])
           base::message(msgs)
         }
@@ -268,7 +268,7 @@ getBASMasterSample <- function(shp, n = 100, bb = NULL, stratum = NULL, nExtra =
 #' library(bcmapsdata)
 #' library(bcmaps)
 #' cities <- bcmaps::get_layer("bc_cities")
-#' bb <- uc511::buildMS(cities, d = 2, FALSE)
+#' bb <- uc511::BoundingBox(cities, d = 2, FALSE)
 #' # For visibility will make boxes 10 km
 #' cities.halton <- uc511::point2Frame(pts = cities, bb = bb, size = 10000)
 #' plot(sf::st_geometry(cities), pch = 20, cex = 0.1)
@@ -370,7 +370,7 @@ point2Frame <- function(pts, bb = NULL, base = c(2,3), J = NULL, size = 100)
 #' install.packages('bcmapsdata', repos='https://bcgov.github.io/drat/')
 #' library(bcmapsdata)
 #' cities <- bcmaps::get_layer("bc_cities")
-#' bb <- uc511::buildMS(cities, d = 2, FALSE)
+#' bb <- uc511::BoundingBox(cities, d = 2, FALSE)
 #' # For visibility will make boxes 10 km
 #' cities.ord <- uc511::getIndividualBoxIndices(pts = cities, bb = bb, size = 100)
 #' plot(st_geometry(cities), pch = 20)

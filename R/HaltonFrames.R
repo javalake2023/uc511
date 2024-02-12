@@ -77,7 +77,8 @@ validate_parameters <- function(parm, parm_value){
 HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
                         J = c(3, 2),
                         bases = c(2, 3),
-                        shapefile = NULL){
+                        shapefile = NULL,
+                        randomStart = FALSE){
   # validate our parameters.
   uc511::validate_parameters("J", J)
   uc511::validate_parameters("bases", bases)
@@ -151,6 +152,12 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
   msg <- "uc511(HaltonFrame) %s samples found in %s iterations, using J1=%s and J2=%s."
   msgs <- sprintf(msg, pts_in_intersection, i, J[1]+i, J[2]+i)
   message(msgs)
+
+  # are we performing a randomStart?
+  if (randomStart){
+    # need to select n samples from diff_ (rename this to samp).
+    # and then replicate; generate random number and take new sample.
+  }
 
   # Need to return cpprshs$pts, cpprshs$xklist, z and hf
   result <- base::list(halton_seq = hf_$halton_seq,

@@ -1,4 +1,4 @@
-#' @name BuildMS
+#' @name BoundingBox
 #'
 #' @title Build a new Master Sample with a random rotation and seed.
 #'
@@ -21,14 +21,14 @@
 #' @examples
 #' \dontrun{
 #' data(NS_bioregion)
-#' bb <- uc511::buildMS(shp = NS_bioregion)         # Vertically aligned master sample bounding box.
+#' bb <- uc511::BoundingBox(shp = NS_bioregion)         # Vertically aligned master sample bounding box.
 #' bb.rot <- uc511::rotate.shp(bb, bb, back = TRUE) # Actual bounding box.
 #' plot(sf::st_geometry(NS_bioregion))
 #' plot(sf::st_geometry(bb.rot), add = TRUE)
 #' }
 #'
 #' @export
-buildMS <- function(shp, d = 2, showOutput = TRUE, rotate = TRUE)
+BoundingBox <- function(shp, d = 2, showOutput = TRUE, rotate = TRUE)
 {
   # generate 2 seed values.
   seed <- base::floor(stats::runif(d, 0, 10000))
@@ -52,10 +52,10 @@ buildMS <- function(shp, d = 2, showOutput = TRUE, rotate = TRUE)
   attr(build.bb, "seed") <- seed
 
   if(showOutput){
-    msg <- "uc511(buildMS) Seed: %s.\n"
+    msg <- "uc511(BoundingBox) Seed: %s.\n"
     msgs <- sprintf(msg, seed)
     base::message(msgs)
-    msg <- "uc511(buildMS) Rotation: %s Radians.\n"
+    msg <- "uc511(BoundingBox) Rotation: %s Radians.\n"
     msgs <- sprintf(msg, theta)
     base::message(msgs)
   }
