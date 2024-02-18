@@ -37,8 +37,6 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
   # We always use base 2,3
   base <- c(2,3)
 
-  if(is.null(inclSeed)) inclSeed <- base::floor(stats::runif(1,1,10000))
-
   # Updating to work for sf only. Start here...
   if (class(shp)[1] != "sf"){
     shp <- sf::st_as_sf(shp)
@@ -49,11 +47,28 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
   if(is.null(bb)){
     bb <- getBB()
     msproj <- getProj()
-    seed <- getSeed()
+    #seed <- getSeed()
   }else{
     msproj <- sf::st_crs(bb)$proj4string
-    seed <- base::attr(bb, "seed")[1:2]	# 3rd dimension is not yet supported...
   }
+
+  # if inclSeed NULL then generate new seed and add to BB, otherwise replace
+  # seed in BB with user specified seed from inclSeed.
+  ##attr(build.bb, "seed") <- inclSeed todo!!!!!
+  if(is.null(inclSeed)){
+    # generate 2 seed values.
+    inclSeed <- base::floor(stats::runif(2, 0, 10000))
+    #inclSeed <- base::floor(stats::runif(1,1,10000))
+  }
+
+  # replace seed in BB no matter what.
+  attr(bb, "seed") <- inclSeed
+
+  # seed <- base::attr(bb, "seed")[1:2]	# 3rd dimension is not yet supported...
+  #msg <- "uc511(masterSampleSelect)(bb) inclSeed = %s.\n"
+  #msgs <- base::sprintf(msg, inclSeed)
+  #base::message(msgs)
+  cat("uc511(masterSampleSelect)(bb) inclSeed = ", inclSeed, ".", "\n")
 
   orig.crs <- NULL
   if(sf::st_crs(shp) != sf::st_crs(msproj)){
@@ -90,15 +105,19 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
 
   hal.fr2 <- uc511::rotate.shp(hal.frame, bb)
   hal.indx <- which(raster::rowSums(sf::st_intersects(hal.fr2, shp, sparse = FALSE)) > 0)
-  # need to remove prior to submitting to CRAN.
-  if(length(hal.indx) < 2){browser()}
+  # need to remove the next line prior to submitting to CRAN.
+  if(length(hal.indx) < 1){browser()}
 
   #hal.pts <- (sf::st_centroid(hal.frame) %>% sf::st_coordinates())[hal.indx,]	## Hack to react to changes in sf. Need to get coordinates and then subset now. Fix it better in the future.
   hal.tmp <- sf::st_centroid(hal.fr2) #hal.frame ???? #[hal.indx,]
   hal.pts <- sf::st_coordinates(hal.tmp)[hal.indx,]
 
   # Find the corner Halton Pts
-  box.lower <- t(base::apply(hal.pts, 1, FUN = function(x){(x - shift.bas)/scale.bas}))
+  if(length(hal.indx) == 1){
+    box.lower <- as.matrix((hal.pts - shift.bas)/scale.bas)
+  } else {
+    box.lower <- t(base::apply(hal.pts, 1, FUN = function(x){(x - shift.bas)/scale.bas}))
+  }
   A <- uc511::GetBoxIndices(box.lower, base, J)
   halt.rep <- uc511::SolveCongruence(A, base, J)
   B <- base::prod(c(2, 3) ^ J)
@@ -111,14 +130,23 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
   }
 
   getSample <- function(k = 0, endPoint = 0){
-    print("getSample")
-    seed <- c(seed, inclSeed)
+    #seed <- c(seed, inclSeed)
+    seed <- inclSeed
+
+    cat("uc511(masterSampleSelect)(getSample) seed = ", seed, ".", "\n")
+    #msg <- "uc511(masterSampleSelect)(getSample) seed = %s.\n"
+    #msgs <- base::sprintf(msg, seed)
+    #base::message(msgs)
+
     if(k == 0){ seedshift <- seed
     }else {
       seedshift <- endPoint + seed
     }
-    #print("seedshift:")
-    #print(seedshift)
+    cat("uc511(masterSampleSelect)(getSample) seedshift = ", seedshift, ".", "\n")
+    #msg <- "uc511(masterSampleSelect)(getSample) seedshift = %s.\n"
+    #msgs <- base::sprintf(msg, seedshift)
+    #base::message(msgs)
+
     #pts <- uc511::cppRSHalton(n = draw, seeds = seedshift, bases = c(2, 3, 5), boxes = halt.rep, J = J)
     #pts <- pts[1:draw,]
     res <- uc511::cppRSHalton_br(n = draw, seeds = seedshift, bases = c(2, 3, 5))
@@ -142,9 +170,10 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
   while(base::nrow(pts.sample) == 0){
     draw <- draw * 2
     pts.sample <- getSample()
-    msg <- "uc511(masterSampleSelect) after getSample %s.\n"
-    msgs <- base::sprintf(msg, base::nrow(pts.sample))
-    base::message(msgs)
+    cat("uc511(masterSampleSelect)(after getSample) nrow(pts.sample) = ", base::nrow(pts.sample), ".", "\n")
+    #msg <- "uc511(masterSampleSelect) after getSample %s.\n"
+    #msgs <- base::sprintf(msg, base::nrow(pts.sample))
+    #base::message(msgs)
   }
 
   di <- 1
@@ -159,7 +188,9 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
   if(!is.null(orig.crs)){
     smp <- sf::st_transform(smp, orig.crs)
   }
-  return(smp)
+  result <- base::list(sample = smp,
+                       seed   = inclSeed)
+  return(result)
 }
 
 
@@ -204,11 +235,17 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
 #' @export
 getBAS <- function(shp, n = 100, bb = NULL, stratum = NULL, nExtra = 1000, quiet = FALSE, inclSeed = NULL)
 {
-  if(is.null(inclSeed)) inclSeed <- base::floor(stats::runif(1,1,10000))
+  #if(is.null(inclSeed)) inclSeed <- base::floor(stats::runif(1,1,10000))
   if(is.null(stratum)){
-    smp <- masterSampleSelect(shp = shp, n = n, bb = bb, nExtra = nExtra, inclSeed = inclSeed)
+    result <- masterSampleSelect(shp = shp,
+                                 n = n,
+                                 bb = bb,
+                                 nExtra = nExtra,
+                                 inclSeed = inclSeed)
+    smp <- result$sample
+    inclSeed <- result$seed
   }else{
-    if(is.null(names(n))) return("Need design sample size as n = named vector")
+    if(is.null(names(n))) return("uc511(getBAS) Need design sample size as n = named vector")
     strata.levels <- names(n)
 
     if(!quiet){
@@ -218,7 +255,14 @@ getBAS <- function(shp, n = 100, bb = NULL, stratum = NULL, nExtra = 1000, quiet
     }
     k.indx <- which(shp[, stratum, drop = TRUE] == strata.levels[1])
     shp.stratum <- shp[k.indx,] #%>% st_union()	# ? Not sure if this is necessary... slowed things down too much!
-    smp <- masterSampleSelect(shp.stratum, n = n[1], bb = bb, nExtra = nExtra, printJ = !quiet, inclSeed)
+    result <- masterSampleSelect(shp.stratum,
+                                 n = n[1],
+                                 bb = bb,
+                                 nExtra = nExtra,
+                                 printJ = !quiet,
+                                 inclSeed = inclSeed)
+    smp <- result$sample
+    inclSeed <- result$seed
     smp[stratum] <- strata.levels[1]
 
     if(base::length(n) > 1){
@@ -230,7 +274,14 @@ getBAS <- function(shp, n = 100, bb = NULL, stratum = NULL, nExtra = 1000, quiet
         }
         k.indx <- which(shp[, stratum, drop = TRUE] == strata.levels[k])
         shp.stratum <- shp[k.indx,] ## %>% st_union()	# Needed?
-        smp.s <- masterSampleSelect(shp = shp.stratum, n = n[k], bb = bb, nExtra = nExtra, printJ = !quiet, inclSeed = inclSeed)
+        result <- masterSampleSelect(shp = shp.stratum,
+                                    n = n[k],
+                                    bb = bb,
+                                    nExtra = nExtra,
+                                    printJ = !quiet,
+                                    inclSeed = inclSeed)
+        smp.s <- result$sample
+        inclSeed <- result$seed
         smp.s[stratum] <- strata.levels[k]
         smp <- base::rbind(smp, smp.s)
       }

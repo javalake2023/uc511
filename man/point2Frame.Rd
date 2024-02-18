@@ -36,7 +36,7 @@ install.packages('bcmapsdata', repos='https://bcgov.github.io/drat/')
 library(bcmapsdata)
 library(bcmaps)
 cities <- bcmaps::get_layer("bc_cities")
-bb <- uc511::buildMS(cities, d = 2, FALSE)
+bb <- uc511::BoundingBox(cities, d = 2, FALSE)
 # For visibility will make boxes 10 km
 cities.halton <- uc511::point2Frame(pts = cities, bb = bb, size = 10000)
 plot(sf::st_geometry(cities), pch = 20, cex = 0.1)

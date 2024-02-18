@@ -35,7 +35,7 @@ library(bcmaps)
 install.packages('bcmapsdata', repos='https://bcgov.github.io/drat/')
 library(bcmapsdata)
 cities <- bcmaps::get_layer("bc_cities")
-bb <- uc511::buildMS(cities, d = 2, FALSE)
+bb <- uc511::BoundingBox(cities, d = 2, FALSE)
 # For visibility will make boxes 10 km
 cities.ord <- uc511::getIndividualBoxIndices(pts = cities, bb = bb, size = 100)
 plot(st_geometry(cities), pch = 20)

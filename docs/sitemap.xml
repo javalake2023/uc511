@@ -28,6 +28,9 @@
     <loc>/reference/BASMastersample.html</loc>
   </url>
   <url>
+    <loc>/reference/BoundingBox.html</loc>
+  </url>
+  <url>
     <loc>/reference/BuildMS.html</loc>
   </url>
   <url>
@@ -89,6 +92,9 @@
   </url>
   <url>
     <loc>/reference/cppWhere2Start.html</loc>
+  </url>
+  <url>
+    <loc>/reference/getBAS.html</loc>
   </url>
   <url>
     <loc>/reference/getBASMasterSample.html</loc>

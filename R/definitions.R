@@ -28,7 +28,7 @@
 #' }
 #'
 #' @export
-BoundingBox <- function(shp, d = 2, showOutput = TRUE, rotate = TRUE)
+BoundingBox <- function(shp, d = 2, showOutput = TRUE, rotate = FALSE)
 {
   # generate 2 seed values.
   seed <- base::floor(stats::runif(d, 0, 10000))
@@ -52,9 +52,12 @@ BoundingBox <- function(shp, d = 2, showOutput = TRUE, rotate = TRUE)
   attr(build.bb, "seed") <- seed
 
   if(showOutput){
-    msg <- "uc511(BoundingBox) Seed: %s.\n"
-    msgs <- sprintf(msg, seed)
-    base::message(msgs)
+    #msg <- "uc511(BoundingBox) Seed: %s.\n"
+    #msgs <- sprintf(msg, seed)
+    #base::message(msgs)
+
+    cat("uc511(BoundingBox) Seed:", seed, ".", "\n")
+
     msg <- "uc511(BoundingBox) Rotation: %s Radians.\n"
     msgs <- sprintf(msg, theta)
     base::message(msgs)
