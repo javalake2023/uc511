@@ -208,6 +208,11 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
 #' @param shp Shape file as a polygon (sp or sf) to select sites for.
 #' @param n Number of sites to select. If using stratification it is a named vector containing sample sizes of each group.
 #' @param bb Bounding box which defines the Master Sample. Default is BC Marine Master Sample.
+#' @param panels A list of integers that define the size of each panel in a
+#' non-overlapping panels design. The length of the list determines the number of
+#' panels required. The sum of the integers in the panels parameter will determine
+#' the total number of samples selected, n. The default value for panels is NULL,
+#' this indicates that a non-overlapping panel design is not wanted.
 #' @param stratum Name of column of data.frame attached to shapefile that makes up the strata.
 #' @param nExtra An efficiency problem of how many extra samples to draw before spatial clipping to shp.
 #' @param quiet Boolean if you want to see any output printed to screen. Helpful if taking a long time.
@@ -233,8 +238,22 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
 #' }
 #'
 #' @export
-getBAS <- function(shp, n = 100, bb = NULL, stratum = NULL, nExtra = 1000, quiet = FALSE, inclSeed = NULL)
+getBAS <- function(shp, n = 100, bb = NULL, panels = NULL,
+                   stratum = NULL, nExtra = 1000, quiet = FALSE, inclSeed = NULL)
 {
+  # default is not a panel design. Will be set to true if either of the
+  # panels or panel_overlap parameters are not NULL.
+  panel_design <- FALSE
+
+  # verify panels parameter, must be a list of numerics (if not null).
+  # if panels not NULL, then we will ignore the n parameter.
+  if(!is.null(panels)){
+    validate_parameters("panels", panels)
+    n <- base::sum(panels)
+    panel_design <- TRUE
+    number_panels <- length(panels)
+  }
+
   #if(is.null(inclSeed)) inclSeed <- base::floor(stats::runif(1,1,10000))
   if(is.null(stratum)){
     result <- masterSampleSelect(shp = shp,
@@ -287,6 +306,18 @@ getBAS <- function(shp, n = 100, bb = NULL, stratum = NULL, nExtra = 1000, quiet
       }
     }
   } # end is.null(stratum)
+
+  # if(panel_design) then assign panel id's to smp.
+  if(panel_design){
+    #browser()
+    tmp <- NULL
+    # assign panel id's to sample points. smp$panel_id.
+    for(i in 1:number_panels){
+      tmp <- c(tmp, rep(i, panels[i]))
+    }
+    smp$panel_id <- tmp
+  }
+
   result <- base::list(sample = smp,
                        seed   = inclSeed)
   return(result)
