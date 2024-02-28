@@ -55,6 +55,7 @@ BoundingBox() function or will be selecting a marine master sample site in BC.</
 <span>  <span class="va">shp</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  bb <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  panels <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  stratum <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  nExtra <span class="op">=</span> <span class="fl">1000</span>,</span>
 <span>  quiet <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -74,6 +75,14 @@ BoundingBox() function or will be selecting a marine master sample site in BC.</
 
 <dt>bb</dt>
 <dd><p>Bounding box which defines the Master Sample. Default is BC Marine Master Sample.</p></dd>
+
+
+<dt>panels</dt>
+<dd><p>A list of integers that define the size of each panel in a
+non-overlapping panels design. The length of the list determines the number of
+panels required. The sum of the integers in the panels parameter will determine
+the total number of samples selected, n. The default value for panels is NULL,
+this indicates that a non-overlapping panel design is not wanted.</p></dd>
 
 
 <dt>stratum</dt>

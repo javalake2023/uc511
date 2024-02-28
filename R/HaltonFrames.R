@@ -29,8 +29,8 @@ validate_parameters <- function(parm, parm_value){
   if(parm == "J" & length(parm_value) != 2){
     stop("uc511(validate_parameters) Parameter J must be a list of length 2.")
   }
-  # check if values for SRS parameters are greater than zero.
-  if(parm %in% c("seed", "total_rows", "sample_size")) {
+  # check if values for SRS parameters are greater than zero. check if panelid is greaer than zero.
+  if(parm %in% c("seed", "total_rows", "sample_size", "panelid")) {
     if (parm_value <= 0){
       stop(c("uc511(validate_parameters) Parameter ", parm, " must have a value greater than zero."))
     }

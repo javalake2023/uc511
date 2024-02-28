@@ -8,6 +8,7 @@ getBAS(
   shp,
   n = 100,
   bb = NULL,
+  panels = NULL,
   stratum = NULL,
   nExtra = 1000,
   quiet = FALSE,
@@ -20,6 +21,12 @@ getBAS(
 \item{n}{Number of sites to select. If using stratification it is a named vector containing sample sizes of each group.}
 
 \item{bb}{Bounding box which defines the Master Sample. Default is BC Marine Master Sample.}
+
+\item{panels}{A list of integers that define the size of each panel in a
+non-overlapping panels design. The length of the list determines the number of
+panels required. The sum of the integers in the panels parameter will determine
+the total number of samples selected, n. The default value for panels is NULL,
+this indicates that a non-overlapping panel design is not wanted.}
 
 \item{stratum}{Name of column of data.frame attached to shapefile that makes up the strata.}
 

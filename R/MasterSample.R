@@ -238,7 +238,7 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
 #' }
 #'
 #' @export
-getBAS <- function(shp, n = 100, bb = NULL, panels = NULL,
+getBAS <- function(shp, n = 100, bb = NULL, panels = NULL, panel_overlap = NULL,
                    stratum = NULL, nExtra = 1000, quiet = FALSE, inclSeed = NULL)
 {
   # default is not a panel design. Will be set to true if either of the
@@ -252,6 +252,15 @@ getBAS <- function(shp, n = 100, bb = NULL, panels = NULL,
     n <- base::sum(panels)
     panel_design <- TRUE
     number_panels <- length(panels)
+  }
+
+  # verify panels_overlap parameter, must be a list of numerics (if not null).
+  if(!is.null(panel_overlap)){
+    validate_parameters("panel_overlap", panel_overlap)
+    if(!panel_design){
+      stop("uc511(getBAS) panels parameter must be specified when panel_overlap specified.")
+    }
+    panel_design <- TRUE
   }
 
   #if(is.null(inclSeed)) inclSeed <- base::floor(stats::runif(1,1,10000))
@@ -308,14 +317,42 @@ getBAS <- function(shp, n = 100, bb = NULL, panels = NULL,
   } # end is.null(stratum)
 
   # if(panel_design) then assign panel id's to smp.
-  if(panel_design){
-    #browser()
+  # need to distinguish if panel_overlap is required.
+  if(panel_design & is.null(panel_overlap)){
     tmp <- NULL
     # assign panel id's to sample points. smp$panel_id.
     for(i in 1:number_panels){
       tmp <- c(tmp, rep(i, panels[i]))
     }
     smp$panel_id <- tmp
+  }
+  # if(panel_overlap) is not null and panel_design is TRUE
+  if(!is.null(panel_overlap) & panel_design){
+    # need to create the panel_id column
+    # Initialize variables
+    smp$panel_id <- 0
+    panelid <- 1
+    start_index <- 1
+
+    for(i in 1:length(panels)){
+      start_index <- start_index - panel_overlap[i]
+      if(i == 1){
+        for(j in 1:panels[i]){
+          smp$panel_id[start_index] <- panelid
+          start_index <- start_index + 1
+        }
+      } else {
+        for(j in 1:panels[i]){
+          #print(unlist(df$panelid[start_index]))
+          #if(df$panelid[start_index] == 0){
+          #  print("just a zero.")
+          #}
+          smp$panel_id[start_index] <- list(c(smp$panel_id[start_index], panelid))
+          start_index <- start_index + 1
+        }
+      }
+      panelid <- panelid + 1
+    }
   }
 
   result <- base::list(sample = smp,
