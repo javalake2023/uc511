@@ -194,7 +194,7 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
 }
 
 
-#' @name getBAS
+#' @name BAS
 #'
 #' @title Select points from a polygon using a BAS Master Sample.
 #'
@@ -213,6 +213,11 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
 #' panels required. The sum of the integers in the panels parameter will determine
 #' the total number of samples selected, n. The default value for panels is NULL,
 #' this indicates that a non-overlapping panel design is not wanted.
+#' @param panel_overlap A list of integers that define the overlap into the previous
+#' panel. Is only used when the panels parameter is not NULL. The default value for
+#' panel_overlap is NULL. The length of panel_overlap must be equal to the length
+#' of panels. The first value is always forced to zero as the first panel never
+#' overlaps any region.
 #' @param stratum Name of column of data.frame attached to shapefile that makes up the strata.
 #' @param nExtra An efficiency problem of how many extra samples to draw before spatial clipping to shp.
 #' @param quiet Boolean if you want to see any output printed to screen. Helpful if taking a long time.
@@ -232,14 +237,14 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
 #' # make it explicit that it is different.
 #' shp.MPAs <- Fed_MPAs_clipped[Fed_MPAs_clipped$ZONEDESC_E != "Core Protection Zone", ]
 #' # Select the Master Sample sites:
-#' smp.str <- uc511::getBAS(shp.MPAs, N = N_Zone, stratum = "ZONEDESC_E", quiet = FALSE)
+#' smp.str <- uc511::BAS(shp.MPAs, N = N_Zone, stratum = "ZONEDESC_E", quiet = FALSE)
 #' plot(sf::st_geometry(shp.MPAs))
 #' plot(sf::st_geometry(smp.str), add = T, col= "red", pch = 16)
 #' }
 #'
 #' @export
-getBAS <- function(shp, n = 100, bb = NULL, panels = NULL, panel_overlap = NULL,
-                   stratum = NULL, nExtra = 1000, quiet = FALSE, inclSeed = NULL)
+BAS <- function(shp, n = 100, bb = NULL, panels = NULL, panel_overlap = NULL,
+                stratum = NULL, nExtra = 1000, quiet = FALSE, inclSeed = NULL)
 {
   # default is not a panel design. Will be set to true if either of the
   # panels or panel_overlap parameters are not NULL.
@@ -258,9 +263,16 @@ getBAS <- function(shp, n = 100, bb = NULL, panels = NULL, panel_overlap = NULL,
   if(!is.null(panel_overlap)){
     validate_parameters("panel_overlap", panel_overlap)
     if(!panel_design){
-      stop("uc511(getBAS) panels parameter must be specified when panel_overlap specified.")
+      stop("uc511(BAS) panels parameter must be specified when panel_overlap specified.")
+    }
+    if(length(panels) != length(panel_overlap)){
+      msg <- "uc511(BAS) length of panels [%s] must match length of panel_overlap [%s]."
+      msgs <- sprintf(msg, length(panels), length(panel_overlap))
+      stop(msgs)
     }
     panel_design <- TRUE
+    # force zero for panel 1.
+    panel_overlap[1] <- 0
   }
 
   #if(is.null(inclSeed)) inclSeed <- base::floor(stats::runif(1,1,10000))
@@ -273,11 +285,11 @@ getBAS <- function(shp, n = 100, bb = NULL, panels = NULL, panel_overlap = NULL,
     smp <- result$sample
     inclSeed <- result$seed
   }else{
-    if(is.null(names(n))) return("uc511(getBAS) Need design sample size as n = named vector")
+    if(is.null(names(n))) return("uc511(BAS) Need design sample size as n = named vector")
     strata.levels <- names(n)
 
     if(!quiet){
-      msg <- "uc511(getBAS) Stratum: %s.\n"
+      msg <- "uc511(BAS) Stratum: %s.\n"
       msgs <- base::sprintf(msg, strata.levels[1])
       base::message(msgs)
     }
@@ -296,7 +308,7 @@ getBAS <- function(shp, n = 100, bb = NULL, panels = NULL, panel_overlap = NULL,
     if(base::length(n) > 1){
       for(k in 2:base::length(n)){
         if(!quiet){
-          msg <- "uc511(getBAS) Stratum: %s."
+          msg <- "uc511(BAS) Stratum: %s."
           msgs <- base::sprintf(msg, strata.levels[k])
           base::message(msgs)
         }

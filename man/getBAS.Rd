@@ -9,6 +9,7 @@ getBAS(
   n = 100,
   bb = NULL,
   panels = NULL,
+  panel_overlap = NULL,
   stratum = NULL,
   nExtra = 1000,
   quiet = FALSE,
