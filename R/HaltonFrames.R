@@ -59,14 +59,20 @@ validate_parameters <- function(parm, parm_value){
 #' @param n The number of points in the frame to generate.
 #' @param J The number of grid cells. A list of 2 values. The default value is c(3, 2), we could also use c(5, 3).
 #' @param bases Co-prime base for the Halton Sequence. The default value is c(2, 3).
-#' @param shapefile something
-#' @param crs The co-ordinate reference system.
+#' @param shapefile A sf object. If the shapefile parameter is NULL then function
+#' uc511::HaltonFrameBase is called directly.
+#' @param randomStart Whether a spatially balanced sample will be randomly drawn from
+#' the frame or not. Default value is FALSE.
 #'
-#' @return A list containing the following four variables:
-#' halton_seq -
-#' halton_seq_div -
-#' Z -
-#' halton_frame -
+#' @return A list containing the following variables:
+#'         - halton_seq = hf_$halton_seq
+#'         - halton_seq_div = hf_$halton_seq_div
+#'         - Z = hf_$Z
+#'         - halton_frame = hf_$halton_frame
+#'         - J = c(J[1]+i, J[2]+i)
+#'         - sample = diff_
+#'         - pts.shp = pts.shp
+#'         - bb = bb.new
 #'
 #' @examples
 #' \dontrun{
@@ -78,11 +84,20 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
                         J = c(3, 2),
                         bases = c(2, 3),
                         shapefile = NULL,
+                        panels = NULL,
+                        panel_overlap = NULL,
                         randomStart = FALSE){
   # validate our parameters.
   uc511::validate_parameters("J", J)
   uc511::validate_parameters("bases", bases)
   uc511::validate_parameters("n", c(n))
+
+  # validate panel design if we are using one.
+  res <- ValidatePanelDesign(panels, panel_overlap, n)
+  panel_design  <- res$panel_design
+  number_panels <- res$number_panels
+  panel_overlap <- res$panel_overlap
+  n             <- res$n
 
   # validate the shapefile (if specified) has an associated CRS.
   crs <- NULL
@@ -91,8 +106,8 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
     if (is.null(st_crs(shapefile))) {
       stop("uc511(HaltonFrame) Shapefile does not have an associated CRS.")
     } else {
-      msg <- "uc511(HaltonFrame) Shapefile has an associated CRS."
-      msgs <- sprintf(msg)
+      msg <- "uc511(HaltonFrame) Shapefile has an associated CRS (%s)."
+      msgs <- sprintf(msg, st_crs(shapefile))
       message(msgs)
       crs <- st_crs(shapefile)
     }
@@ -155,8 +170,13 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
 
   # are we performing a randomStart?
   if (randomStart){
-    # need to select n samples from diff_ (rename this to samp).
+    # need to select n samples from diff_ (rename this to sample).
     # and then replicate; generate random number and take new sample.
+    duplicated_pts <- c(diff_, diff_)
+    random_start_point <- sample(1:length(duplicated_pts), 1)
+    sample_indices <- seq(random_start_point, (random_start_point + n) - 1, 1)
+    random_start_sample <- duplicated_pts[sample_indices]
+    diff_ <- random_start_sample
   }
 
   # Need to return cpprshs$pts, cpprshs$xklist, z and hf
@@ -165,7 +185,7 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
                        Z = hf_$Z,
                        halton_frame = hf_$halton_frame,
                        J = c(J[1]+i, J[2]+i),
-                       diff_ = diff_,
+                       sample = diff_,
                        pts.shp = pts.shp,
                        bb = bb.new)
   return(result)

@@ -50,6 +50,8 @@
 <span>  J <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">2</span><span class="op">)</span>,</span>
 <span>  bases <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>,</span>
 <span>  shapefile <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  panels <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  panel_overlap <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  randomStart <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -69,22 +71,28 @@
 
 
 <dt>shapefile</dt>
-<dd><p>something</p></dd>
+<dd><p>A sf object. If the shapefile parameter is NULL then function
+uc511::HaltonFrameBase is called directly.</p></dd>
 
 
-<dt>crs</dt>
-<dd><p>The co-ordinate reference system.</p></dd>
+<dt>randomStart</dt>
+<dd><p>Whether a spatially balanced sample will be randomly drawn from
+the frame or not. Default value is FALSE.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A list containing the following four variables:
-halton_seq -
-halton_seq_div -
-Z -
-halton_frame -</p>
+<p>A list containing the following variables:
+- halton_seq = hf_$halton_seq
+- halton_seq_div = hf_$halton_seq_div
+- Z = hf_$Z
+- halton_frame = hf_$halton_frame
+- J = c(J1+i, J2+i)
+- sample = diff_
+- pts.shp = pts.shp
+- bb = bb.new</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

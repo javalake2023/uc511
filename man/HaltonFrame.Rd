@@ -9,6 +9,8 @@ HaltonFrame(
   J = c(3, 2),
   bases = c(2, 3),
   shapefile = NULL,
+  panels = NULL,
+  panel_overlap = NULL,
   randomStart = FALSE
 )
 }
@@ -19,16 +21,22 @@ HaltonFrame(
 
 \item{bases}{Co-prime base for the Halton Sequence. The default value is c(2, 3).}
 
-\item{shapefile}{something}
+\item{shapefile}{A sf object. If the shapefile parameter is NULL then function
+uc511::HaltonFrameBase is called directly.}
 
-\item{crs}{The co-ordinate reference system.}
+\item{randomStart}{Whether a spatially balanced sample will be randomly drawn from
+the frame or not. Default value is FALSE.}
 }
 \value{
-A list containing the following four variables:
-halton_seq -
-halton_seq_div -
-Z -
-halton_frame -
+A list containing the following variables:
+- halton_seq = hf_$halton_seq
+- halton_seq_div = hf_$halton_seq_div
+- Z = hf_$Z
+- halton_frame = hf_$halton_frame
+- J = c(J\link{1}+i, J\link{2}+i)
+- sample = diff_
+- pts.shp = pts.shp
+- bb = bb.new
 }
 \description{
 A description of this useful function.

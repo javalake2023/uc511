@@ -70,6 +70,9 @@
     <loc>/reference/compareBoxesBoxInit.html</loc>
   </url>
   <url>
+    <loc>/reference/contains_feature.html</loc>
+  </url>
+  <url>
     <loc>/reference/cppBASMasterSample.html</loc>
   </url>
   <url>
@@ -104,6 +107,9 @@
   </url>
   <url>
     <loc>/reference/getIndividualBoxIndices.html</loc>
+  </url>
+  <url>
+    <loc>/reference/getOverlappedPoints.html</loc>
   </url>
   <url>
     <loc>/reference/getProj.html</loc>

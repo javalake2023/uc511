@@ -11,7 +11,7 @@ getOverlappedPoints(shapefile, panelid)
 sample points from.}
 
 \item{shp}{Shape file as a polygon (sp or sf) containing a BAS sample that
-contains panelid's.}
+contains a feature column named panel_id.}
 }
 \value{
 The sample for the specified panel.
