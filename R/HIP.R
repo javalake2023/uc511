@@ -203,10 +203,10 @@ hipIndexRandomPermutation <- function(its) {
   # Halton Indices
   b1 <- 2
   b2 <- 3
-  J1 <- sum(diml == 1)
-  J2 <- sum(diml == 2)
+  J1 <- base::sum(diml == 1)
+  J2 <- base::sum(diml == 2)
   B <- (b1^J1) * (b2^J2)
-  HIM <- matrix(0, nrow = (b2^J2), ncol = (b1^J1))
+  HIM <- base::matrix(0, nrow = (b2^J2), ncol = (b1^J1))
   H <- HaltonPts(B)
 
   Hindex <- base::floor(rbind((b1^(J1) + 1e-12) * H[,1], (b2^(J2) + 1e-12) * H[,2])) + 1
@@ -305,10 +305,20 @@ HaltonPts <- function(n) {
   return(pts)
 }
 
-# internal only function
-# Check if an object is an sf points object
+#' @name is_sf_points
+#'
+#' @title Check if an object is an sf points object.
+#'
+#' @description A description. internal only function.
+#'
+#' @details The details.
+#'
+#' @param x A parm.
+#'
+#' @return Either TRUE or FALSE.
+
 is_sf_points <- function(x) {
-  inherits(x, "sf") && inherits(sf_points$geometry, "sfc_POINT")
+  inherits(x, "sf") && inherits(x$geometry, "sfc_POINT")
 }
 
 
@@ -348,7 +358,7 @@ HIP <- function(population, n = 20, iterations = 7) {
     sf_population <- population
     # just get coordinates from the population
     population <- sf::st_coordinates(population)
-  } else if (is.matrix(pop)) {
+  } else if (is.matrix(population)) {
     print("It's not an sf points object.")
     # must be numeric.
     validate_parameters("hipPopulation", c(population))

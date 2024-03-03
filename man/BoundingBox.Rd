@@ -20,9 +20,10 @@ bounding box for a master sample.
 }
 \description{
 Randomly generate a seed from 10,000 possible values in right now 2 dimensions.
-Note that in van Dam-Bates et al. (2018) we required that the random seed falls into main object shape, such
-as one of the islands in New Zealand, or within marine environment for BC west coast. However, with a random rotation,
-we are able to ignore that detail. If this function is used without a random rotation, we recommend running it until
+Note that in van Dam-Bates et al. (2018) we required that the random seed falls into main
+object shape, such as one of the islands in New Zealand, or within marine environment for
+BC west coast. However, with a random rotation, we are able to ignore that detail. If this
+function is used without a random rotation, we recommend running it until
 the first master sample point does indeed fall within the largest scale of the master sample use.
 }
 \details{
@@ -32,8 +33,10 @@ package BASMasterSample and later ported to this package, uc511.
 \examples{
 \dontrun{
 data(NS_bioregion)
-bb <- uc511::BoundingBox(shp = NS_bioregion)         # Vertically aligned master sample bounding box.
-bb.rot <- uc511::rotate.shp(bb, bb, back = TRUE) # Actual bounding box.
+# Vertically aligned master sample bounding box.
+bb <- uc511::BoundingBox(shp = NS_bioregion)
+# Actual bounding box.
+bb.rot <- uc511::rotate.shp(bb, bb, back = TRUE)
 plot(sf::st_geometry(NS_bioregion))
 plot(sf::st_geometry(bb.rot), add = TRUE)
 }

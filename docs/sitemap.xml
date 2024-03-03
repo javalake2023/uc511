@@ -52,6 +52,9 @@
     <loc>/reference/HaltonFrames.html</loc>
   </url>
   <url>
+    <loc>/reference/PanelDesignAssignPanelids.html</loc>
+  </url>
+  <url>
     <loc>/reference/SRS.html</loc>
   </url>
   <url>
@@ -62,6 +65,9 @@
   </url>
   <url>
     <loc>/reference/SpatialStratification.html</loc>
+  </url>
+  <url>
+    <loc>/reference/ValidatePanelDesign.html</loc>
   </url>
   <url>
     <loc>/reference/VarianceEstimators.html</loc>
@@ -134,6 +140,9 @@
   </url>
   <url>
     <loc>/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>/reference/is_sf_points.html</loc>
   </url>
   <url>
     <loc>/reference/log_a_to_base_b.html</loc>

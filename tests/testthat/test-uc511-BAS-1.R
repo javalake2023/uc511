@@ -8,7 +8,7 @@ testthat::test_that("1. Verify panels= and panel_overlap= parm length checking."
   expect_error(uc511::BAS(shp.cant,
                           panels = n_panels,
                           panel_overlap = n_panel_overlap,
-                          bb = bb), "uc511(BAS) length of panels [4] must match length of panel_overlap [3].", fixed=TRUE)
+                          bb = bb), "uc511(ValidatePanelDesign) length of panels [4] must match length of panel_overlap [3].", fixed=TRUE)
 })
 
 testthat::test_that("2. Verify panels= and panel_overlap= parm length checking.", {
@@ -19,7 +19,7 @@ testthat::test_that("2. Verify panels= and panel_overlap= parm length checking."
   expect_error(uc511::BAS(shp.cant,
                           panels = n_panels,
                           panel_overlap = n_panel_overlap,
-                          bb = bb), "uc511(BAS) length of panels [3] must match length of panel_overlap [4].", fixed=TRUE)
+                          bb = bb), "uc511(ValidatePanelDesign) length of panels [3] must match length of panel_overlap [4].", fixed=TRUE)
 })
 
 

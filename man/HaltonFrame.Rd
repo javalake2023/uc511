@@ -24,6 +24,18 @@ HaltonFrame(
 \item{shapefile}{A sf object. If the shapefile parameter is NULL then function
 uc511::HaltonFrameBase is called directly.}
 
+\item{panels}{A list of integers that define the size of each panel in a
+non-overlapping panels design. The length of the list determines the number of
+panels required. The sum of the integers in the panels parameter will determine
+the total number of samples selected, n. The default value for panels is NULL,
+this indicates that a non-overlapping panel design is not wanted.}
+
+\item{panel_overlap}{A list of integers that define the overlap into the previous
+panel. Is only used when the panels parameter is not NULL. The default value for
+panel_overlap is NULL. The length of panel_overlap must be equal to the length
+of panels. The first value is always forced to zero as the first panel never
+overlaps any region.}
+
 \item{randomStart}{Whether a spatially balanced sample will be randomly drawn from
 the frame or not. Default value is FALSE.}
 }

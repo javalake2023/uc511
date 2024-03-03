@@ -35,7 +35,7 @@ contains_feature <- function(sf_object, feature_name) {
 #'
 #' @details This function was written by Phil Davies.
 #'
-#' @param shp Shape file as a polygon (sp or sf) containing a BAS sample that
+#' @param shapefile Shape file as a polygon (sp or sf) containing a BAS sample that
 #' contains a feature column named panel_id.
 #' @param panelid The overlapped panel in the shapefile shp the user wants
 #' sample points from.

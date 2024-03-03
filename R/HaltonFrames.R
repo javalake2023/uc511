@@ -61,6 +61,16 @@ validate_parameters <- function(parm, parm_value){
 #' @param bases Co-prime base for the Halton Sequence. The default value is c(2, 3).
 #' @param shapefile A sf object. If the shapefile parameter is NULL then function
 #' uc511::HaltonFrameBase is called directly.
+#' @param panels A list of integers that define the size of each panel in a
+#' non-overlapping panels design. The length of the list determines the number of
+#' panels required. The sum of the integers in the panels parameter will determine
+#' the total number of samples selected, n. The default value for panels is NULL,
+#' this indicates that a non-overlapping panel design is not wanted.
+#' @param panel_overlap A list of integers that define the overlap into the previous
+#' panel. Is only used when the panels parameter is not NULL. The default value for
+#' panel_overlap is NULL. The length of panel_overlap must be equal to the length
+#' of panels. The first value is always forced to zero as the first panel never
+#' overlaps any region.
 #' @param randomStart Whether a spatially balanced sample will be randomly drawn from
 #' the frame or not. Default value is FALSE.
 #'
@@ -99,6 +109,9 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
   panel_overlap <- res$panel_overlap
   n             <- res$n
 
+  # panel_design and randomStart are mutually exclusive. stop if both TRUE.
+
+
   # validate the shapefile (if specified) has an associated CRS.
   crs <- NULL
   # Check if the shapefile has an associated CRS
@@ -106,8 +119,8 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
     if (is.null(st_crs(shapefile))) {
       stop("uc511(HaltonFrame) Shapefile does not have an associated CRS.")
     } else {
-      msg <- "uc511(HaltonFrame) Shapefile has an associated CRS (%s)."
-      msgs <- sprintf(msg, st_crs(shapefile))
+      msg <- "uc511(HaltonFrame) Shapefile has an associated CRS."
+      msgs <- sprintf(msg)
       message(msgs)
       crs <- st_crs(shapefile)
     }
@@ -172,11 +185,33 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
   if (randomStart){
     # need to select n samples from diff_ (rename this to sample).
     # and then replicate; generate random number and take new sample.
-    duplicated_pts <- c(diff_, diff_)
+    message("HaltonFrame randomStart.")
+    diff_pts <- sf::st_cast(diff_, "POINT")
+    duplicated_pts <- c(diff_pts[1:n], diff_pts[1:n])
+    #dup_pts_sf <- sf::st_as_sf(duplicated_pts)
     random_start_point <- sample(1:length(duplicated_pts), 1)
     sample_indices <- seq(random_start_point, (random_start_point + n) - 1, 1)
     random_start_sample <- duplicated_pts[sample_indices]
     diff_ <- random_start_sample
+    # randomStart mutually exclusive with panel_design.
+    panel_design <- FALSE
+  }
+
+  # are we performing a panel_design? yes then go assign panelid's.
+  if(panel_design){
+    message("HaltonFrame panel_design.")
+    diff_pts <- sf::st_cast(sf::st_union(diff_), "POINT")
+    diff_pts_sf <- sf::st_as_sf(diff_pts)
+    res <- PanelDesignAssignPanelids(diff_pts_sf, panels, panel_overlap, panel_design, number_panels)
+    diff_ <- res$sample
+  }
+
+  # if we are not performing a randomStart or a panel_design
+  if (!randomStart & !panel_design){
+    message("return n subset of points.")
+    # turn our sample into points.
+    diff_pts <- sf::st_cast(diff_, "POINT")
+    diff_ <- diff_pts[1:n]
   }
 
   # Need to return cpprshs$pts, cpprshs$xklist, z and hf
