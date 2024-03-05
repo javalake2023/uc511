@@ -163,11 +163,23 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
     #sf::st_agr(shp.ashb) <- "constant"
     #sf::st_agr(pts.shp) <- "constant"
 
+    #tmp <- sf::st_as_sf(pts.shp)
+    tmp <- sf::st_cast(pts.shp, "POINT")
+    tmp <- sf::st_as_sf(tmp)
+    tmp$ID <- seq(1, dim(pts)[1])
+    diff_ <- sf::st_intersection(tmp, shapefile)
+
+    #tmp_shapefile <- sf::st_cast((shapefile), "POINT")
+    #diff_ <- sf::st_intersection(sf::st_geometry(tmp), sf::st_geometry(tmp_shapefile))
+
     # need to change this to ensure unique points.
-    diff_ <- sf::st_intersection(sf::st_union(sf::st_geometry(shapefile)),
-                                 sf::st_union(sf::st_geometry(pts.shp)))
+    # don't use sf::st_union as it will destroy the ordering.
+    #diff_ <- sf::st_intersection((sf::st_geometry(shapefile)),
+    #                             (sf::st_geometry(sf::st_as_sf(pts.shp))))
+    #browser()
     # find number of points within our shapefile.
     pts_in_intersection <- length(sf::st_cast(sf::st_union(diff_), "POINT"))
+    #pts_in_intersection <- length(sf::st_cast((diff_), "POINT"))
     #pts_in_intersection <- lengths(diff_$geometry)
     msg <- "uc511(HaltonFrame) points in intersection: %s."
     msgs <- sprintf(msg, pts_in_intersection)
@@ -211,7 +223,7 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
     message("return n subset of points.")
     # turn our sample into points.
     diff_pts <- sf::st_cast(diff_, "POINT")
-    diff_ <- diff_pts[1:n]
+    diff_ <- diff_pts #[1:n,]
   }
 
   # Need to return cpprshs$pts, cpprshs$xklist, z and hf
@@ -278,11 +290,14 @@ HaltonFrameBase <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]), J = c(3, 2), 
   y_dim <- (base::floor(bases[2]^j2 * z[,2])/bases[2]^j2) + 0.5*(1/bases[2]^j2)
   # Halton Frame
   hf <- base::cbind(x_dim, y_dim)
+  # Create an index number for each data point.
+  halton_indx <- seq(1, B2/2)
 
   # Need to return cpprshs$pts, cpprshs$xklist, z and hf
   result <- base::list(halton_seq = cpprshs$pts,
                        halton_seq_div = cpprshs$xklist,
                        Z = z,
-                       halton_frame = hf)
+                       halton_frame = hf,
+                       halton_indx = halton_indx)
   return(result)
 }
