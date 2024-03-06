@@ -458,26 +458,26 @@ inline void xiota(Iter first, Iter last, T value){
   }
 }
 
-template <typename T>
-inline T pop_random(std::vector<T>& v){
-  typename std::vector<T>::size_type pos = std::rand() % v.size();
-  T res = v[pos];
-  std::swap(v[pos], v.back());
-  v.pop_back();
-  return res;
-}
+//template <typename T>
+//inline T pop_random(std::vector<T>& v){
+//  typename std::vector<T>::size_type pos = std::rand() % v.size();
+//  T res = v[pos];
+//  std::swap(v[pos], v.back());
+//  v.pop_back();
+//  return res;
+//}
 
-// [[Rcpp::export]]
-Rcpp::IntegerVector sample_int(int n, int min, int max){
-  Rcpp::IntegerVector res(n);
-  std::vector<int> pool(max + 1 - min);
-  xiota(pool.begin(), pool.end(), min);
+//
+//Rcpp::IntegerVector sample_int(int n, int min, int max){
+//  Rcpp::IntegerVector res(n);
+//  std::vector<int> pool(max + 1 - min);
+//  xiota(pool.begin(), pool.end(), min);
 
-  for(R_xlen_t i = 0; i < n; i++){
-    res[i] = pop_random(pool);
-  }
-  return res;
-}
+//  for(R_xlen_t i = 0; i < n; i++){
+//    res[i] = pop_random(pool);
+//  }
+//  return res;
+//}
 
 
 //double runif(double min, double max) {
@@ -492,6 +492,13 @@ Rcpp::NumericVector removeDuplicates(Rcpp::NumericVector vec){
   // remove duplicates
   vec.erase(std::unique(vec.begin(), vec.end()), vec.end());
   return vec;
+}
+
+
+// [[Rcpp::export]]
+Rcpp::IntegerVector sample_int_v2(int max_int, int num_seeds) {
+  Rcpp::IntegerVector v = Rcpp::sample(max_int, num_seeds);
+  return v;
 }
 
 
@@ -526,7 +533,8 @@ Rcpp::List cppBASpts(int n = 10,
 {
   // set default seeds values
   if (seeds.size() == 0){
-    seeds = sample_int(2, 0, 62208);
+    //seeds = sample_int(2, 0, 62208);
+    seeds = sample_int_v2(62208, 2);
   }
   // set default bases values
   if (bases.size() == 0){
@@ -534,7 +542,7 @@ Rcpp::List cppBASpts(int n = 10,
   }
 
   //RcppThread::Rcout << "cppBASpts() n     : " << n << std::endl;
-  //RcppThread::Rcout << "cppBASpts() seeds : " << seeds << std::endl;
+  RcppThread::Rcout << "cppBASpts() seeds : " << seeds << std::endl;
   //RcppThread::Rcout << "cppBASpts() bases : " << bases << std::endl;
 
   // initialise variables
@@ -595,14 +603,14 @@ Rcpp::List cppBASpts(int n = 10,
 //' @param bases Co-prime base for the Halton Sequence
 //' @param seeds Random starting point in each dimension
 //'
-//' @return Matrix with the columns, order of point, x in [0,1) and y in [0,1)
+//' @return Matrix with the columns, order of point, x in [0,1) and y in [0,1).
 //'
-//' #examples
+//' @examples
 //' # First 10 points in the Halton Sequence for base 2,3
-//' # uc511::cppRSHalton_br(n = 10)
+//'  uc511::cppRSHalton_br(n = 10)
 //' # First 10 points in the Halton Sequence for base 2,3 with
 //' # starting point at the 15th and 22nd index.
-//' # uc511::cppRSHalton_br(n = 10, seeds = c(14, 21))
+//'  uc511::cppRSHalton_br(n = 10, seeds = c(14, 21))
 //'
 //' @export
 // [[Rcpp::export(rng = false)]]
@@ -642,10 +650,10 @@ Rcpp::List cppRSHalton_br(int n = 10,
   Rcpp::NumericVector k(n);
   Rcpp::List          xklist;
 
-  dqrng::dqRNGkind("Xoroshiro128+");
-  dqrng::dqset_seed(IntegerVector::create(42));
-  NumericVector xxx = dqrunif(d, min, max);
-  RcppThread::Rcout << "cppRSHalton_br() xxx : " << xxx << std::endl;
+  //dqrng::dqRNGkind("Xoroshiro128+");
+  //dqrng::dqset_seed(IntegerVector::create(42));
+  //NumericVector xxx = dqrunif(d, min, max);
+  //RcppThread::Rcout << "cppRSHalton_br() xxx : " << xxx << std::endl;
 
   if (seeds.size() == 0){
     // seeds = numeric(d)

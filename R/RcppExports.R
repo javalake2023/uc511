@@ -189,12 +189,12 @@ cppRSHalton <- function(n = 10L, seeds = as.integer( c()), bases = as.numeric( c
     .Call(`_uc511_cppRSHalton`, n, seeds, bases, boxes, J)
 }
 
-sample_int <- function(n, min, max) {
-    .Call(`_uc511_sample_int`, n, min, max)
-}
-
 removeDuplicates <- function(vec) {
     .Call(`_uc511_removeDuplicates`, vec)
+}
+
+sample_int_v2 <- function(max_int, num_seeds) {
+    .Call(`_uc511_sample_int_v2`, max_int, num_seeds)
 }
 
 #' @name cppBASpts
@@ -239,14 +239,14 @@ cppBASpts <- function(n = 10L, seeds = as.integer( c()), bases = as.numeric( c()
 #' @param bases Co-prime base for the Halton Sequence
 #' @param seeds Random starting point in each dimension
 #'
-#' @return Matrix with the columns, order of point, x in [0,1) and y in [0,1)
+#' @return Matrix with the columns, order of point, x in [0,1) and y in [0,1).
 #'
-#' #examples
+#' @examples
 #' # First 10 points in the Halton Sequence for base 2,3
-#' # uc511::cppRSHalton_br(n = 10)
+#'  uc511::cppRSHalton_br(n = 10)
 #' # First 10 points in the Halton Sequence for base 2,3 with
 #' # starting point at the 15th and 22nd index.
-#' # uc511::cppRSHalton_br(n = 10, seeds = c(14, 21))
+#'  uc511::cppRSHalton_br(n = 10, seeds = c(14, 21))
 #'
 #' @export
 cppRSHalton_br <- function(n = 10L, bases = as.numeric( c()), seeds = as.numeric( c())) {

@@ -73,16 +73,17 @@ validate_parameters <- function(parm, parm_value){
 #' overlaps any region.
 #' @param randomStart Whether a spatially balanced sample will be randomly drawn from
 #' the frame or not. Default value is FALSE.
+#' @param seeds A list of 2 seeds, u1 and u2. If not specified, default is NULL.
 #'
 #' @return A list containing the following variables:
-#'         - halton_seq = hf_$halton_seq
-#'         - halton_seq_div = hf_$halton_seq_div
-#'         - Z = hf_$Z
-#'         - halton_frame = hf_$halton_frame
-#'         - J = c(J[1]+i, J[2]+i)
-#'         - sample = diff_
-#'         - pts.shp = pts.shp
-#'         - bb = bb.new
+#'         - halton_seq
+#'         - halton_seq_div
+#'         - Z
+#'         - halton_frame
+#'         - J
+#'         - sample
+#'         - pts.shp
+#'         - bb
 #'
 #' @examples
 #' \dontrun{
@@ -96,11 +97,16 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
                         shapefile = NULL,
                         panels = NULL,
                         panel_overlap = NULL,
-                        randomStart = FALSE){
+                        randomStart = FALSE,
+                        seeds = NULL){
+
   # validate our parameters.
   uc511::validate_parameters("J", J)
   uc511::validate_parameters("bases", bases)
   uc511::validate_parameters("n", c(n))
+  if (!is.null(seeds)){
+    uc511::validate_parameters("seeds", seeds)
+  }
 
   # validate panel design if we are using one.
   res <- ValidatePanelDesign(panels, panel_overlap, n)
@@ -110,7 +116,14 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
   n             <- res$n
 
   # panel_design and randomStart are mutually exclusive. stop if both TRUE.
+  if(panel_design & randomStart){
+    stop("uc511(HaltonFrame) Panel design and randomStart are mutually exclusive.")
+  }
 
+  # state how many samples user is looking for.
+  msg <- "uc511(HaltonFrame) %s samples have been requested."
+  msgs <- sprintf(msg, n)
+  message(msgs)
 
   # validate the shapefile (if specified) has an associated CRS.
   crs <- NULL
@@ -126,7 +139,7 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
     }
   } else {
     # shapefile is null, ie. not specified, so just call HaltonFrameBase
-    hf_ <- uc511::HaltonFrameBase(J = c(J[1], J[2]), bases = bases)
+    hf_ <- uc511::HaltonFrameBase(J = c(J[1], J[2]), bases = bases, seeds = seeds)
     return(hf_)
   }
 
@@ -139,7 +152,7 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
     # keep going until we have found the required number of points
 
     # create halton frame
-    hf_ <- uc511::HaltonFrameBase(J = c(J[1]+i, J[2]+i), bases = bases)
+    hf_ <- uc511::HaltonFrameBase(J = c(J[1]+i, J[2]+i), bases = bases, seeds = seeds)
 
     # process points returned.
     pts <- hf_$halton_frame
@@ -169,22 +182,14 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
     tmp$ID <- seq(1, dim(pts)[1])
     diff_ <- sf::st_intersection(tmp, shapefile)
 
-    #tmp_shapefile <- sf::st_cast((shapefile), "POINT")
-    #diff_ <- sf::st_intersection(sf::st_geometry(tmp), sf::st_geometry(tmp_shapefile))
-
-    # need to change this to ensure unique points.
-    # don't use sf::st_union as it will destroy the ordering.
-    #diff_ <- sf::st_intersection((sf::st_geometry(shapefile)),
-    #                             (sf::st_geometry(sf::st_as_sf(pts.shp))))
-    #browser()
     # find number of points within our shapefile.
     pts_in_intersection <- length(sf::st_cast(sf::st_union(diff_), "POINT"))
-    #pts_in_intersection <- length(sf::st_cast((diff_), "POINT"))
-    #pts_in_intersection <- lengths(diff_$geometry)
+
     msg <- "uc511(HaltonFrame) points in intersection: %s."
     msgs <- sprintf(msg, pts_in_intersection)
     message(msgs)
 
+    # expand the Halton frame.
     i <- i + 1
   }
 
@@ -223,7 +228,8 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
     message("return n subset of points.")
     # turn our sample into points.
     diff_pts <- sf::st_cast(diff_, "POINT")
-    diff_ <- diff_pts #[1:n,]
+    df_sorted <- diff_pts[order(diff_pts$ID), ]
+    diff_ <- df_sorted[1:n,]
   }
 
   # Need to return cpprshs$pts, cpprshs$xklist, z and hf
@@ -250,6 +256,7 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
 #' @param n The number of points in the frame to generate.
 #' @param J The number of grid cells. A list of 2 values. The default value is c(3, 2), we could also use c(5, 3).
 #' @param bases Co-prime base for the Halton Sequence. The default value is c(2, 3).
+#' @param seeds The u1 and u2 seeds to use.
 #'
 #' @return A list containing the following four variables:
 #' halton_seq -
@@ -263,7 +270,10 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
 #' }
 #'
 #' @export
-HaltonFrameBase <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]), J = c(3, 2), bases = c(2, 3)){
+HaltonFrameBase <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
+                            J = c(3, 2),
+                            bases = c(2, 3),
+                            seeds = NULL){
   # validate our parameters.
   uc511::validate_parameters("J", J)
   uc511::validate_parameters("bases", bases)

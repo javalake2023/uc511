@@ -14,7 +14,7 @@ cppRSHalton_br(n = 10L, bases = as.numeric(c()), seeds = as.numeric(c()))
 \item{seeds}{Random starting point in each dimension}
 }
 \value{
-Matrix with the columns, order of point, x in [0,1) and y in [0,1)
+Matrix with the columns, order of point, x in [0,1) and y in [0,1).
 }
 \description{
 For efficiency, this function can generate points along a random start
@@ -26,9 +26,9 @@ package BASMasterSample. Subsequently it was written in C/C++ by Phil Davies.
 }
 \examples{
 # First 10 points in the Halton Sequence for base 2,3
-uc511::cppRSHalton_br(n = 10)
+ uc511::cppRSHalton_br(n = 10)
 # First 10 points in the Halton Sequence for base 2,3 with
 # starting point at the 15th and 22nd index.
-uc511::cppRSHalton_br(n = 10, seeds = c(14, 21))
+ uc511::cppRSHalton_br(n = 10, seeds = c(14, 21))
 
 }

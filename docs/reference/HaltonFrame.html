@@ -52,7 +52,8 @@
 <span>  shapefile <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  panels <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  panel_overlap <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  randomStart <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  randomStart <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  seeds <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -95,20 +96,24 @@ overlaps any region.</p></dd>
 <dd><p>Whether a spatially balanced sample will be randomly drawn from
 the frame or not. Default value is FALSE.</p></dd>
 
+
+<dt>seeds</dt>
+<dd><p>A list of 2 seeds, u1 and u2. If not specified, default is NULL.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
 <p>A list containing the following variables:
-- halton_seq = hf_$halton_seq
-- halton_seq_div = hf_$halton_seq_div
-- Z = hf_$Z
-- halton_frame = hf_$halton_frame
-- J = c(J1+i, J2+i)
-- sample = diff_
-- pts.shp = pts.shp
-- bb = bb.new</p>
+- halton_seq
+- halton_seq_div
+- Z
+- halton_frame
+- J
+- sample
+- pts.shp
+- bb</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

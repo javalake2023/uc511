@@ -110,19 +110,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// sample_int
-Rcpp::IntegerVector sample_int(int n, int min, int max);
-RcppExport SEXP _uc511_sample_int(SEXP nSEXP, SEXP minSEXP, SEXP maxSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type n(nSEXP);
-    Rcpp::traits::input_parameter< int >::type min(minSEXP);
-    Rcpp::traits::input_parameter< int >::type max(maxSEXP);
-    rcpp_result_gen = Rcpp::wrap(sample_int(n, min, max));
-    return rcpp_result_gen;
-END_RCPP
-}
 // removeDuplicates
 Rcpp::NumericVector removeDuplicates(Rcpp::NumericVector vec);
 RcppExport SEXP _uc511_removeDuplicates(SEXP vecSEXP) {
@@ -131,6 +118,18 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type vec(vecSEXP);
     rcpp_result_gen = Rcpp::wrap(removeDuplicates(vec));
+    return rcpp_result_gen;
+END_RCPP
+}
+// sample_int_v2
+Rcpp::IntegerVector sample_int_v2(int max_int, int num_seeds);
+RcppExport SEXP _uc511_sample_int_v2(SEXP max_intSEXP, SEXP num_seedsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type max_int(max_intSEXP);
+    Rcpp::traits::input_parameter< int >::type num_seeds(num_seedsSEXP);
+    rcpp_result_gen = Rcpp::wrap(sample_int_v2(max_int, num_seeds));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -168,8 +167,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_uc511_cppWhere2Start", (DL_FUNC) &_uc511_cppWhere2Start, 4},
     {"_uc511_log_a_to_base_b", (DL_FUNC) &_uc511_log_a_to_base_b, 2},
     {"_uc511_cppRSHalton", (DL_FUNC) &_uc511_cppRSHalton, 5},
-    {"_uc511_sample_int", (DL_FUNC) &_uc511_sample_int, 3},
     {"_uc511_removeDuplicates", (DL_FUNC) &_uc511_removeDuplicates, 1},
+    {"_uc511_sample_int_v2", (DL_FUNC) &_uc511_sample_int_v2, 2},
     {"_uc511_cppBASpts", (DL_FUNC) &_uc511_cppBASpts, 3},
     {"_uc511_cppRSHalton_br", (DL_FUNC) &_uc511_cppRSHalton_br, 3},
     {NULL, NULL, 0}

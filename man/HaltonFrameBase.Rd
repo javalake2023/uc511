@@ -7,7 +7,8 @@
 HaltonFrameBase(
   n = (bases[1]^J[1]) * (bases[2]^J[2]),
   J = c(3, 2),
-  bases = c(2, 3)
+  bases = c(2, 3),
+  seeds = NULL
 )
 }
 \arguments{
@@ -16,6 +17,8 @@ HaltonFrameBase(
 \item{J}{The number of grid cells. A list of 2 values. The default value is c(3, 2), we could also use c(5, 3).}
 
 \item{bases}{Co-prime base for the Halton Sequence. The default value is c(2, 3).}
+
+\item{seeds}{The u1 and u2 seeds to use.}
 }
 \value{
 A list containing the following four variables:

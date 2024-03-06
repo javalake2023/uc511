@@ -11,7 +11,8 @@ HaltonFrame(
   shapefile = NULL,
   panels = NULL,
   panel_overlap = NULL,
-  randomStart = FALSE
+  randomStart = FALSE,
+  seeds = NULL
 )
 }
 \arguments{
@@ -38,17 +39,19 @@ overlaps any region.}
 
 \item{randomStart}{Whether a spatially balanced sample will be randomly drawn from
 the frame or not. Default value is FALSE.}
+
+\item{seeds}{A list of 2 seeds, u1 and u2. If not specified, default is NULL.}
 }
 \value{
 A list containing the following variables:
-- halton_seq = hf_$halton_seq
-- halton_seq_div = hf_$halton_seq_div
-- Z = hf_$Z
-- halton_frame = hf_$halton_frame
-- J = c(J\link{1}+i, J\link{2}+i)
-- sample = diff_
-- pts.shp = pts.shp
-- bb = bb.new
+- halton_seq
+- halton_seq_div
+- Z
+- halton_frame
+- J
+- sample
+- pts.shp
+- bb
 }
 \description{
 A description of this useful function.
