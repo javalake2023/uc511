@@ -15,7 +15,7 @@ object sf_object.}
 }
 \value{
 Returns TRUE if the simple file object sf_object contains the feature
-feature_name. Otherwise it returns FALSE.
+feature_name. Otherwise FALSE is returned.
 }
 \description{
 Used to check if a simple file object contains a feature. This

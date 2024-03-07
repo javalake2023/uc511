@@ -21,7 +21,7 @@
 hipX1split <- function(x1pts, HaltonIndex, BoxIndex, xlevel, x1Hpts) {
 
   # Determine points in current box
-  inBox <- which(HaltonIndex == BoxIndex)
+  inBox <- base::which(HaltonIndex == BoxIndex)
   x1pts <- x1pts[inBox]
 
   # Randomly remove one point (if needed)
@@ -73,7 +73,7 @@ hipX1split <- function(x1pts, HaltonIndex, BoxIndex, xlevel, x1Hpts) {
 hipX2split <- function(x2pts, HaltonIndex, BoxIndex, xlevel, x2Hpts) {
 
   # Determine points in current box
-  inBox <- which(HaltonIndex == BoxIndex)
+  inBox <- base::which(HaltonIndex == BoxIndex)
   x2pts <- x2pts[inBox]
 
   # Randomly remove one or two points (if needed)
@@ -83,7 +83,7 @@ hipX2split <- function(x2pts, HaltonIndex, BoxIndex, xlevel, x2Hpts) {
 
   # not divisible by 3.
   if ((nF %% 3) == 1) {
-    r <- sample(nF, 1)
+    r <- base::sample(nF, 1)
     HaltonIndex[F[r]] <- NA
     F <- F[-r]
     nF <- (nF - 1)
@@ -115,7 +115,7 @@ hipX2split <- function(x2pts, HaltonIndex, BoxIndex, xlevel, x2Hpts) {
   # update halton indices - middle third.
   HaltonIndex[F[((base::floor(nF/3))+1):(2*(base::floor(nF/3)))]] <- (BoxIndex + (I[2] - 1) * xlevel)
   # update halton indices - bottom third.
-  HaltonIndex[F[((2*(floor(nF/3)))+1):nF]] <- (BoxIndex + (I[3] - 1) * xlevel)
+  HaltonIndex[F[((2*(base::floor(nF/3)))+1):nF]] <- (BoxIndex + (I[3] - 1) * xlevel)
   # return the halton index.
   return(HaltonIndex)
 }
@@ -138,13 +138,13 @@ hipX2split <- function(x2pts, HaltonIndex, BoxIndex, xlevel, x2Hpts) {
 #' @export
 hipPartition <- function(pts, its) {
   # Initialize
-  N <- nrow(pts)
-  pts <- cbind(pts, 1:N)
+  N <- base::nrow(pts)
+  pts <- base::cbind(pts, 1:N)
   # Assuming HaltonPts is a function that generates Halton points.
   Hpts <- HaltonPts(N)
   #res <- cppRSHalton_br(n = N)
   #Hpts <- res$pts
-  HaltonIndex <- rep(0, N)
+  HaltonIndex <- base::rep(0, N)
 
   # Partitioning parameters
   xlevel <- c(1, 2, 6, 12, 24, 72, 144, 432, 864, 1728, 5184, 10368, 20736)
@@ -171,7 +171,7 @@ hipPartition <- function(pts, its) {
     }
 
     # Remove discarded points
-    TF <- which(!is.na(HaltonIndex))
+    TF <- base::which(!is.na(HaltonIndex))
     HaltonIndex <- HaltonIndex[TF]
     pts <- pts[TF,]
   }
@@ -210,7 +210,7 @@ hipIndexRandomPermutation <- function(its) {
   H <- HaltonPts(B)
 
   Hindex <- base::floor(rbind((b1^(J1) + 1e-12) * H[,1], (b2^(J2) + 1e-12) * H[,2])) + 1
-  Hindex <- t(Hindex)
+  Hindex <- base::t(Hindex)
 
   # Halton Matrix
   for (i in 0:(B - 1)) {
@@ -220,8 +220,8 @@ hipIndexRandomPermutation <- function(its) {
   # Permutated Halton Matrix
   step2 <- c(2, 4, 8, 16, 32, 64, 128, 256)
   step3 <- c(3, 9, 27, 81, 243)
-  order2 <- c((base::sample(2) - 1), rep(NA, ((b1^J1) - b1)))
-  order3 <- c((base::sample(3) - 1), rep(NA, ((b2^J2) - b2)))
+  order2 <- c((base::sample(2) - 1), base::rep(NA, ((b1^J1) - b1)))
+  order3 <- c((base::sample(3) - 1), base::rep(NA, ((b2^J2) - b2)))
 
   for (i in 1:(J1 - 1)) {
     #if (J1 < 2) {break}
@@ -230,7 +230,7 @@ hipIndexRandomPermutation <- function(its) {
       next
     }
     v <- vector()
-    L <- sum(!is.na(order2))
+    L <- sum(!base::is.na(order2))
 
     for (j in (1:L)) {
       k <- order2[j]
@@ -247,7 +247,7 @@ hipIndexRandomPermutation <- function(its) {
       next
     }
     v <- vector()
-    L <- sum(!is.na(order3))
+    L <- base::sum(!is.na(order3))
     for (j in (1:L)) {
       k <- order3[j]
       P <- (base::sample(3) - 1)
@@ -263,30 +263,31 @@ hipIndexRandomPermutation <- function(its) {
 
   I2 <- vector()
   for (i in 1:(b1^J1)) {
-    F <- which(b2vals == order2[i])
+    F <- base::which(b2vals == order2[i])
     I2 <- c(I2, F)
   }
   I3 <- vector()
   for (i in 1:(b2^J2)) {
-    F <- which(b3vals == order3[i])
+    F <- base::which(b3vals == order3[i])
     I3 <- c(I3, F)
   }
 
   permHIM <- HIM[I3, I2]
-  permHaltonIndex <- rep(0, B)
+  permHaltonIndex <- base::rep(0, B)
 
   for (i in 0:(B - 1)) {
-    permHaltonIndex[i + 1] <- permHIM[which(HIM == i)]
+    permHaltonIndex[i + 1] <- permHIM[base::which(HIM == i)]
   }
 
-  return(list(permHaltonIndex = permHaltonIndex, B = B))
+  return(base::list(permHaltonIndex = permHaltonIndex,
+                    B               = B))
 }
 
 # delete at some stage - use cpp version instead.
 HaltonPts <- function(n) {
   # Initialize
   bases <- c(2, 3)
-  pts <- matrix(0, nrow = n, ncol = 2)
+  pts <- base::matrix(0, nrow = n, ncol = 2)
 
   for (ii in (1:n)) {
     for (i in (1:2)) {

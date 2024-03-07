@@ -1,3 +1,5 @@
+# transformations.R
+
 #' @name rot
 #'
 #' @title Generate a rotation matrix for rotating objects later.
@@ -17,9 +19,8 @@
 #' }
 #'
 #' @export
-rot <- function(a)
-{
-  matrix(c(base::cos(a), base::sin(a), -base::sin(a), base::cos(a)), 2, 2)
+rot <- function(a){
+  base::matrix(c(base::cos(a), base::sin(a), -base::sin(a), base::cos(a)), 2, 2)
 }
 
 
@@ -47,21 +48,19 @@ rot <- function(a)
 #' }
 #'
 #' @export
-rotate.bb <- function(shp, theta)
-{
-  if (class(shp)[1] != "sf")
-  {
-    shp <-  sf::st_as_sf(shp)
+rotate.bb <- function(shp, theta){
+  if (base::class(shp)[1] != "sf"){
+    shp <- sf::st_as_sf(shp)
   }
 
   bb <- sf::st_as_sfc(sf::st_bbox(shp))
 
   cntrd <- sf::st_centroid(bb)
-  bb.rot <- (bb - cntrd) * rot(theta) + cntrd
+  bb.rot <- (bb - cntrd) * uc511::rot(theta) + cntrd
   bb.new <- sf::st_as_sfc(sf::st_bbox(bb.rot))
 
-  attr(bb.new, "rotation") = theta
-  attr(bb.new, "centroid") = sf::st_coordinates(cntrd)
+  base::attr(bb.new, "rotation") = theta
+  base::attr(bb.new, "centroid") = sf::st_coordinates(cntrd)
   return(bb.new)
 }
 
@@ -90,20 +89,19 @@ rotate.bb <- function(shp, theta)
 #' }
 #'
 #' @export
-rotate.scale.coords <- function(coords, bb, back = TRUE)
-{
+rotate.scale.coords <- function(coords, bb, back = TRUE){
+
   coords <- coords[, 2:3]
-  theta <- ifelse(back, -1, 1) * attr(bb, "rotation")	# Rotate backwards
-  cntrd <- attr(bb, "centroid")
+  theta <- ifelse(back, -1, 1) * base::attr(bb, "rotation")	# Rotate backwards
+  cntrd <- base::attr(bb, "centroid")
 
   bb.bounds <- sf::st_bbox(bb)
   bb.scale <- base::diag(2) * (bb.bounds[3:4] - bb.bounds[1:2])
 
-  #coords <- sf::st_multipoint(coords, dim = "XY") %>% sf::st_geometry()
   coords.tmp <- sf::st_multipoint(coords, dim = "XY")
   coords <- sf::st_geometry(coords.tmp)
   coords.scale <- coords*bb.scale + bb.bounds[1:2]
-  coords.rot <- (coords.scale - cntrd) * rot(theta) + cntrd
+  coords.rot <- (coords.scale - cntrd) * uc511::rot(theta) + cntrd
 
   sf::st_crs(coords.rot) <- sf::st_crs(bb)
   return(coords.rot)
@@ -134,14 +132,13 @@ rotate.scale.coords <- function(coords, bb, back = TRUE)
 #' }
 #'
 #' @export
-rotate.shp <- function(shp, bb, back = TRUE)
-{
-  theta <- ifelse(back, -1, 1) * attr(bb, "rotation")	# Rotate backwards
-  cntrd <- attr(bb, "centroid")
+rotate.shp <- function(shp, bb, back = TRUE){
+  theta <- ifelse(back, -1, 1) * base::attr(bb, "rotation")	# Rotate backwards
+  cntrd <- base::attr(bb, "centroid")
 
   shp <- sf::st_transform(shp, sf::st_crs(bb))
   shp <- sf::st_geometry(shp)
-  shp.rot <- (shp - cntrd) * rot(theta) + cntrd
+  shp.rot <- (shp - cntrd) * uc511::rot(theta) + cntrd
   sf::st_crs(shp.rot) <- sf::st_crs(bb)
   return(shp.rot)
 }

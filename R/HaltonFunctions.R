@@ -1,3 +1,5 @@
+# HaltonFunctions.R
+
 #' @name makeFrame
 #'
 #' @title Create a Halton Frame raster, defined in sf based on the bounding box master sample.
@@ -22,14 +24,14 @@
 #' }
 #'
 #' @export
-makeFrame <- function(base = c(2,3), J = c(2,2), bb, rotate = FALSE)
-{
+makeFrame <- function(base = c(2,3), J = c(2,2), bb, rotate = FALSE){
+
   b.bounds <- sf::st_bbox(bb)
-  B <- prod(base^J)
+  B <- base::prod(base^J)
   halt.grid <- raster::raster(raster::extent(base::matrix( b.bounds, 2, 2 )), nrow=base[2]^J[2], ncol=base[1]^J[1])
   halt.grid <- raster::rasterToPolygons(halt.grid)
   raster::projection(halt.grid) <- sf::st_crs(bb)$proj4string
-  if(rotate) return(rotate.shp(sf::st_as_sf(halt.grid), bb))
+  if(rotate) return(uc511::rotate.shp(sf::st_as_sf(halt.grid), bb))
   return(sf::st_as_sf(halt.grid))
 }
 
@@ -62,26 +64,25 @@ makeFrame <- function(base = c(2,3), J = c(2,2), bb, rotate = FALSE)
 #' }
 #'
 #' @export
-shape2Frame <- function(shp, bb = NULL, base = c(2,3), J = c(2,2), projstring = NULL, rotate = FALSE)
-{
-  if( !is.null( bb))
-  {
+shape2Frame <- function(shp, bb = NULL, base = c(2,3), J = c(2,2), projstring = NULL, rotate = FALSE){
+
+  if( !is.null( bb)){
     bb.bounds <- sf::st_bbox(bb)
     scale.bas <- bb.bounds[3:4] - bb.bounds[1:2]
     shift.bas <- bb.bounds[1:2]
-    theta <- attr(bb, "rotation")
-    cntrd <- attr(bb, "centroid")
+    theta <- base::attr(bb, "rotation")
+    cntrd <- base::attr(bb, "centroid")
     projstring <- sf::st_crs(bb)$proj4string
   }else{ return("uc511(shape2Frame) Define Bounding Box Please.")}
 
-  if( is.null(projstring)) {
-    projstring <- getProj()
+  if(base::is.null(projstring)) {
+    projstring <- uc511::getProj()
     base::message("uc511(shape2Frame) Assuming Projection\n")
   }
   if(sf::st_crs(shp) != sf::st_crs(projstring)) shp <- sf::st_transform(shp, projstring)
 
   #Stretch bounding box to Halton Frame Size:
-  shp2 <- rotate.shp(shp, bb, back = FALSE)
+  shp2 <- uc511::rotate.shp(shp, bb, back = FALSE)
   bb2 <- sf::st_bbox(shp)
   xy <- (bb2 - shift.bas[c(1,2,1,2)])/scale.bas[c(1,2,1,2)]
   lx <- base::floor(xy[1] / (1/base[1]^J[1]))/(base[1]^J[1])
@@ -95,6 +96,7 @@ shape2Frame <- function(shp, bb = NULL, base = c(2,3), J = c(2,2), projstring = 
   halt.frame <- raster::raster(raster::extent(base::matrix( bb.new , 2, 2)), nrow=ny, ncol=nx)
   raster::projection(halt.frame) <- projstring
   halt.poly <- raster::rasterToPolygons(halt.frame)
-  if(rotate) return(rotate.shp(sf::st_as_sf(halt.poly), bb))
+  if(rotate) return(uc511::rotate.shp(sf::st_as_sf(halt.poly), bb))
+
   return(sf::st_as_sfc(halt.poly))
 }

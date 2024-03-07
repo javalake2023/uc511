@@ -1,3 +1,5 @@
+# getOverlappedPoints.R
+
 #' @name contains_feature
 #'
 #' @title Check if the sf object contains a certain feature.
@@ -11,15 +13,16 @@
 #' a feature called feature_name.
 #' @param feature_name The feature name we want to find in the simple file
 #' object sf_object.
+#'
 #' @return Returns TRUE if the simple file object sf_object contains the feature
-#' feature_name. Otherwise it returns FALSE.
+#' feature_name. Otherwise FALSE is returned.
 
 contains_feature <- function(sf_object, feature_name) {
   # Drop the geometry column
   df <- sf::st_drop_geometry(sf_object)
 
   # Check if the feature exists in the data frame
-  feature_exists <- feature_name %in% names(df)
+  feature_exists <- feature_name %in% base::names(df)
 
   return(feature_exists)
 }
@@ -35,7 +38,7 @@ contains_feature <- function(sf_object, feature_name) {
 #'
 #' @details This function was written by Phil Davies.
 #'
-#' @param shapefile Shape file as a polygon (sp or sf) containing a BAS sample that
+#' @param shapefile Shape file as a polygon (sp or sf) containing a sample that
 #' contains a feature column named panel_id.
 #' @param panelid The overlapped panel in the shapefile shp the user wants
 #' sample points from.
@@ -56,14 +59,14 @@ getOverlappedPoints <- function(shapefile, panelid){
   feature_name <- "panel_id"
   exists <- contains_feature(shapefile, feature_name)
   if(!exists){
-    stop("uc511(getOverlappedPoints) Simple file object does not contain a feature named panel_id.")
+    base::stop("uc511(getOverlappedPoints) Simple file object does not contain a feature named panel_id.")
   }
 
-  indx <- c()
-  for(k in 1:length(shapefile$panel_id)){
+  indx <- base::c()
+  for(k in 1:base::length(shapefile$panel_id)){
     tmp <- shapefile$panel_id[k]
-    if(any(panelid %in% unlist(tmp))){
-      indx <- c(indx, k)
+    if(base::any(panelid %in% base::unlist(tmp))){
+      indx <- base::c(indx, k)
     }
   }
   smp <- shapefile[indx,]

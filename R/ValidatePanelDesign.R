@@ -1,3 +1,5 @@
+# ValidatePanelDesign.R
+
 #' @name ValidatePanelDesign
 #'
 #' @title Validate the panels and panel_overlap parameters.
@@ -25,6 +27,7 @@
 #'                                                    number_panels
 #'                                                    panel_overlap
 
+#' @export
 ValidatePanelDesign <- function(panels, panel_overlap, n){
   #
   # default is not a panel design. Will be set to true if either of the
@@ -34,23 +37,23 @@ ValidatePanelDesign <- function(panels, panel_overlap, n){
 
   # verify panels parameter, must be a list of numerics (if not null).
   # if panels not NULL, then we will ignore the n parameter.
-  if(!is.null(panels)){
+  if(!base::is.null(panels)){
     validate_parameters("panels", panels)
     n <- base::sum(panels)
     panel_design <- TRUE
-    number_panels <- length(panels)
+    number_panels <- base::length(panels)
   }
 
   # verify panels_overlap parameter, must be a list of numerics (if not null).
-  if(!is.null(panel_overlap)){
+  if(!base::is.null(panel_overlap)){
     validate_parameters("panel_overlap", panel_overlap)
     if(!panel_design){
-      stop("uc511(ValidatePanelDesign) panels parameter must be specified when panel_overlap specified.")
+      base::stop("uc511(ValidatePanelDesign) panels parameter must be specified when panel_overlap specified.")
     }
-    if(length(panels) != length(panel_overlap)){
+    if(base::length(panels) != base::length(panel_overlap)){
       msg <- "uc511(ValidatePanelDesign) length of panels [%s] must match length of panel_overlap [%s]."
-      msgs <- sprintf(msg, length(panels), length(panel_overlap))
-      stop(msgs)
+      msgs <- base::sprintf(msg, length(panels), length(panel_overlap))
+      base::stop(msgs)
     }
     panel_design <- TRUE
     # force zero for panel 1.
@@ -91,27 +94,29 @@ ValidatePanelDesign <- function(panels, panel_overlap, n){
 #' assigned determined by the panels and panel_overlap parameters.
 #'
 
+#' @export
 PanelDesignAssignPanelids <- function(smp, panels, panel_overlap, panel_design, number_panels){
   # if(panel_design) then assign panel id's to smp.
   # need to distinguish if panel_overlap is required.
-  if(is.null(panel_overlap) & panel_design){
+  if(base::is.null(panel_overlap) & panel_design){
+    base::message("uc511(PanelDesignAssignPanelids) Non-Overlapping panel design.")
     tmp <- NULL
     # assign panel id's to sample points. smp$panel_id.
     for(i in 1:number_panels){
-      tmp <- c(tmp, rep(i, panels[i]))
+      tmp <- base::c(tmp, base::rep(i, panels[i]))
     }
     smp$panel_id <- tmp
   }
   # if(panel_overlap) is not null and panel_design is TRUE
-  if(!is.null(panel_overlap) & panel_design){
-    message("panel_overlap")
+  if(!base::is.null(panel_overlap) & panel_design){
+    base::message("uc511(PanelDesignAssignPanelids) Overlapping panel design.")
     # need to create the panel_id column
     # Initialize variables
     smp$panel_id <- 0
     panelid <- 1
     start_index <- 1
 
-    for(i in 1:length(panels)){
+    for(i in 1:base::length(panels)){
       start_index <- start_index - panel_overlap[i]
       if(i == 1){
         for(j in 1:panels[i]){
@@ -120,11 +125,7 @@ PanelDesignAssignPanelids <- function(smp, panels, panel_overlap, panel_design, 
         }
       } else {
         for(j in 1:panels[i]){
-          #print(unlist(df$panelid[start_index]))
-          #if(df$panelid[start_index] == 0){
-          #  print("just a zero.")
-          #}
-          smp$panel_id[start_index] <- list(c(smp$panel_id[start_index], panelid))
+          smp$panel_id[start_index] <- base::list(base::c(smp$panel_id[start_index], panelid))
           start_index <- start_index + 1
         }
       }

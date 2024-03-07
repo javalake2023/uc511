@@ -585,7 +585,8 @@ Rcpp::List cppBASpts(int n = 10,
 
   //return pts;
   return Rcpp::List::create(_["pts"]    = pts,
-                            _["xklist"] = xklist);
+                            _["xklist"] = xklist,
+                            _["seeds"]  = seeds);
 }
 
 
@@ -662,7 +663,7 @@ Rcpp::List cppRSHalton_br(int n = 10,
     // Generate random values using uniform distribution
     for (int i = 0; i < d; i++) {
       // Generate random uniform values (respects the current R set.seed())
-      RcppThread::Rcout << "cppRSHalton_br() u : " << R::runif(min, max) << std::endl;
+      //RcppThread::Rcout << "cppRSHalton_br() u : " << R::runif(min, max) << std::endl;
       u.push_back(R::runif(min, max));
     } // end for i
 
@@ -710,6 +711,7 @@ Rcpp::List cppRSHalton_br(int n = 10,
 
   //return pts;
   return Rcpp::List::create(_["pts"]    = pts,
-                            _["xklist"] = xklist);
+                            _["xklist"] = xklist,
+                            _["seeds"]  = seeds);
 }
 

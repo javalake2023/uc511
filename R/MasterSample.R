@@ -1,7 +1,4 @@
-########################
-#Master Sample Code
-#Paul van Dam-Bates
-########################
+# MasterSample.R
 
 #' @import raster
 #' @import sf
@@ -35,18 +32,18 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
   optInclProb <- FALSE
 
   # We always use base 2,3
-  base <- c(2,3)
+  base <- base::c(2,3)
 
   # Updating to work for sf only. Start here...
-  if (class(shp)[1] != "sf"){
+  if (base::class(shp)[1] != "sf"){
     shp <- sf::st_as_sf(shp)
   }
 
   # Set up Western Canada Marine Master Sample as default, general for any.
   # bb now includes its rotation as well.
-  if(is.null(bb)){
-    bb <- getBB()
-    msproj <- getProj()
+  if(base::is.null(bb)){
+    bb <- uc511::getBB()
+    msproj <- uc511::getProj()
     #seed <- getSeed()
   }else{
     msproj <- sf::st_crs(bb)$proj4string
@@ -55,20 +52,20 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
   # if inclSeed NULL then generate new seed and add to BB, otherwise replace
   # seed in BB with user specified seed from inclSeed.
   ##attr(build.bb, "seed") <- inclSeed todo!!!!!
-  if(is.null(inclSeed)){
+  if(base::is.null(inclSeed)){
     # generate 2 seed values.
     inclSeed <- base::floor(stats::runif(2, 0, 10000))
     #inclSeed <- base::floor(stats::runif(1,1,10000))
   }
 
   # replace seed in BB no matter what.
-  attr(bb, "seed") <- inclSeed
+  base::attr(bb, "seed") <- inclSeed
 
   # seed <- base::attr(bb, "seed")[1:2]	# 3rd dimension is not yet supported...
   #msg <- "uc511(masterSampleSelect)(bb) inclSeed = %s.\n"
   #msgs <- base::sprintf(msg, inclSeed)
   #base::message(msgs)
-  cat("uc511(masterSampleSelect)(bb) inclSeed = ", inclSeed, ".", "\n")
+  base::cat("uc511(masterSampleSelect)(bb) inclSeed = ", inclSeed, ".", "\n")
 
   orig.crs <- NULL
   if(sf::st_crs(shp) != sf::st_crs(msproj)){
@@ -88,10 +85,10 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
   # Kind of like magic!
   draw <- n + nExtra
 
-  J <- c(0, 0)
+  J <- base::c(0, 0)
   # Tricky here to figure out where the shape is on the vertical Halton box.
-  shp.rot <- rotate.shp(shp, bb, back = FALSE)
-  hal.frame <- shape2Frame(shp.rot, J = J, bb = bb, projstring = msproj)
+  shp.rot <- uc511::rotate.shp(shp, bb, back = FALSE)
+  hal.frame <- uc511::shape2Frame(shp.rot, J = J, bb = bb, projstring = msproj)
   area.shp <- as.numeric(base::sum(sf::st_area(shp)))
   # Subset again:
   while(area.shp < 0.25*as.numeric(sf::st_area(hal.frame))[1]){
@@ -100,27 +97,27 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
     }else{
       J[2] <- J[2] + 1
     }
-    hal.frame <- shape2Frame(shp.rot, J = J, bb = bb, projstring = msproj)
+    hal.frame <- uc511::shape2Frame(shp.rot, J = J, bb = bb, projstring = msproj)
   }
 
   hal.fr2 <- uc511::rotate.shp(hal.frame, bb)
-  hal.indx <- which(raster::rowSums(sf::st_intersects(hal.fr2, shp, sparse = FALSE)) > 0)
-  # need to remove the next line prior to submitting to CRAN.
-  if(length(hal.indx) < 1){browser()}
+  hal.indx <- base::which(raster::rowSums(sf::st_intersects(hal.fr2, shp, sparse = FALSE)) > 0)
+  # ****** need to remove the next line prior to submitting to CRAN. ******
+  if(base::length(hal.indx) < 1){browser()}
 
   #hal.pts <- (sf::st_centroid(hal.frame) %>% sf::st_coordinates())[hal.indx,]	## Hack to react to changes in sf. Need to get coordinates and then subset now. Fix it better in the future.
   hal.tmp <- sf::st_centroid(hal.fr2) #hal.frame ???? #[hal.indx,]
   hal.pts <- sf::st_coordinates(hal.tmp)[hal.indx,]
 
   # Find the corner Halton Pts
-  if(length(hal.indx) == 1){
+  if(base::length(hal.indx) == 1){
     box.lower <- as.matrix((hal.pts - shift.bas)/scale.bas)
   } else {
-    box.lower <- t(base::apply(hal.pts, 1, FUN = function(x){(x - shift.bas)/scale.bas}))
+    box.lower <- base::t(base::apply(hal.pts, 1, FUN = function(x){(x - shift.bas)/scale.bas}))
   }
   A <- uc511::GetBoxIndices(box.lower, base, J)
   halt.rep <- uc511::SolveCongruence(A, base, J)
-  B <- base::prod(c(2, 3) ^ J)
+  B <- base::prod(base::c(2, 3) ^ J)
 
   # We like to know how many divisions we had to make...
   if(printJ){
@@ -133,7 +130,7 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
     #seed <- c(seed, inclSeed)
     seed <- inclSeed
 
-    cat("uc511(masterSampleSelect)(getSample) seed = ", seed, ".", "\n")
+    base::cat("uc511(masterSampleSelect)(getSample) seed = ", seed, ".", "\n")
     #msg <- "uc511(masterSampleSelect)(getSample) seed = %s.\n"
     #msgs <- base::sprintf(msg, seed)
     #base::message(msgs)
@@ -142,7 +139,7 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
     }else {
       seedshift <- endPoint + seed
     }
-    cat("uc511(masterSampleSelect)(getSample) seedshift = ", seedshift, ".", "\n")
+    base::cat("uc511(masterSampleSelect)(getSample) seedshift = ", seedshift, ".", "\n")
     #msg <- "uc511(masterSampleSelect)(getSample) seedshift = %s.\n"
     #msgs <- base::sprintf(msg, seedshift)
     #base::message(msgs)
@@ -155,7 +152,7 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
     pts <- base::cbind(siteid, pts)
 
     xy <- base::cbind(pts[,2]*scale.bas[1] + shift.bas[1], pts[,3]*scale.bas[2] + shift.bas[2])
-    if(theta != 0) xy <- sweep ( sweep(xy, 2,  cntrd, FUN = "-") %*% uc511::rot(-theta), 2,  cntrd, FUN = "+")
+    if(theta != 0) xy <- base::sweep(base::sweep(xy, 2,  cntrd, FUN = "-") %*% uc511::rot(-theta), 2,  cntrd, FUN = "+")
     if(optInclProb){
       pts.coord <- sf::st_as_sf(data.frame(SiteID = pts[,1] + endPoint, xy, inclProb = pts[,4]), coords = c(2,3))
     } else {
@@ -170,7 +167,7 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
   while(base::nrow(pts.sample) == 0){
     draw <- draw * 2
     pts.sample <- getSample()
-    cat("uc511(masterSampleSelect)(after getSample) nrow(pts.sample) = ", base::nrow(pts.sample), ".", "\n")
+    base::cat("uc511(masterSampleSelect)(after getSample) nrow(pts.sample) = ", base::nrow(pts.sample), ".", "\n")
     #msg <- "uc511(masterSampleSelect) after getSample %s.\n"
     #msgs <- base::sprintf(msg, base::nrow(pts.sample))
     #base::message(msgs)
@@ -180,12 +177,12 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
   while(base::nrow(pts.sample) < n){
     last.pt <- pts.sample$SiteID[base::nrow(pts.sample)]
     new.pts <- getSample(k = di, endPoint = last.pt)
-    if(nrow(new.pts) > 0) pts.sample <- base::rbind(pts.sample, new.pts)
+    if(base::nrow(new.pts) > 0) pts.sample <- base::rbind(pts.sample, new.pts)
     di <- di + 1
   }
 
   smp <- pts.sample[1:n,]
-  if(!is.null(orig.crs)){
+  if(!base::is.null(orig.crs)){
     smp <- sf::st_transform(smp, orig.crs)
   }
   result <- base::list(sample = smp,
@@ -254,8 +251,8 @@ BAS <- function(shp, n = 100, bb = NULL, panels = NULL, panel_overlap = NULL,
   n             <- res$n
 
   #if(is.null(inclSeed)) inclSeed <- base::floor(stats::runif(1,1,10000))
-  if(is.null(stratum)){
-    result <- masterSampleSelect(shp = shp,
+  if(base::is.null(stratum)){
+    result <- uc511::masterSampleSelect(shp = shp,
                                  n = n,
                                  bb = bb,
                                  nExtra = nExtra,
@@ -263,17 +260,17 @@ BAS <- function(shp, n = 100, bb = NULL, panels = NULL, panel_overlap = NULL,
     smp <- result$sample
     inclSeed <- result$seed
   }else{
-    if(is.null(names(n))) return("uc511(BAS) Need design sample size as n = named vector")
-    strata.levels <- names(n)
+    if(base::is.null(base::names(n))) return("uc511(BAS) Need design sample size as n = named vector")
+    strata.levels <- base::names(n)
 
     if(!quiet){
       msg <- "uc511(BAS) Stratum: %s.\n"
       msgs <- base::sprintf(msg, strata.levels[1])
       base::message(msgs)
     }
-    k.indx <- which(shp[, stratum, drop = TRUE] == strata.levels[1])
+    k.indx <- base::which(shp[, stratum, drop = TRUE] == strata.levels[1])
     shp.stratum <- shp[k.indx,] #%>% st_union()	# ? Not sure if this is necessary... slowed things down too much!
-    result <- masterSampleSelect(shp.stratum,
+    result <- uc511::masterSampleSelect(shp.stratum,
                                  n = n[1],
                                  bb = bb,
                                  nExtra = nExtra,
@@ -290,9 +287,9 @@ BAS <- function(shp, n = 100, bb = NULL, panels = NULL, panel_overlap = NULL,
           msgs <- base::sprintf(msg, strata.levels[k])
           base::message(msgs)
         }
-        k.indx <- which(shp[, stratum, drop = TRUE] == strata.levels[k])
+        k.indx <- base::which(shp[, stratum, drop = TRUE] == strata.levels[k])
         shp.stratum <- shp[k.indx,] ## %>% st_union()	# Needed?
-        result <- masterSampleSelect(shp = shp.stratum,
+        result <- uc511::masterSampleSelect(shp = shp.stratum,
                                     n = n[k],
                                     bb = bb,
                                     nExtra = nExtra,
@@ -345,7 +342,7 @@ BAS <- function(shp, n = 100, bb = NULL, panels = NULL, panel_overlap = NULL,
   #  }
   #}
 
-  res <- PanelDesignAssignPanelids(smp, panels, panel_overlap, panel_design, number_panels)
+  res <- uc511::PanelDesignAssignPanelids(smp, panels, panel_overlap, panel_design, number_panels)
 
   result <- base::list(sample = res$sample,
                        seed   = inclSeed)
@@ -392,16 +389,16 @@ BAS <- function(shp, n = 100, bb = NULL, panels = NULL, panel_overlap = NULL,
 point2Frame <- function(pts, bb = NULL, base = c(2,3), J = NULL, size = 100)
 {
   # Updating to work for sf only. Start here...
-  if (class(pts)[1] != "sf"){
+  if (base::class(pts)[1] != "sf"){
     pts <-  sf::st_as_sf(pts)
   }
 
   # Set up Western Canada Marine Master Sample as default, general for any.
   # bb now includes its rotation as well.
-  if(is.null(bb)){
-    bb <- getBB()
-    msproj <- getProj()
-    seed <- getSeed()
+  if(base::is.null(bb)){
+    bb <- uc511::getBB()
+    msproj <- uc511::getProj()
+    seed <- uc511::getSeed()
   }else{
     msproj <- sf::st_crs(bb)$proj4string
     seed <- base::attr(bb, "seed")[1:2]	# 3rd dimension is not yet supported...
@@ -421,14 +418,14 @@ point2Frame <- function(pts, bb = NULL, base = c(2,3), J = NULL, size = 100)
   cntrd <- base::attr(bb, "centroid")
   theta <- base::attr(bb, "rotation")
 
-  if(is.null(J)) J <- base::ceiling(base::log(scale.bas/size)/base::log(base))
+  if(base::is.null(J)) J <- base::ceiling(base::log(scale.bas/size)/base::log(base))
 
-  xy.r <- rotate.shp(pts, bb, back = FALSE)
+  xy.r <- uc511::rotate.shp(pts, bb, back = FALSE)
   xy <- sf::st_coordinates(xy.r)
   xy <- base::cbind((xy[,1] - shift.bas[1])/scale.bas[1], (xy[,2] - shift.bas[2])/scale.bas[2])
   lx <- base::floor(xy[,1] / (1/base[1]^J[1]))/(base[1]^J[1])
   ly <- base::floor(xy[,2] / (1/base[2]^J[2]))/(base[2]^J[2])
-  A <- GetBoxIndices(base::cbind(lx,ly), base, J)
+  A <- uc511::GetBoxIndices(base::cbind(lx,ly), base, J)
 
   #Only build the boxes for unique ones.
   frame.order <- uc511::SolveCongruence(A, base, J)
@@ -446,9 +443,9 @@ point2Frame <- function(pts, bb = NULL, base = c(2,3), J = NULL, size = 100)
   frame.order <- ifelse( frame.order < boxInit, B + ( frame.order - boxInit),  frame.order - boxInit)
 
   polys <- base::cbind("xmin" = lx, "ymin" = ly, "xmax" = lx + scale.bas[1]/base[1]^J[1], "ymax" = ly + scale.bas[2]/base[2]^J[2])
-  halt.boxes <- do.call("c", apply(polys[!dupli,] , 1, FUN = function(x){sf::st_as_sfc(sf::st_bbox(x))}))
+  halt.boxes <- base::do.call("c", base::apply(polys[!dupli,] , 1, FUN = function(x){sf::st_as_sfc(sf::st_bbox(x))}))
   sf::st_crs(halt.boxes) <- sf::st_crs(bb)
-  halt.rot <- rotate.shp(halt.boxes, bb, back = TRUE)
+  halt.rot <- uc511::rotate.shp(halt.boxes, bb, back = TRUE)
   shp.out <- sf::st_sf(halt.rot, data.frame(HaltonIndex = frame.order[!dupli]))
 
   return(shp.out)
@@ -489,22 +486,22 @@ point2Frame <- function(pts, bb = NULL, base = c(2,3), J = NULL, size = 100)
 #' }
 #'
 #' @export
-getIndividualBoxIndices <- function(pts, J = NULL, bb, size = 100)
-{
+getIndividualBoxIndices <- function(pts, J = NULL, bb, size = 100){
+
   # We always use base 2,3
-  base <- c(2,3)
+  base <- base::c(2,3)
 
   # Updating to work for sf only. Start here...
-  if (class(pts)[1] != "sf"){
+  if (base::class(pts)[1] != "sf"){
     pts <-  sf::st_as_sf(pts)
   }
 
   # Set up Western Canada Marine Master Sample as default, general for any.
   # bb now includes its rotation as well.
-  if(is.null(bb)){
-    bb <- getBB()
-    msproj <- getProj()
-    seed <- getSeed()
+  if(base::is.null(bb)){
+    bb <- uc511::getBB()
+    msproj <- uc511::getProj()
+    seed <- uc511::getSeed()
   }else{
     msproj <- sf::st_crs(bb)$proj4string
     seed <- base::attr(bb, "seed")[1:2]	# 3rd dimension is not yet supported...
@@ -524,7 +521,7 @@ getIndividualBoxIndices <- function(pts, J = NULL, bb, size = 100)
   cntrd <- base::attr(bb, "centroid")
   theta <- base::attr(bb, "rotation")
 
-  if(is.null(J)) J <- base::ceiling(base::log(scale.bas/size)/base::log(base))
+  if(base::is.null(J)) J <- base::ceiling(base::log(scale.bas/size)/base::log(base))
 
   B <- base::prod(base^J)
 
@@ -533,10 +530,10 @@ getIndividualBoxIndices <- function(pts, J = NULL, bb, size = 100)
 
   xy <- sf::st_coordinates(pts)
   # Rotate pts to the bounding box:
-  if(theta != 0) xy <- base::sweep(base::sweep(xy, 2,  cntrd, FUN = "-") %*% rot(theta), 2,  cntrd, FUN = "+")
+  if(theta != 0) xy <- base::sweep(base::sweep(xy, 2,  cntrd, FUN = "-") %*% uc511::rot(theta), 2,  cntrd, FUN = "+")
   # Scale to 0-1
   xy <- base::cbind((xy[,1] - shift.bas[1])/scale.bas[1], (xy[,2] - shift.bas[2])/scale.bas[2])
-  Axy <- base::cbind(floor((xy[,1] + 2*.Machine$double.eps)*Bx), base::floor((xy[,2] + 2*.Machine$double.eps)*By))
+  Axy <- base::cbind(base::floor((xy[,1] + 2*.Machine$double.eps)*Bx), base::floor((xy[,2] + 2*.Machine$double.eps)*By))
 
   haltonIndex <- uc511::SolveCongruence(Axy, base = base, J = J)
 

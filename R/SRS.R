@@ -34,14 +34,14 @@ SRS <- function(seed = 42, total_rows = 0, sample_size = 0) {
   uc511::validate_parameters("sample_size", c(sample_size))
   # ensure sample_size < total_rows
   if(sample_size >= total_rows){
-    stop("uc511(validate_parameters) Parameter sample_size must be less than total_rows.")
+    stop("uc511(SRS) Parameter sample_size must be less than total_rows.")
   }
 
   samp_pts <- NULL
-  set.seed(seed)
-  samp_pts <- base::sample(x = total_rows,
-                          size = sample_size,
+  base::set.seed(seed)
+  samp_pts <- base::sample(x      = total_rows,
+                          size    = sample_size,
                           replace = FALSE,
-                          prob = NULL)
+                          prob    = NULL)
   return (samp_pts)
 }

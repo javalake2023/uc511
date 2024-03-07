@@ -1,3 +1,5 @@
+# definitions.R
+
 #' @name BoundingBox
 #'
 #' @title Build a new Master Sample with a random rotation and seed.
@@ -52,17 +54,17 @@ BoundingBox <- function(shp, d = 2, showOutput = TRUE, rotate = FALSE)
   # Create a Random Rotation:
   build.bb <- rotate.bb(shp, theta = theta)
   sf::st_crs(build.bb) <- sf::st_crs(shp)
-  attr(build.bb, "seed") <- seed
+  base::attr(build.bb, "seed") <- seed
 
   if(showOutput){
     #msg <- "uc511(BoundingBox) Seed: %s.\n"
-    #msgs <- sprintf(msg, seed)
+    #msgs <- base::sprintf(msg, seed)
     #base::message(msgs)
 
-    cat("uc511(BoundingBox) Seed:", seed, ".", "\n")
+    base::cat("uc511(BoundingBox) Seed:", seed, ".", "\n")
 
     msg <- "uc511(BoundingBox) Rotation: %s Radians.\n"
-    msgs <- sprintf(msg, theta)
+    msgs <- base::sprintf(msg, theta)
     base::message(msgs)
   }
   return(build.bb)
@@ -106,8 +108,8 @@ getBB <- function()
   bb.df <- c("xmin" = 85148, "ymin" = 33745, "xmax" = 1280999, "ymax" = 1351981)
   bb <- sf::st_as_sfc(sf::st_bbox(bb.df))
 
-  attr(bb, "rotation") <- 0
-  attr(bb, "centroid") <- sf::st_centroid(bb)
+  base::attr(bb, "rotation") <- 0
+  base::attr(bb, "centroid") <- sf::st_centroid(bb)
 
   sf::st_crs(bb) <- sf::st_crs(getProj())
   return(bb)
@@ -128,7 +130,7 @@ getBB <- function()
 #' @export
 getSeed <- function()
 {
-  seed <- c(37916, 85846)
+  seed <- base::c(37916, 85846)
   return(seed)
 }
 

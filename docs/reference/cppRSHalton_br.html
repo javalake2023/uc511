@@ -81,20 +81,18 @@ package BASMasterSample. Subsequently it was written in C/C++ by Phil Davies.</p
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># First 10 points in the Halton Sequence for base 2,3</span></span></span>
 <span class="r-in"><span> <span class="fu">uc511</span><span class="fu">::</span><span class="fu">cppRSHalton_br</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cppRSHalton_br() u : 0.27751</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cppRSHalton_br() u : 0.132759</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $pts</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             [,1]        [,2]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1,] 0.57243508 0.544526352</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [2,] 0.32243508 0.877859685</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [3,] 0.82243508 0.322304130</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [4,] 0.19743508 0.655637463</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [5,] 0.69743508 0.988970796</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [6,] 0.44743508 0.005431702</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7,] 0.94743508 0.338765035</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [8,] 0.04118508 0.672098368</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9,] 0.54118508 0.116542813</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [10,] 0.29118508 0.449876146</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             [,1]       [,2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1,] 0.27751045 0.57243508</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [2,] 0.77751045 0.90576841</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3,] 0.15251045 0.05391656</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [4,] 0.65251045 0.38724990</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5,] 0.40251045 0.72058323</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6,] 0.90251045 0.16502767</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7,] 0.09001045 0.49836101</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [8,] 0.59001045 0.83169434</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9,] 0.34001045 0.27613878</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [10,] 0.84001045 0.60947212</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xklist</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xklist[[1]]</span>
@@ -103,6 +101,9 @@ package BASMasterSample. Subsequently it was written in C/C++ by Phil Davies.</p
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xklist[[2]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.0000000 0.3333333 0.6666667</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $seeds</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> numeric(0)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="co"># First 10 points in the Halton Sequence for base 2,3 with</span></span></span>
 <span class="r-in"><span><span class="co"># starting point at the 15th and 22nd index.</span></span></span>
@@ -127,6 +128,9 @@ package BASMasterSample. Subsequently it was written in C/C++ by Phil Davies.</p
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xklist[[2]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.0000000 0.3333333 0.6666667</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $seeds</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 14 21</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

@@ -129,13 +129,13 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
   crs <- NULL
   # Check if the shapefile has an associated CRS
   if (!is.null(shapefile)){
-    if (is.null(st_crs(shapefile))) {
+    if (is.null(sf::st_crs(shapefile))) {
       stop("uc511(HaltonFrame) Shapefile does not have an associated CRS.")
     } else {
       msg <- "uc511(HaltonFrame) Shapefile has an associated CRS."
       msgs <- sprintf(msg)
       message(msgs)
-      crs <- st_crs(shapefile)
+      crs <- sf::st_crs(shapefile)
     }
   } else {
     # shapefile is null, ie. not specified, so just call HaltonFrameBase
@@ -158,6 +158,9 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
     pts <- hf_$halton_frame
     pts <- cbind(seq(1, dim(pts)[1]), pts)
 
+    # save returned seeds in case they have changed (would only change if initially NULL).
+    seeds <- hf_$seeds
+
     #
     bb <- sf::st_as_sfc(sf::st_bbox(shapefile))
     cntrd <- sf::st_centroid(bb)
@@ -165,8 +168,8 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
     bb.new <- sf::st_as_sfc(sf::st_bbox(bb.rot))
 
     #
-    attr(bb.new, "rotation") <- 0
-    attr(bb.new, "centroid") <- sf::st_coordinates(cntrd)
+    base::attr(bb.new, "rotation") <- 0
+    base::attr(bb.new, "centroid") <- sf::st_coordinates(cntrd)
     pts.shp <- uc511::rotate.scale.coords(coords = pts, bb = bb.new)
 
     # replace the CRS (or set), st_intersection needs both objects with the same CRS.
@@ -195,20 +198,22 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
 
   # display some statistics and return results.
   msg <- "uc511(HaltonFrame) %s samples found in %s iterations, using J1=%s and J2=%s."
-  msgs <- sprintf(msg, pts_in_intersection, i, J[1]+i, J[2]+i)
+  msgs <- sprintf(msg, pts_in_intersection, i, J[1]+i-1, J[2]+i-1)
   message(msgs)
 
   # are we performing a randomStart?
   if (randomStart){
     # need to select n samples from diff_ (rename this to sample).
     # and then replicate; generate random number and take new sample.
-    message("HaltonFrame randomStart.")
+    message("uc511(HaltonFrame) randomStart.")
     diff_pts <- sf::st_cast(diff_, "POINT")
-    duplicated_pts <- c(diff_pts[1:n], diff_pts[1:n])
-    #dup_pts_sf <- sf::st_as_sf(duplicated_pts)
-    random_start_point <- sample(1:length(duplicated_pts), 1)
-    sample_indices <- seq(random_start_point, (random_start_point + n) - 1, 1)
-    random_start_sample <- duplicated_pts[sample_indices]
+    df_sorted <- diff_pts[order(diff_pts$ID),]
+    df_sorted <- sf::st_as_sf(df_sorted)
+    df_sorted$uc511SeqID <- seq(1, length(df_sorted$ID))
+    duplicated_pts <- base::rbind(df_sorted, df_sorted)
+    random_start_point <- base::sample(1:length(duplicated_pts$ID), 1)
+    sample_indices <- base::seq(random_start_point, (random_start_point + n) - 1, 1)
+    random_start_sample <- duplicated_pts[sample_indices,]
     diff_ <- random_start_sample
     # randomStart mutually exclusive with panel_design.
     panel_design <- FALSE
@@ -216,31 +221,36 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
 
   # are we performing a panel_design? yes then go assign panelid's.
   if(panel_design){
-    message("HaltonFrame panel_design.")
-    diff_pts <- sf::st_cast(sf::st_union(diff_), "POINT")
-    diff_pts_sf <- sf::st_as_sf(diff_pts)
+    message("uc511(HaltonFrame) panel_design.")
+    diff_pts <- sf::st_cast(diff_, "POINT")
+    df_sorted <- diff_pts[order(diff_pts$ID), ]
+    df_sorted$uc511SeqID <- seq(1, length(df_sorted$ID))
+    diff_pts_sf <- sf::st_as_sf(df_sorted)
     res <- PanelDesignAssignPanelids(diff_pts_sf, panels, panel_overlap, panel_design, number_panels)
     diff_ <- res$sample
   }
 
   # if we are not performing a randomStart or a panel_design
   if (!randomStart & !panel_design){
-    message("return n subset of points.")
+    message("uc511(HaltonFrame) return n points.")
     # turn our sample into points.
     diff_pts <- sf::st_cast(diff_, "POINT")
     df_sorted <- diff_pts[order(diff_pts$ID), ]
-    diff_ <- df_sorted[1:n,]
+    df_sorted$uc511SeqID <- seq(1, length(df_sorted$ID))
+    # return everything from the intersection.
+    diff_ <- df_sorted #[1:n,]
   }
 
   # Need to return cpprshs$pts, cpprshs$xklist, z and hf
-  result <- base::list(halton_seq = hf_$halton_seq,
+  result <- base::list(halton_seq     = hf_$halton_seq,
                        halton_seq_div = hf_$halton_seq_div,
-                       Z = hf_$Z,
-                       halton_frame = hf_$halton_frame,
-                       J = c(J[1]+i, J[2]+i),
-                       sample = diff_,
-                       pts.shp = pts.shp,
-                       bb = bb.new)
+                       Z              = hf_$Z,
+                       halton_frame   = hf_$halton_frame,
+                       J              = c(J[1]+i-1, J[2]+i-1),
+                       sample         = diff_,
+                       pts.shp        = pts.shp,
+                       bb             = bb.new,
+                       seeds          = seeds)
   return(result)
 }
 
@@ -278,6 +288,9 @@ HaltonFrameBase <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
   uc511::validate_parameters("J", J)
   uc511::validate_parameters("bases", bases)
   uc511::validate_parameters("n", c(n))
+  if (!is.null(seeds)){
+    uc511::validate_parameters("seeds", seeds)
+  }
 
   #
   j1 <- J[1]; j2 <- J[2]
@@ -291,7 +304,11 @@ HaltonFrameBase <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
   B2 <- 2 * B
   # compute B2 halton points
   #cpprshs <- uc511::cppRSHalton_br(n = B2, bases = bases)
-  cpprshs <- uc511::cppBASpts(n = B2, bases = bases)
+  if(is.null(seeds)){
+    cpprshs <- uc511::cppBASpts(n = B2, bases = bases)
+  } else {
+    cpprshs <- uc511::cppBASpts(n = B2, bases = bases, seeds = seeds)
+  }
   #
   z <- ((cpprshs$pts[1:B,] + cpprshs$pts[(B+1):B2,])/2)
   # x-dimension
@@ -301,13 +318,14 @@ HaltonFrameBase <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
   # Halton Frame
   hf <- base::cbind(x_dim, y_dim)
   # Create an index number for each data point.
-  halton_indx <- seq(1, B2/2)
+  halton_indx <- base::seq(1, B2/2)
 
-  # Need to return cpprshs$pts, cpprshs$xklist, z and hf
-  result <- base::list(halton_seq = cpprshs$pts,
+  # Need to return cpprshs$pts, cpprshs$xklist, z, hf and seeds.
+  result <- base::list(halton_seq     = cpprshs$pts,
                        halton_seq_div = cpprshs$xklist,
-                       Z = z,
-                       halton_frame = hf,
-                       halton_indx = halton_indx)
+                       Z              = z,
+                       halton_frame   = hf,
+                       halton_indx    = halton_indx,
+                       seeds          = cpprshs$seeds)
   return(result)
 }

@@ -7,7 +7,7 @@
 getOverlappedPoints(shapefile, panelid)
 }
 \arguments{
-\item{shapefile}{Shape file as a polygon (sp or sf) containing a BAS sample that
+\item{shapefile}{Shape file as a polygon (sp or sf) containing a sample that
 contains a feature column named panel_id.}
 
 \item{panelid}{The overlapped panel in the shapefile shp the user wants
