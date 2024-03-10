@@ -329,11 +329,6 @@ T mod(T a, int n)
   return a - floor(a / n) * n;
 }
 
-//void sample_int(int first, int last, std::vector<int> *out, std::size_t n, std::mt19937*g){
-//  std::ranges::sample(std::views::iota(first, last), std::back_inserter(*out), n, *g);
-//}
-
-
 
 //' @name cppRSHalton
 //'

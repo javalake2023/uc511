@@ -33,8 +33,9 @@ the parameters used are specified in the panels and panel_overlap parameters.}
 \item{number_panels}{The number of sample panels required.}
 }
 \value{
-Returns a list of the following variables: sample, which has the appropriate panel id
-assigned determined by the panels and panel_overlap parameters.
+Returns a list of the following variables: sample, which is the original shapefile
+that has had the appropriate panel id's add as a feature. The panel id values are determined
+by the panels and panel_overlap parameters.
 }
 \description{
 This function assigns panel id's to each sample based on values in the

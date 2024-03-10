@@ -10,8 +10,9 @@
 #'
 #' @title Generate sample points using BAS master sample.
 #'
-#' @description This function has no features and is generally expected to be run by the wrapper function.
-#' masterSample that ensures all the correct pieces are passed and adds the additional feature of stratification.
+#' @description This function has no features and is generally expected to be run by the wrapper
+#' function, BAS that ensures all the correct pieces are passed and adds the additional feature
+#' of stratification.
 #'
 #' @details This function was first written by Paul van Dam-Bates for the
 #' package BASMasterSample.
@@ -19,9 +20,11 @@
 #' @param shp Shape file as a polygon to select sites for.
 #' @param n Number of sites to select.
 #' @param bb Bounding box which defines the Master Sample. Default is BC Marine Master Sample.
-#' @param nExtra An efficiency problem of how many extra samples to draw before spatial clipping to shp.
-#' @param printJ Boolean if you want to see J, how many cuts of space are required to generate the sample efficiently.
-#' @param inclSeed Boolean need something here
+#' @param nExtra An efficiency problem of how many extra samples to draw before spatial clipping
+#' to shp.
+#' @param printJ Boolean if you want to see J, how many cuts of space are required to generate
+#' the sample efficiently.
+#' @param inclSeed A list of seeds, u1 and u2, specified by the user.
 #'
 #' @returns Sample points.
 #'
@@ -44,7 +47,7 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
   if(base::is.null(bb)){
     bb <- uc511::getBB()
     msproj <- uc511::getProj()
-    #seed <- getSeed()
+    inclseed <- uc511::getSeed()
   }else{
     msproj <- sf::st_crs(bb)$proj4string
   }
@@ -218,7 +221,7 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
 #' @param stratum Name of column of data.frame attached to shapefile that makes up the strata.
 #' @param nExtra An efficiency problem of how many extra samples to draw before spatial clipping to shp.
 #' @param quiet Boolean if you want to see any output printed to screen. Helpful if taking a long time.
-#' @param inclSeed Boolean need something here
+#' @param inclSeed A list of seeds, u1 and u2, specified by the user.
 #'
 #' @return A master sample.
 
@@ -253,10 +256,10 @@ BAS <- function(shp, n = 100, bb = NULL, panels = NULL, panel_overlap = NULL,
   #if(is.null(inclSeed)) inclSeed <- base::floor(stats::runif(1,1,10000))
   if(base::is.null(stratum)){
     result <- uc511::masterSampleSelect(shp = shp,
-                                 n = n,
-                                 bb = bb,
-                                 nExtra = nExtra,
-                                 inclSeed = inclSeed)
+                                        n = n,
+                                        bb = bb,
+                                        nExtra = nExtra,
+                                        inclSeed = inclSeed)
     smp <- result$sample
     inclSeed <- result$seed
   }else{
@@ -271,11 +274,11 @@ BAS <- function(shp, n = 100, bb = NULL, panels = NULL, panel_overlap = NULL,
     k.indx <- base::which(shp[, stratum, drop = TRUE] == strata.levels[1])
     shp.stratum <- shp[k.indx,] #%>% st_union()	# ? Not sure if this is necessary... slowed things down too much!
     result <- uc511::masterSampleSelect(shp.stratum,
-                                 n = n[1],
-                                 bb = bb,
-                                 nExtra = nExtra,
-                                 printJ = !quiet,
-                                 inclSeed = inclSeed)
+                                        n = n[1],
+                                        bb = bb,
+                                        nExtra = nExtra,
+                                        printJ = !quiet,
+                                        inclSeed = inclSeed)
     smp <- result$sample
     inclSeed <- result$seed
     smp[stratum] <- strata.levels[1]
@@ -290,11 +293,11 @@ BAS <- function(shp, n = 100, bb = NULL, panels = NULL, panel_overlap = NULL,
         k.indx <- base::which(shp[, stratum, drop = TRUE] == strata.levels[k])
         shp.stratum <- shp[k.indx,] ## %>% st_union()	# Needed?
         result <- uc511::masterSampleSelect(shp = shp.stratum,
-                                    n = n[k],
-                                    bb = bb,
-                                    nExtra = nExtra,
-                                    printJ = !quiet,
-                                    inclSeed = inclSeed)
+                                            n = n[k],
+                                            bb = bb,
+                                            nExtra = nExtra,
+                                            printJ = !quiet,
+                                            inclSeed = inclSeed)
         smp.s <- result$sample
         inclSeed <- result$seed
         smp.s[stratum] <- strata.levels[k]
@@ -303,47 +306,10 @@ BAS <- function(shp, n = 100, bb = NULL, panels = NULL, panel_overlap = NULL,
     }
   } # end is.null(stratum)
 
-  # if(panel_design) then assign panel id's to smp.
-  # need to distinguish if panel_overlap is required.
-  #if(panel_design & is.null(panel_overlap)){
-  #  tmp <- NULL
-  #  # assign panel id's to sample points. smp$panel_id.
-  #  for(i in 1:number_panels){
-  #    tmp <- c(tmp, rep(i, panels[i]))
-  #  }
-  #  smp$panel_id <- tmp
-  #}
-  # if(panel_overlap) is not null and panel_design is TRUE
-  #if(!is.null(panel_overlap) & panel_design){
-  #  # need to create the panel_id column
-  #  # Initialize variables
-  #  smp$panel_id <- 0
-  #  panelid <- 1
-  #  start_index <- 1
-
-  #  for(i in 1:length(panels)){
-  #    start_index <- start_index - panel_overlap[i]
-  #    if(i == 1){
-  #      for(j in 1:panels[i]){
-  #        smp$panel_id[start_index] <- panelid
-  #        start_index <- start_index + 1
-  #      }
-  #    } else {
-  #      for(j in 1:panels[i]){
-  #        #print(unlist(df$panelid[start_index]))
-  #        #if(df$panelid[start_index] == 0){
-  #        #  print("just a zero.")
-  #        #}
-  #        smp$panel_id[start_index] <- list(c(smp$panel_id[start_index], panelid))
-  #        start_index <- start_index + 1
-  #      }
-  #    }
-  #    panelid <- panelid + 1
-  #  }
-  #}
-
+  # go assign panelid's if required.
   res <- uc511::PanelDesignAssignPanelids(smp, panels, panel_overlap, panel_design, number_panels)
 
+  # return the sample and the u1, u2 seeds used.
   result <- base::list(sample = res$sample,
                        seed   = inclSeed)
   return(result)
@@ -410,7 +376,7 @@ point2Frame <- function(pts, bb = NULL, base = c(2,3), J = NULL, size = 100)
     pts <- sf::st_transform(pts, msproj)
   }
 
-  #Scale and shift Halton to fit into bounding box
+  # Scale and shift Halton to fit into bounding box
   bb.bounds <- sf::st_bbox(bb)
   scale.bas <- bb.bounds[3:4] - bb.bounds[1:2]
   shift.bas <- bb.bounds[1:2]
@@ -427,7 +393,7 @@ point2Frame <- function(pts, bb = NULL, base = c(2,3), J = NULL, size = 100)
   ly <- base::floor(xy[,2] / (1/base[2]^J[2]))/(base[2]^J[2])
   A <- uc511::GetBoxIndices(base::cbind(lx,ly), base, J)
 
-  #Only build the boxes for unique ones.
+  # Only build the boxes for unique ones.
   frame.order <- uc511::SolveCongruence(A, base, J)
 
   dupli <- base::duplicated(frame.order)
@@ -543,7 +509,7 @@ getIndividualBoxIndices <- function(pts, J = NULL, bb, size = 100){
 
   # Adjusted index:
   haltonIndex <- ifelse(haltonIndex < boxInit, B + (haltonIndex - boxInit), haltonIndex - boxInit)
-  # Return the Halton Index for all "pts" in dat that are passed to this function.
+  # Return the Halton Index for all "pts" in data that are passed to this function.
 
   pts$HaltonIndex <- haltonIndex
   return(pts)

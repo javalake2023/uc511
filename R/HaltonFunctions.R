@@ -66,14 +66,14 @@ makeFrame <- function(base = c(2,3), J = c(2,2), bb, rotate = FALSE){
 #' @export
 shape2Frame <- function(shp, bb = NULL, base = c(2,3), J = c(2,2), projstring = NULL, rotate = FALSE){
 
-  if( !is.null( bb)){
+  if( !is.null(bb)){
     bb.bounds <- sf::st_bbox(bb)
     scale.bas <- bb.bounds[3:4] - bb.bounds[1:2]
     shift.bas <- bb.bounds[1:2]
     theta <- base::attr(bb, "rotation")
     cntrd <- base::attr(bb, "centroid")
     projstring <- sf::st_crs(bb)$proj4string
-  }else{ return("uc511(shape2Frame) Define Bounding Box Please.")}
+  }else{ return("uc511(shape2Frame) Define the Bounding Box Please.")}
 
   if(base::is.null(projstring)) {
     projstring <- uc511::getProj()
@@ -81,7 +81,7 @@ shape2Frame <- function(shp, bb = NULL, base = c(2,3), J = c(2,2), projstring = 
   }
   if(sf::st_crs(shp) != sf::st_crs(projstring)) shp <- sf::st_transform(shp, projstring)
 
-  #Stretch bounding box to Halton Frame Size:
+  # Stretch bounding box to Halton Frame Size:
   shp2 <- uc511::rotate.shp(shp, bb, back = FALSE)
   bb2 <- sf::st_bbox(shp)
   xy <- (bb2 - shift.bas[c(1,2,1,2)])/scale.bas[c(1,2,1,2)]
@@ -93,7 +93,7 @@ shape2Frame <- function(shp, bb = NULL, base = c(2,3), J = c(2,2), projstring = 
   ny <- (uy-ly)*base[2]^J[2]
 
   bb.new <- c(lx,ly, ux, uy)*scale.bas[c(1,2,1,2)] + shift.bas[c(1,2,1,2)]
-  halt.frame <- raster::raster(raster::extent(base::matrix( bb.new , 2, 2)), nrow=ny, ncol=nx)
+  halt.frame <- raster::raster(raster::extent(base::matrix(bb.new , 2, 2)), nrow=ny, ncol=nx)
   raster::projection(halt.frame) <- projstring
   halt.poly <- raster::rasterToPolygons(halt.frame)
   if(rotate) return(uc511::rotate.shp(sf::st_as_sf(halt.poly), bb))

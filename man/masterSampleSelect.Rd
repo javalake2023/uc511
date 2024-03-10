@@ -20,18 +20,21 @@ masterSampleSelect(
 
 \item{bb}{Bounding box which defines the Master Sample. Default is BC Marine Master Sample.}
 
-\item{nExtra}{An efficiency problem of how many extra samples to draw before spatial clipping to shp.}
+\item{nExtra}{An efficiency problem of how many extra samples to draw before spatial clipping
+to shp.}
 
-\item{printJ}{Boolean if you want to see J, how many cuts of space are required to generate the sample efficiently.}
+\item{printJ}{Boolean if you want to see J, how many cuts of space are required to generate
+the sample efficiently.}
 
-\item{inclSeed}{Boolean need something here}
+\item{inclSeed}{A list of seeds, u1 and u2, specified by the user.}
 }
 \value{
 Sample points.
 }
 \description{
-This function has no features and is generally expected to be run by the wrapper function.
-masterSample that ensures all the correct pieces are passed and adds the additional feature of stratification.
+This function has no features and is generally expected to be run by the wrapper
+function, BAS that ensures all the correct pieces are passed and adds the additional feature
+of stratification.
 }
 \details{
 This function was first written by Paul van Dam-Bates for the

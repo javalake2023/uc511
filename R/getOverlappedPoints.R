@@ -2,7 +2,7 @@
 
 #' @name contains_feature
 #'
-#' @title Check if the sf object contains a certain feature.
+#' @title Check if the sf object contains a specified feature.
 #'
 #' @description Used to check if a simple file object contains a feature. This
 #' is an internal only function.
@@ -16,7 +16,13 @@
 #'
 #' @return Returns TRUE if the simple file object sf_object contains the feature
 #' feature_name. Otherwise FALSE is returned.
-
+#'
+#' @examples
+#' \dontrun{
+#' # Check if a feature is available in a shapefile.
+#' containsFeature <- contains_feature(shp, "NAME")
+#' }
+#'
 contains_feature <- function(sf_object, feature_name) {
   # Drop the geometry column
   df <- sf::st_drop_geometry(sf_object)
@@ -47,7 +53,9 @@ contains_feature <- function(sf_object, feature_name) {
 
 #' @examples
 #' \dontrun{
-#' #
+#' # Get all the sample from panel 1.
+#' panelid <- 1
+#' panel_1 <- uc511::getOverlappedPoints(shp, panelid)
 #' }
 #'
 #' @export

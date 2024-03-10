@@ -4,7 +4,7 @@
 \alias{SRS}
 \title{Simple random sampling.}
 \usage{
-SRS(seed = 42, total_rows = 0, sample_size = 0)
+SRS(seed = 511, total_rows = 0, sample_size = 0)
 }
 \arguments{
 \item{seed}{The random seed to be used to draw the current sample.}

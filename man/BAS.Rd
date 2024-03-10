@@ -41,7 +41,7 @@ overlaps any region.}
 
 \item{quiet}{Boolean if you want to see any output printed to screen. Helpful if taking a long time.}
 
-\item{inclSeed}{Boolean need something here}
+\item{inclSeed}{A list of seeds, u1 and u2, specified by the user.}
 }
 \value{
 A master sample.

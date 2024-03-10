@@ -16,11 +16,11 @@
 #' the total number of samples selected, n. The default value for panels is NULL,
 #' this indicates that a non-overlapping panel design is not wanted.
 #' @param panel_overlap A list of integers that define the overlap into the previous
-#' panel. Is only used when the panels parameter is not NULL. The default value for
+#' panel. It is only used when the panels parameter is not NULL. The default value for
 #' panel_overlap is NULL. The length of panel_overlap must be equal to the length
 #' of panels. The first value is always forced to zero as the first panel never
 #' overlaps any region.
-#' @param n The number of samples required. Used when panels and panel_overlap are NULL.
+#' @param n The number of samples required. Only used when panels and panel_overlap are NULL.
 #'
 #' @return Returns a list of the following variables: n
 #'                                                    panel_design
@@ -90,8 +90,9 @@ ValidatePanelDesign <- function(panels, panel_overlap, n){
 #' the parameters used are specified in the panels and panel_overlap parameters.
 #' @param number_panels The number of sample panels required.
 #'
-#' @return Returns a list of the following variables: sample, which has the appropriate panel id
-#' assigned determined by the panels and panel_overlap parameters.
+#' @return Returns a list of the following variables: sample, which is the original shapefile
+#' that has had the appropriate panel id's add as a feature. The panel id values are determined
+#'by the panels and panel_overlap parameters.
 #'
 
 #' @export
@@ -135,4 +136,3 @@ PanelDesignAssignPanelids <- function(smp, panels, panel_overlap, panel_design, 
   result <- base::list(sample = smp)
   return(result)
 }
-

@@ -26,7 +26,9 @@ This function was written by Phil Davies.
 }
 \examples{
 \dontrun{
-#
+# Get all the sample from panel 1.
+panelid <- 1
+panel_1 <- uc511::getOverlappedPoints(shp, panelid)
 }
 
 }

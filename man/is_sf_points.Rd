@@ -7,14 +7,15 @@
 is_sf_points(x)
 }
 \arguments{
-\item{x}{A parm.}
+\item{x}{A probable sf points object.}
 }
 \value{
 Either TRUE or FALSE.
 }
 \description{
-A description. internal only function.
+Tests if the object passed to the function is a sf points object or not.
+An internal only function.
 }
 \details{
-The details.
+Detect if an object is a sf points object or not.
 }

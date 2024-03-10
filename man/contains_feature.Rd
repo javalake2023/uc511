@@ -2,7 +2,7 @@
 % Please edit documentation in R/getOverlappedPoints.R
 \name{contains_feature}
 \alias{contains_feature}
-\title{Check if the sf object contains a certain feature.}
+\title{Check if the sf object contains a specified feature.}
 \usage{
 contains_feature(sf_object, feature_name)
 }
@@ -23,4 +23,11 @@ is an internal only function.
 }
 \details{
 This function was written by Phil Davies.
+}
+\examples{
+\dontrun{
+# Check if a feature is available in a shapefile.
+containsFeature <- contains_feature(shp, "NAME")
+}
+
 }

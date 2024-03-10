@@ -14,12 +14,12 @@ the total number of samples selected, n. The default value for panels is NULL,
 this indicates that a non-overlapping panel design is not wanted.}
 
 \item{panel_overlap}{A list of integers that define the overlap into the previous
-panel. Is only used when the panels parameter is not NULL. The default value for
+panel. It is only used when the panels parameter is not NULL. The default value for
 panel_overlap is NULL. The length of panel_overlap must be equal to the length
 of panels. The first value is always forced to zero as the first panel never
 overlaps any region.}
 
-\item{n}{The number of samples required. Used when panels and panel_overlap are NULL.}
+\item{n}{The number of samples required. Only used when panels and panel_overlap are NULL.}
 }
 \value{
 Returns a list of the following variables: n
