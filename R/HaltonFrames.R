@@ -17,6 +17,17 @@
 #'
 #' @export
 validate_parameters <- function(parm, parm_value){
+  # validate the parm being validated i.e. is it a supported uc511 function parameter.
+  if(!parm %in% base::c("n", "J", "bases", "shapefile", "panels", "panel_overlap", "randomStart",
+                  "shp", "bb", "stratum", "nExtra", "quiet", "inclSeed",
+                  "seeds",
+                  "seed", "total_rows", "sample_size",
+                  "testparm",
+                  "panelid",
+                  "hipPopulation", "hipN", "hipIterations")){
+    stop(base::c("uc511(validate_parameters) specified parameter ", parm, " is not currently supported."))
+  }
+
   # make sure parameter is a list (or vector)
   if(!is.vector(parm_value)){
     stop(c("uc511(validate_parameters) Parameter ", parm, " must be a list or vector."))
