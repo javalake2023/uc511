@@ -52,7 +52,7 @@ BoundingBox() function or will be selecting a marine master sample site in BC.</
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">BAS</span><span class="op">(</span></span>
-<span>  <span class="va">shp</span>,</span>
+<span>  <span class="va">shapefile</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  bb <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  panels <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -60,13 +60,13 @@ BoundingBox() function or will be selecting a marine master sample site in BC.</
 <span>  stratum <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  nExtra <span class="op">=</span> <span class="fl">1000</span>,</span>
 <span>  quiet <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  inclSeed <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  seeds <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>shp</dt>
+    <dl><dt>shapefile</dt>
 <dd><p>Shape file as a polygon (sp or sf) to select sites for.</p></dd>
 
 
@@ -106,7 +106,7 @@ overlaps any region.</p></dd>
 <dd><p>Boolean if you want to see any output printed to screen. Helpful if taking a long time.</p></dd>
 
 
-<dt>inclSeed</dt>
+<dt>seeds</dt>
 <dd><p>A list of seeds, u1 and u2, specified by the user.</p></dd>
 
 </dl></div>

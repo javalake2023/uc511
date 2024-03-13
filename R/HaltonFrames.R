@@ -30,29 +30,29 @@ validate_parameters <- function(parm, parm_value){
 
   # make sure parameter is a list (or vector)
   if(!is.vector(parm_value)){
-    stop(c("uc511(validate_parameters) Parameter ", parm, " must be a list or vector."))
+    stop(base::c("uc511(validate_parameters) Parameter ", parm, " must be a list or vector."))
   }
   # check if all values in the list are numeric
   if(!all(sapply(parm_value, is.numeric))){
-    stop(c("uc511(validate_parameters) Parameter ", parm, " must contain all numeric values."))
+    stop(base::c("uc511(validate_parameters) Parameter ", parm, " must contain all numeric values."))
   }
   # check if list is of length 2
   if(parm == "J" & length(parm_value) != 2){
     stop("uc511(validate_parameters) Parameter J must be a list of length 2.")
   }
   # check if values for SRS parameters are greater than zero. check if panelid is greaer than zero.
-  if(parm %in% c("seed", "total_rows", "sample_size", "panelid")) {
+  if(parm %in% base::c("seed", "total_rows", "sample_size", "panelid")) {
     if (parm_value <= 0){
-      stop(c("uc511(validate_parameters) Parameter ", parm, " must have a value greater than zero."))
+      stop(base::c("uc511(validate_parameters) Parameter ", parm, " must have a value greater than zero."))
     }
   }
   # validate HIP parameters
   if(parm == "hipIterations"){
     if(parm_value < 2){
-      stop(c("uc511(validate_parameters) Parameter ", parm, " values less than two are not supported."))
+      stop(base::c("uc511(validate_parameters) Parameter ", parm, " values less than two are not supported."))
     }
     if(parm_value > 13){
-      stop(c("uc511(validate_parameters) Parameter ", parm, " values greater than 13 are not supported."))
+      stop(base::c("uc511(validate_parameters) Parameter ", parm, " values greater than 13 are not supported."))
     }
   }
   return(TRUE)
@@ -85,6 +85,7 @@ validate_parameters <- function(parm, parm_value){
 #' @param randomStart Whether a spatially balanced sample will be randomly drawn from
 #' the frame or not. Default value is FALSE.
 #' @param seeds A list of 2 seeds, u1 and u2. If not specified, default is NULL.
+#' @param stratum Name of column in shapefile that makes up the strata.
 #'
 #' @return A list containing the following variables:
 #'         - halton_seq
@@ -103,13 +104,14 @@ validate_parameters <- function(parm, parm_value){
 #'
 #' @export
 HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
-                        J = c(3, 2),
-                        bases = c(2, 3),
+                        J = base::c(3, 2),
+                        bases = base::c(2, 3),
                         shapefile = NULL,
                         panels = NULL,
                         panel_overlap = NULL,
                         randomStart = FALSE,
-                        seeds = NULL){
+                        seeds = NULL,
+                        stratum = NULL){
 
   # validate our parameters.
   uc511::validate_parameters("J", J)
@@ -117,6 +119,8 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
   uc511::validate_parameters("n", c(n))
   if (!is.null(seeds)){
     uc511::validate_parameters("seeds", seeds)
+  } else {
+    seeds <- base::floor(stats::runif(2, 0, 62208))
   }
 
   # validate panel design if we are using one.
@@ -259,7 +263,7 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
                        halton_frame   = hf_$halton_frame,
                        J              = c(J[1]+i-1, J[2]+i-1),
                        sample         = diff_,
-                       pts.shp        = pts.shp,
+                       hf.pts.shp     = pts.shp,
                        bb             = bb.new,
                        seeds          = seeds)
   return(result)
@@ -292,13 +296,13 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
 #'
 #' @export
 HaltonFrameBase <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
-                            J = c(3, 2),
-                            bases = c(2, 3),
+                            J = base::c(3, 2),
+                            bases = base::c(2, 3),
                             seeds = NULL){
   # validate our parameters.
   uc511::validate_parameters("J", J)
   uc511::validate_parameters("bases", bases)
-  uc511::validate_parameters("n", c(n))
+  uc511::validate_parameters("n", base::c(n))
   if (!is.null(seeds)){
     uc511::validate_parameters("seeds", seeds)
   }

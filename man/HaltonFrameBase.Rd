@@ -6,8 +6,8 @@
 \usage{
 HaltonFrameBase(
   n = (bases[1]^J[1]) * (bases[2]^J[2]),
-  J = c(3, 2),
-  bases = c(2, 3),
+  J = base::c(3, 2),
+  bases = base::c(2, 3),
   seeds = NULL
 )
 }

@@ -47,13 +47,14 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">HaltonFrame</span><span class="op">(</span></span>
 <span>  n <span class="op">=</span> <span class="op">(</span><span class="va">bases</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">^</span><span class="va">J</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="va">bases</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">^</span><span class="va">J</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span>,</span>
-<span>  J <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">2</span><span class="op">)</span>,</span>
-<span>  bases <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>  J <span class="op">=</span> <span class="fu">base</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">2</span><span class="op">)</span>,</span>
+<span>  bases <span class="op">=</span> <span class="fu">base</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>,</span>
 <span>  shapefile <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  panels <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  panel_overlap <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  randomStart <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  seeds <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  seeds <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  stratum <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -99,6 +100,10 @@ the frame or not. Default value is FALSE.</p></dd>
 
 <dt>seeds</dt>
 <dd><p>A list of 2 seeds, u1 and u2. If not specified, default is NULL.</p></dd>
+
+
+<dt>stratum</dt>
+<dd><p>Name of column in shapefile that makes up the strata.</p></dd>
 
 </dl></div>
     <div class="section level2">

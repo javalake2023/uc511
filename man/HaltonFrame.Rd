@@ -6,13 +6,14 @@
 \usage{
 HaltonFrame(
   n = (bases[1]^J[1]) * (bases[2]^J[2]),
-  J = c(3, 2),
-  bases = c(2, 3),
+  J = base::c(3, 2),
+  bases = base::c(2, 3),
   shapefile = NULL,
   panels = NULL,
   panel_overlap = NULL,
   randomStart = FALSE,
-  seeds = NULL
+  seeds = NULL,
+  stratum = NULL
 )
 }
 \arguments{
@@ -41,6 +42,8 @@ overlaps any region.}
 the frame or not. Default value is FALSE.}
 
 \item{seeds}{A list of 2 seeds, u1 and u2. If not specified, default is NULL.}
+
+\item{stratum}{Name of column in shapefile that makes up the strata.}
 }
 \value{
 A list containing the following variables:

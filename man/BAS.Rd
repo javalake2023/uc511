@@ -5,7 +5,7 @@
 \title{Select points from a polygon using a BAS Master Sample.}
 \usage{
 BAS(
-  shp,
+  shapefile,
   n = 100,
   bb = NULL,
   panels = NULL,
@@ -13,11 +13,11 @@ BAS(
   stratum = NULL,
   nExtra = 1000,
   quiet = FALSE,
-  inclSeed = NULL
+  seeds = NULL
 )
 }
 \arguments{
-\item{shp}{Shape file as a polygon (sp or sf) to select sites for.}
+\item{shapefile}{Shape file as a polygon (sp or sf) to select sites for.}
 
 \item{n}{Number of sites to select. If using stratification it is a named vector containing sample sizes of each group.}
 
@@ -41,7 +41,7 @@ overlaps any region.}
 
 \item{quiet}{Boolean if you want to see any output printed to screen. Helpful if taking a long time.}
 
-\item{inclSeed}{A list of seeds, u1 and u2, specified by the user.}
+\item{seeds}{A list of seeds, u1 and u2, specified by the user.}
 }
 \value{
 A master sample.

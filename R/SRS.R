@@ -29,9 +29,9 @@
 SRS <- function(seed = 511, total_rows = 0, sample_size = 0) {
 
   # validate our parameters.
-  uc511::validate_parameters("seed", c(seed))
-  uc511::validate_parameters("total_rows", c(total_rows))
-  uc511::validate_parameters("sample_size", c(sample_size))
+  uc511::validate_parameters("seed", base::c(seed))
+  uc511::validate_parameters("total_rows", base::c(total_rows))
+  uc511::validate_parameters("sample_size", base::c(sample_size))
 
   # ensure sample_size < total_rows
   if(sample_size >= total_rows){

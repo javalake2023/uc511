@@ -4,7 +4,7 @@
 \alias{point2Frame}
 \title{Get the Halton Boxes around a point resource ordered by BAS Master Sample.}
 \usage{
-point2Frame(pts, bb = NULL, base = c(2, 3), J = NULL, size = 100)
+point2Frame(pts, bb = NULL, base = base::c(2, 3), J = NULL, size = 100)
 }
 \arguments{
 \item{pts}{Shape file as a polygon (sp or sf) to generate the boxes for.}
