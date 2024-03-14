@@ -1,4 +1,4 @@
-# MasterSample.R
+# BAS.R
 
 #' @import raster
 #' @import sf
@@ -206,8 +206,10 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
 #' package BASMasterSample.
 #'
 #' @param shapefile Shape file as a polygon (sp or sf) to select sites for.
-#' @param n Number of sites to select. If using stratification it is a named vector containing sample sizes of each group.
-#' @param bb Bounding box which defines the Master Sample. Default is BC Marine Master Sample.
+#' @param n Number of sites to select. If using stratification it is a named vector containing
+#' sample sizes of each group.
+#' @param boundingbox Bounding box which defines the Master Sample. Default is BC Marine
+#' Master Sample.
 #' @param panels A list of integers that define the size of each panel in a
 #' non-overlapping panels design. The length of the list determines the number of
 #' panels required. The sum of the integers in the panels parameter will determine
@@ -219,8 +221,10 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
 #' of panels. The first value is always forced to zero as the first panel never
 #' overlaps any region.
 #' @param stratum Name of column of data.frame attached to shapefile that makes up the strata.
-#' @param nExtra An efficiency problem of how many extra samples to draw before spatial clipping to shp.
-#' @param quiet Boolean if you want to see any output printed to screen. Helpful if taking a long time.
+#' @param nExtra An efficiency problem of how many extra samples to draw before spatial clipping
+#'  to shp.
+#' @param quiet Boolean if you want to see any output printed to screen. Helpful if taking a
+#' long time.
 #' @param seeds A list of seeds, u1 and u2, specified by the user.
 #'
 #' @return A master sample.
@@ -243,7 +247,7 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
 #' }
 #'
 #' @export
-BAS <- function(shapefile, n = 100, bb = NULL, panels = NULL, panel_overlap = NULL,
+BAS <- function(shapefile, n = 100, boundingbox = NULL, panels = NULL, panel_overlap = NULL,
                 stratum = NULL, nExtra = 1000, quiet = FALSE, seeds = NULL)
 {
   # validate panel design if we are using one.
@@ -257,7 +261,7 @@ BAS <- function(shapefile, n = 100, bb = NULL, panels = NULL, panel_overlap = NU
   if(base::is.null(stratum)){
     result <- uc511::masterSampleSelect(shp = shapefile,
                                         n = n,
-                                        bb = bb,
+                                        bb = boundingbox,
                                         nExtra = nExtra,
                                         inclSeed = seeds)
     smp <- result$sample
@@ -275,7 +279,7 @@ BAS <- function(shapefile, n = 100, bb = NULL, panels = NULL, panel_overlap = NU
     shp.stratum <- shapefile[k.indx,] #%>% st_union()	# ? Not sure if this is necessary... slowed things down too much!
     result <- uc511::masterSampleSelect(shp.stratum,
                                         n = n[1],
-                                        bb = bb,
+                                        bb = boundingbox,
                                         nExtra = nExtra,
                                         printJ = !quiet,
                                         inclSeed = seeds)
@@ -294,7 +298,7 @@ BAS <- function(shapefile, n = 100, bb = NULL, panels = NULL, panel_overlap = NU
         shp.stratum <- shapefile[k.indx,] ## %>% st_union()	# Needed?
         result <- uc511::masterSampleSelect(shp = shp.stratum,
                                             n = n[k],
-                                            bb = bb,
+                                            bb = boundingbox,
                                             nExtra = nExtra,
                                             printJ = !quiet,
                                             inclSeed = seeds)

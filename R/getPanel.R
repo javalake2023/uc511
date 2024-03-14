@@ -1,4 +1,4 @@
-# getOverlappedPoints.R
+# getPanel.R
 
 #' @name contains_feature
 #'
@@ -20,7 +20,7 @@
 #' @examples
 #' \dontrun{
 #' # Check if a feature is available in a shapefile.
-#' containsFeature <- contains_feature(shp, "NAME")
+#' containsFeature <- contains_feature(shapefile, "NAME")
 #' }
 #'
 contains_feature <- function(sf_object, feature_name) {
@@ -34,7 +34,7 @@ contains_feature <- function(sf_object, feature_name) {
 }
 
 
-#' @name getOverlappedPoints
+#' @name getPanel
 #'
 #' @title Select points from a polygon using a BAS Master Sample.
 #'
@@ -55,11 +55,11 @@ contains_feature <- function(sf_object, feature_name) {
 #' \dontrun{
 #' # Get all the sample from panel 1.
 #' panelid <- 1
-#' panel_1 <- uc511::getOverlappedPoints(shp, panelid)
+#' panel_1 <- uc511::getPanel(shp, panelid)
 #' }
 #'
 #' @export
-getOverlappedPoints <- function(shapefile, panelid){
+getPanel <- function(shapefile, panelid){
   # validate our parameters. Ensure panelid is numeric and has a value greater than zero.
   uc511::validate_parameters("panelid", c(panelid))
 
@@ -67,7 +67,7 @@ getOverlappedPoints <- function(shapefile, panelid){
   feature_name <- "panel_id"
   exists <- contains_feature(shapefile, feature_name)
   if(!exists){
-    base::stop("uc511(getOverlappedPoints) Simple file object does not contain a feature named panel_id.")
+    base::stop("uc511(getPanel) Simple file object does not contain a feature named panel_id.")
   }
 
   indx <- base::c()

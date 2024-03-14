@@ -224,12 +224,13 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
     diff_pts <- sf::st_cast(diff_, "POINT")
     df_sorted <- diff_pts[order(diff_pts$ID),]
     df_sorted <- sf::st_as_sf(df_sorted)
-    df_sorted$uc511SeqID <- seq(1, length(df_sorted$ID))
+    #df_sorted$uc511SeqID <- seq(1, length(df_sorted$ID))
     duplicated_pts <- base::rbind(df_sorted, df_sorted)
     random_start_point <- base::sample(1:length(duplicated_pts$ID), 1)
     sample_indices <- base::seq(random_start_point, (random_start_point + n) - 1, 1)
     random_start_sample <- duplicated_pts[sample_indices,]
     diff_ <- random_start_sample
+    diff_$uc511SeqID <- seq(1, length(diff_$ID))
     # randomStart mutually exclusive with panel_design.
     panel_design <- FALSE
   }

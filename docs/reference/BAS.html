@@ -54,7 +54,7 @@ BoundingBox() function or will be selecting a marine master sample site in BC.</
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">BAS</span><span class="op">(</span></span>
 <span>  <span class="va">shapefile</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">100</span>,</span>
-<span>  bb <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  boundingbox <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  panels <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  panel_overlap <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  stratum <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -71,11 +71,13 @@ BoundingBox() function or will be selecting a marine master sample site in BC.</
 
 
 <dt>n</dt>
-<dd><p>Number of sites to select. If using stratification it is a named vector containing sample sizes of each group.</p></dd>
+<dd><p>Number of sites to select. If using stratification it is a named vector containing
+sample sizes of each group.</p></dd>
 
 
-<dt>bb</dt>
-<dd><p>Bounding box which defines the Master Sample. Default is BC Marine Master Sample.</p></dd>
+<dt>boundingbox</dt>
+<dd><p>Bounding box which defines the Master Sample. Default is BC Marine
+Master Sample.</p></dd>
 
 
 <dt>panels</dt>
@@ -99,11 +101,13 @@ overlaps any region.</p></dd>
 
 
 <dt>nExtra</dt>
-<dd><p>An efficiency problem of how many extra samples to draw before spatial clipping to shp.</p></dd>
+<dd><p>An efficiency problem of how many extra samples to draw before spatial clipping
+to shp.</p></dd>
 
 
 <dt>quiet</dt>
-<dd><p>Boolean if you want to see any output printed to screen. Helpful if taking a long time.</p></dd>
+<dd><p>Boolean if you want to see any output printed to screen. Helpful if taking a
+long time.</p></dd>
 
 
 <dt>seeds</dt>
