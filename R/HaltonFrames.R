@@ -103,7 +103,7 @@ validate_parameters <- function(parm, parm_value){
 #' }
 #'
 #' @export
-HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
+HaltonFrame <- function(n = NULL, #(bases[1]^J[1]) * (bases[2]^J[2]),
                         J = base::c(3, 2),
                         bases = base::c(2, 3),
                         shapefile = NULL,
@@ -113,10 +113,13 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
                         seeds = NULL,
                         stratum = NULL){
 
+  # initialize variables.
+  wantHaltonFrame <- FALSE
+
   # validate our parameters.
   uc511::validate_parameters("J", J)
   uc511::validate_parameters("bases", bases)
-  uc511::validate_parameters("n", c(n))
+  #uc511::validate_parameters("n", base::c(n))
   if (!is.null(seeds)){
     uc511::validate_parameters("seeds", seeds)
   } else {
@@ -135,10 +138,15 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
     stop("uc511(HaltonFrame) Panel design and randomStart are mutually exclusive.")
   }
 
-  # state how many samples user is looking for.
-  msg <- "uc511(HaltonFrame) %s samples have been requested."
-  msgs <- sprintf(msg, n)
-  message(msgs)
+  if(is.null(n)){
+    wantHaltonFrame <- TRUE
+  } else {
+    wantHaltonFrame <- FALSE
+    # state how many samples user is looking for.
+    msg <- "uc511(HaltonFrame) %s samples have been requested."
+    msgs <- sprintf(msg, n)
+    message(msgs)
+  }
 
   # validate the shapefile (if specified) has an associated CRS.
   crs <- NULL
@@ -154,7 +162,7 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
     }
   } else {
     # shapefile is null, ie. not specified, so just call HaltonFrameBase
-    hf_ <- uc511::HaltonFrameBase(J = c(J[1], J[2]), bases = bases, seeds = seeds)
+    hf_ <- uc511::HaltonFrameBase(J = base::c(J[1], J[2]), bases = bases, seeds = seeds)
     return(hf_)
   }
 
@@ -163,10 +171,8 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
   # initialise
   i <- 0
 
-  while (pts_in_intersection <= n){
-    # keep going until we have found the required number of points
+  if(wantHaltonFrame){
 
-    # create halton frame
     hf_ <- uc511::HaltonFrameBase(J = c(J[1]+i, J[2]+i), bases = bases, seeds = seeds)
 
     # process points returned.
@@ -187,34 +193,67 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
     base::attr(bb.new, "centroid") <- sf::st_coordinates(cntrd)
     pts.shp <- uc511::rotate.scale.coords(coords = pts, bb = bb.new)
 
-    # replace the CRS (or set), st_intersection needs both objects with the same CRS.
-    sf::st_crs(shapefile) <- crs
     sf::st_crs(pts.shp) <- crs
-    # make the assumption (that the attribute is constant throughout the geometry) explicit# make the assumption (that the attribute is constant throughout the geometry)
-    #sf::st_agr(shp.ashb) <- "constant"
-    #sf::st_agr(pts.shp) <- "constant"
 
-    #tmp <- sf::st_as_sf(pts.shp)
-    tmp <- sf::st_cast(pts.shp, "POINT")
-    tmp <- sf::st_as_sf(tmp)
-    tmp$ID <- seq(1, dim(pts)[1])
-    diff_ <- sf::st_intersection(tmp, shapefile)
+    diff_ <- NULL
 
-    # find number of points within our shapefile.
-    pts_in_intersection <- length(sf::st_cast(sf::st_union(diff_), "POINT"))
+  } else {
 
-    msg <- "uc511(HaltonFrame) points in intersection: %s."
-    msgs <- sprintf(msg, pts_in_intersection)
-    message(msgs)
+    while (pts_in_intersection <= n){
+      # keep going until we have found the required number of points
 
-    # expand the Halton frame.
-    i <- i + 1
+      # create halton frame
+      hf_ <- uc511::HaltonFrameBase(J = c(J[1]+i, J[2]+i), bases = bases, seeds = seeds)
+
+      # process points returned.
+      pts <- hf_$halton_frame
+      pts <- cbind(seq(1, dim(pts)[1]), pts)
+
+      # save returned seeds in case they have changed (would only change if initially NULL).
+      seeds <- hf_$seeds
+
+      #
+      bb <- sf::st_as_sfc(sf::st_bbox(shapefile))
+      cntrd <- sf::st_centroid(bb)
+      bb.rot <- (bb - cntrd) * rot(0) + cntrd
+      bb.new <- sf::st_as_sfc(sf::st_bbox(bb.rot))
+
+      #
+      base::attr(bb.new, "rotation") <- 0
+      base::attr(bb.new, "centroid") <- sf::st_coordinates(cntrd)
+      pts.shp <- uc511::rotate.scale.coords(coords = pts, bb = bb.new)
+
+      # replace the CRS (or set), st_intersection needs both objects with the same CRS.
+      sf::st_crs(shapefile) <- crs
+      sf::st_crs(pts.shp) <- crs
+      # make the assumption (that the attribute is constant throughout the geometry) explicit# make the assumption (that the attribute is constant throughout the geometry)
+      #sf::st_agr(shp.ashb) <- "constant"
+      #sf::st_agr(pts.shp) <- "constant"
+
+      #tmp <- sf::st_as_sf(pts.shp)
+      tmp <- sf::st_cast(pts.shp, "POINT")
+      tmp <- sf::st_as_sf(tmp)
+      tmp$ID <- seq(1, dim(pts)[1])
+      diff_ <- sf::st_intersection(tmp, shapefile)
+
+      # find number of points within our shapefile.
+      pts_in_intersection <- length(sf::st_cast(sf::st_union(diff_), "POINT"))
+
+      msg <- "uc511(HaltonFrame) points in intersection: %s."
+      msgs <- sprintf(msg, pts_in_intersection)
+      message(msgs)
+
+      # expand the Halton frame.
+      i <- i + 1
+    }
   }
 
-  # display some statistics and return results.
-  msg <- "uc511(HaltonFrame) %s samples found in %s iterations, using J1=%s and J2=%s."
-  msgs <- sprintf(msg, pts_in_intersection, i, J[1]+i-1, J[2]+i-1)
-  message(msgs)
+  if(!wantHaltonFrame){
+    # display some statistics and return results.
+    msg <- "uc511(HaltonFrame) %s samples found in %s iterations, using J1=%s and J2=%s."
+    msgs <- sprintf(msg, pts_in_intersection, i, J[1]+i-1, J[2]+i-1)
+    message(msgs)
+  }
 
   # are we performing a randomStart?
   if (randomStart){
@@ -247,7 +286,7 @@ HaltonFrame <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
   }
 
   # if we are not performing a randomStart or a panel_design
-  if (!randomStart & !panel_design){
+  if (!randomStart & !panel_design & !wantHaltonFrame){
     message("uc511(HaltonFrame) return n points.")
     # turn our sample into points.
     diff_pts <- sf::st_cast(diff_, "POINT")
