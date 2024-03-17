@@ -18,7 +18,8 @@
 #' @export
 validate_parameters <- function(parm, parm_value){
   # validate the parm being validated i.e. is it a supported uc511 function parameter.
-  if(!parm %in% base::c("n", "J", "bases", "shapefile", "panels", "panel_overlap", "randomStart",
+  if(!parm %in% base::c("n", "J", "bases", "shapefile", "panels", "panel_overlap",
+                        "randomStart", "N",
                   "shp", "bb", "stratum", "nExtra", "quiet", "inclSeed",
                   "seeds",
                   "seed", "total_rows", "sample_size",
@@ -67,7 +68,7 @@ validate_parameters <- function(parm, parm_value){
 #'
 #' @details This function was written by Phil Davies.
 #'
-#' @param n The number of points in the frame to generate.
+#' @param N The number of points in the frame to generate.
 #' @param J The number of grid cells. A list of 2 values. The default value is c(3, 2), we could also use c(5, 3).
 #' @param bases Co-prime base for the Halton Sequence. The default value is c(2, 3).
 #' @param shapefile A sf object. If the shapefile parameter is NULL then function
@@ -82,8 +83,6 @@ validate_parameters <- function(parm, parm_value){
 #' panel_overlap is NULL. The length of panel_overlap must be equal to the length
 #' of panels. The first value is always forced to zero as the first panel never
 #' overlaps any region.
-#' @param randomStart Whether a spatially balanced sample will be randomly drawn from
-#' the frame or not. Default value is FALSE.
 #' @param seeds A list of 2 seeds, u1 and u2. If not specified, default is NULL.
 #' @param stratum Name of column in shapefile that makes up the strata.
 #'
@@ -103,13 +102,13 @@ validate_parameters <- function(parm, parm_value){
 #' }
 #'
 #' @export
-HaltonFrame <- function(n = NULL, #(bases[1]^J[1]) * (bases[2]^J[2]),
+HaltonFrame <- function(N = 1, #(bases[1]^J[1]) * (bases[2]^J[2]),
                         J = base::c(3, 2),
                         bases = base::c(2, 3),
                         shapefile = NULL,
                         panels = NULL,
                         panel_overlap = NULL,
-                        randomStart = FALSE,
+                        #randomStart = FALSE,
                         seeds = NULL,
                         stratum = NULL){
 
@@ -119,7 +118,10 @@ HaltonFrame <- function(n = NULL, #(bases[1]^J[1]) * (bases[2]^J[2]),
   # validate our parameters.
   uc511::validate_parameters("J", J)
   uc511::validate_parameters("bases", bases)
-  #uc511::validate_parameters("n", base::c(n))
+  if (!is.null(N)){
+    uc511::validate_parameters("N", base::c(N))
+  }
+
   if (!is.null(seeds)){
     uc511::validate_parameters("seeds", seeds)
   } else {
@@ -127,37 +129,37 @@ HaltonFrame <- function(n = NULL, #(bases[1]^J[1]) * (bases[2]^J[2]),
   }
 
   # validate panel design if we are using one.
-  res <- ValidatePanelDesign(panels, panel_overlap, n)
+  res <- ValidatePanelDesign(panels, panel_overlap, N)
   panel_design  <- res$panel_design
   number_panels <- res$number_panels
   panel_overlap <- res$panel_overlap
-  n             <- res$n
+  N             <- res$n
 
   # panel_design and randomStart are mutually exclusive. stop if both TRUE.
-  if(panel_design & randomStart){
-    stop("uc511(HaltonFrame) Panel design and randomStart are mutually exclusive.")
-  }
+  #if(panel_design & randomStart){
+  #  stop("uc511(HaltonFrame) Panel design and randomStart are mutually exclusive.")
+  #}
 
-  if(is.null(n)){
+  if((is.null(N))|(N == 1)){
     wantHaltonFrame <- TRUE
+    base::message("uc511(HaltonFrame) Request for a Halton Frame.")
   } else {
     wantHaltonFrame <- FALSE
     # state how many samples user is looking for.
-    msg <- "uc511(HaltonFrame) %s samples have been requested."
-    msgs <- sprintf(msg, n)
-    message(msgs)
+    msg <- "uc511(HaltonFrame) Request for %s samples from a Halton Frame."
+    msgs <- sprintf(msg, N)
+    base::message(msgs)
   }
 
-  # validate the shapefile (if specified) has an associated CRS.
+  # ensure the shapefile (if specified) has an associated CRS.
   crs <- NULL
-  # Check if the shapefile has an associated CRS
   if (!is.null(shapefile)){
     if (is.null(sf::st_crs(shapefile))) {
       stop("uc511(HaltonFrame) Shapefile does not have an associated CRS.")
     } else {
       msg <- "uc511(HaltonFrame) Shapefile has an associated CRS."
       msgs <- sprintf(msg)
-      message(msgs)
+      base::message(msgs)
       crs <- sf::st_crs(shapefile)
     }
   } else {
@@ -172,76 +174,91 @@ HaltonFrame <- function(n = NULL, #(bases[1]^J[1]) * (bases[2]^J[2]),
   i <- 0
 
   if(wantHaltonFrame){
+    # go get halton frame.
+    result <- getHaltonFrame(shapefile, J, i, bases, seeds, crs)
+    hf_ <- result$hf_
+    diff_ <- result$sample
+    pts.shp <- result$pts.shp
+    bb.new <- result$bb.new
+    seeds <- result$seeds
 
-    hf_ <- uc511::HaltonFrameBase(J = c(J[1]+i, J[2]+i), bases = bases, seeds = seeds)
+    #hf_ <- uc511::HaltonFrameBase(J = base::c(J[1]+i, J[2]+i), bases = bases, seeds = seeds)
 
     # process points returned.
-    pts <- hf_$halton_frame
-    pts <- cbind(seq(1, dim(pts)[1]), pts)
+    #pts <- hf_$halton_frame
+    #pts <- base::cbind(base::seq(1, base::dim(pts)[1]), pts)
 
     # save returned seeds in case they have changed (would only change if initially NULL).
-    seeds <- hf_$seeds
+    #seeds <- hf_$seeds
 
     #
-    bb <- sf::st_as_sfc(sf::st_bbox(shapefile))
-    cntrd <- sf::st_centroid(bb)
-    bb.rot <- (bb - cntrd) * rot(0) + cntrd
-    bb.new <- sf::st_as_sfc(sf::st_bbox(bb.rot))
+    #bb <- sf::st_as_sfc(sf::st_bbox(shapefile))
+    #cntrd <- sf::st_centroid(bb)
+    #bb.rot <- (bb - cntrd) * uc511::rot(0) + cntrd
+    #bb.new <- sf::st_as_sfc(sf::st_bbox(bb.rot))
 
     #
-    base::attr(bb.new, "rotation") <- 0
-    base::attr(bb.new, "centroid") <- sf::st_coordinates(cntrd)
-    pts.shp <- uc511::rotate.scale.coords(coords = pts, bb = bb.new)
-
-    sf::st_crs(pts.shp) <- crs
-
-    diff_ <- NULL
+    #base::attr(bb.new, "rotation") <- 0
+    #base::attr(bb.new, "centroid") <- sf::st_coordinates(cntrd)
+    #pts.shp <- uc511::rotate.scale.coords(coords = pts, bb = bb.new)
+    # make sure our shapefile has a CRS (needed for plotting later on).
+    #sf::st_crs(pts.shp) <- crs
+    # always return NULL when just generating a Halton Frame.
+    #diff_ <- NULL
 
   } else {
 
-    while (pts_in_intersection <= n){
+    while (pts_in_intersection <= N){
       # keep going until we have found the required number of points
 
       # create halton frame
-      hf_ <- uc511::HaltonFrameBase(J = c(J[1]+i, J[2]+i), bases = bases, seeds = seeds)
+      #hf_ <- uc511::HaltonFrameBase(J = base::c(J[1]+i, J[2]+i), bases = bases, seeds = seeds)
 
       # process points returned.
-      pts <- hf_$halton_frame
-      pts <- cbind(seq(1, dim(pts)[1]), pts)
+      #pts <- hf_$halton_frame
+      #pts <- base::cbind(base::seq(1, base::dim(pts)[1]), pts)
 
       # save returned seeds in case they have changed (would only change if initially NULL).
-      seeds <- hf_$seeds
+      #seeds <- hf_$seeds
 
       #
-      bb <- sf::st_as_sfc(sf::st_bbox(shapefile))
-      cntrd <- sf::st_centroid(bb)
-      bb.rot <- (bb - cntrd) * rot(0) + cntrd
-      bb.new <- sf::st_as_sfc(sf::st_bbox(bb.rot))
+      #bb <- sf::st_as_sfc(sf::st_bbox(shapefile))
+      #cntrd <- sf::st_centroid(bb)
+      #bb.rot <- (bb - cntrd) * uc511::rot(0) + cntrd
+      #bb.new <- sf::st_as_sfc(sf::st_bbox(bb.rot))
 
       #
-      base::attr(bb.new, "rotation") <- 0
-      base::attr(bb.new, "centroid") <- sf::st_coordinates(cntrd)
-      pts.shp <- uc511::rotate.scale.coords(coords = pts, bb = bb.new)
+      #base::attr(bb.new, "rotation") <- 0
+      #base::attr(bb.new, "centroid") <- sf::st_coordinates(cntrd)
+      #pts.shp <- uc511::rotate.scale.coords(coords = pts, bb = bb.new)
 
       # replace the CRS (or set), st_intersection needs both objects with the same CRS.
-      sf::st_crs(shapefile) <- crs
-      sf::st_crs(pts.shp) <- crs
+      #sf::st_crs(shapefile) <- crs
+      #sf::st_crs(pts.shp) <- crs
       # make the assumption (that the attribute is constant throughout the geometry) explicit# make the assumption (that the attribute is constant throughout the geometry)
-      #sf::st_agr(shp.ashb) <- "constant"
-      #sf::st_agr(pts.shp) <- "constant"
+      ##sf::st_agr(shp.ashb) <- "constant"
+      ##sf::st_agr(pts.shp) <- "constant"
 
-      #tmp <- sf::st_as_sf(pts.shp)
+      # return from function.
+      result <- getHaltonFrame(shapefile, J, i, bases, seeds, crs)
+      hf_ <- result$hf_
+      diff_ <- result$sample
+      pts.shp <- result$pts.shp
+      bb.new <- result$bb.new
+      seeds <- result$seeds
+
+      pts <- hf_$halton_frame
       tmp <- sf::st_cast(pts.shp, "POINT")
       tmp <- sf::st_as_sf(tmp)
-      tmp$ID <- seq(1, dim(pts)[1])
+      tmp$ID <- base::seq(1, base::dim(pts)[1])
       diff_ <- sf::st_intersection(tmp, shapefile)
 
       # find number of points within our shapefile.
-      pts_in_intersection <- length(sf::st_cast(sf::st_union(diff_), "POINT"))
+      pts_in_intersection <- base::length(sf::st_cast(sf::st_union(diff_), "POINT"))
 
       msg <- "uc511(HaltonFrame) points in intersection: %s."
       msgs <- sprintf(msg, pts_in_intersection)
-      message(msgs)
+      base::message(msgs)
 
       # expand the Halton frame.
       i <- i + 1
@@ -249,49 +266,49 @@ HaltonFrame <- function(n = NULL, #(bases[1]^J[1]) * (bases[2]^J[2]),
   }
 
   if(!wantHaltonFrame){
-    # display some statistics and return results.
+    # display some statistics before returning results.
     msg <- "uc511(HaltonFrame) %s samples found in %s iterations, using J1=%s and J2=%s."
     msgs <- sprintf(msg, pts_in_intersection, i, J[1]+i-1, J[2]+i-1)
-    message(msgs)
+    base::message(msgs)
   }
 
   # are we performing a randomStart?
-  if (randomStart){
-    # need to select n samples from diff_ (rename this to sample).
-    # and then replicate; generate random number and take new sample.
-    message("uc511(HaltonFrame) randomStart.")
-    diff_pts <- sf::st_cast(diff_, "POINT")
-    df_sorted <- diff_pts[order(diff_pts$ID),]
-    df_sorted <- sf::st_as_sf(df_sorted)
-    #df_sorted$uc511SeqID <- seq(1, length(df_sorted$ID))
-    duplicated_pts <- base::rbind(df_sorted, df_sorted)
-    random_start_point <- base::sample(1:length(duplicated_pts$ID), 1)
-    sample_indices <- base::seq(random_start_point, (random_start_point + n) - 1, 1)
-    random_start_sample <- duplicated_pts[sample_indices,]
-    diff_ <- random_start_sample
-    diff_$uc511SeqID <- seq(1, length(diff_$ID))
-    # randomStart mutually exclusive with panel_design.
-    panel_design <- FALSE
-  }
+  #if (randomStart){
+  #  # need to select n samples from diff_ (rename this to sample).
+  #  # and then replicate; generate random number and take new sample.
+  #  message("uc511(HaltonFrame) randomStart.")
+  #  diff_pts <- sf::st_cast(diff_, "POINT")
+  #  df_sorted <- diff_pts[order(diff_pts$ID),]
+  #  df_sorted <- sf::st_as_sf(df_sorted)
+  #  #df_sorted$uc511SeqID <- seq(1, length(df_sorted$ID))
+  #  duplicated_pts <- base::rbind(df_sorted, df_sorted)
+  #  random_start_point <- base::sample(1:length(duplicated_pts$ID), 1)
+  #  sample_indices <- base::seq(random_start_point, (random_start_point + n) - 1, 1)
+  #  random_start_sample <- duplicated_pts[sample_indices,]
+  #  diff_ <- random_start_sample
+  #  diff_$uc511SeqID <- seq(1, length(diff_$ID))
+  #  # randomStart mutually exclusive with panel_design.
+  #  panel_design <- FALSE
+  #}
 
   # are we performing a panel_design? yes then go assign panelid's.
   if(panel_design){
-    message("uc511(HaltonFrame) panel_design.")
+    base::message("uc511(HaltonFrame) panel_design.")
     diff_pts <- sf::st_cast(diff_, "POINT")
-    df_sorted <- diff_pts[order(diff_pts$ID), ]
-    df_sorted$uc511SeqID <- seq(1, length(df_sorted$ID))
+    df_sorted <- diff_pts[base::order(diff_pts$ID), ]
+    df_sorted$uc511SeqID <- base::seq(1, base::length(df_sorted$ID))
     diff_pts_sf <- sf::st_as_sf(df_sorted)
     res <- PanelDesignAssignPanelids(diff_pts_sf, panels, panel_overlap, panel_design, number_panels)
     diff_ <- res$sample
   }
 
   # if we are not performing a randomStart or a panel_design
-  if (!randomStart & !panel_design & !wantHaltonFrame){
-    message("uc511(HaltonFrame) return n points.")
+  if (!panel_design & !wantHaltonFrame){
+    message("uc511(HaltonFrame) Return N sample points.")
     # turn our sample into points.
     diff_pts <- sf::st_cast(diff_, "POINT")
-    df_sorted <- diff_pts[order(diff_pts$ID), ]
-    df_sorted$uc511SeqID <- seq(1, length(df_sorted$ID))
+    df_sorted <- diff_pts[base::order(diff_pts$ID), ]
+    df_sorted$uc511SeqID <- base::seq(1, base::length(df_sorted$ID))
     # return everything from the intersection.
     diff_ <- df_sorted #[1:n,]
   }
@@ -384,3 +401,149 @@ HaltonFrameBase <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
                        seeds          = cpprshs$seeds)
   return(result)
 }
+
+
+#' @name getSample
+#'
+#' @title Generate a Halton Frame.
+#'
+#' @description A description of this useful function.
+#'
+#' @details This function was written by Phil Davies.
+#'
+#' @param shapefile A MULTIPOINT or POINT object from where to take the sample.
+#' @param n The number of sample points to return.
+#' @param randomStart Whether a spatially balanced sample will be randomly drawn from
+#' the frame or not. Default value is FALSE.
+#'
+#' @return A list containing the following variable:
+#' sample - the sample from the shapefile POINTS.
+#'
+#' @examples
+#' \dontrun{
+#' hf_ <- uc511::getSample()
+#' }
+#'
+#' @export
+# Drop the random sample functionality from HaltonFrame (sorry!) and have a 'getSample'
+# function (like getPanel). Let 'Frame' be the output from HaltonFrame, then
+#  - getSample(Frame, n): output the first n points from Frame
+#  - getSample(Frame, n, randomStart = TRUE) output n points (in the order of the frame)
+# from a random starting point in Frame.
+getSample <- function(shapefile, n, randomStart = FALSE){
+  # can accept input of either a MULTIPOINT object or a POINT object.
+  # either $sample or $hf.pts.shp from the HaltonFrame function.
+  uc511::validate_parameters("n", base::c(n))
+
+  # Get the geometry type
+  geometry_type <- sf::st_geometry_type(shapefile)
+
+  if(!any(geometry_type == "POINT")){
+    if(!any(geometry_type == "MULTIPOINT")){
+      stop("uc511(getSample) Supplied shapefile must contain POINT or MULTIPOINT geometries.")
+    }
+  }
+
+  # Check if the geometry type is POINT or MULTIPOINT
+  is_point <- base::all(geometry_type == "POINT")
+  is_multipoint <- base::all(geometry_type == "MULTIPOINT")
+
+  # if a MULTIPOINT object need to make a POINT object first. should be from $hf.pts.shp.
+  if(is_multipoint){
+    # get data for the Halton frame.
+    base::message("uc511(getSample) is_multipoint.")
+    hf_pts <- sf::st_cast(shapefile, "POINT")
+    hf_pts <- sf::st_as_sf(hf_pts)
+    hf_pts$ID <- base::seq(1, base::length(hf_pts$x))
+    hf_pts$uc511SeqID <- seq(1, base::length(hf_pts$x))
+    shapefile <- hf_pts
+    # now we can make our sample based on randomStart.
+  }
+
+  # if is_point TRUE then shapefile from $sample
+  if(randomStart){
+    # points will already be sorted and each have a valid $uc511SeqID
+    base::message("uc511(getSample) is_randomStart.")
+    duplicated_pts <- base::rbind(shapefile, shapefile)
+    random_start_point <- base::sample(1:length(duplicated_pts$ID), 1)
+    sample_indices <- base::seq(random_start_point, (random_start_point + n) - 1, 1)
+    sample <- duplicated_pts[sample_indices,]
+  }
+
+  # not a random start so just return the first n sample points.
+  if(!randomStart){
+    # points will already be sorted and each have a valid $uc511SeqID
+    # lets sort on $uc511SeqID to be sure...
+    base::message("uc511(getSample) is_not_randomStart.")
+    shp_sorted <- shapefile[base::order(shapefile$uc511SeqID), ]
+    if(n > length(shp_sorted$uc511SeqID)){
+      msg <- "uc511(getSample) Warning - n exceeds number of points in shapefile. Returning %s points."
+      msgs <- sprintf(msg, length(shp_sorted$uc511SeqID))
+      base::message(msgs)
+    }
+    # get our n sample points.
+    sample <- shp_sorted[1:n,]
+  }
+
+  # package up objects to be returned.
+  result <- base::list(sample = sample)
+  return(result)
+}
+
+
+#' @name getHaltonFrame
+#'
+#' @title Generate a Halton Frame.
+#'
+#' @description A description of this useful function.
+#'
+#' @details This function was written by Phil Davies.
+#'
+#' @param shapefile A MULTIPOINT or POINT object that we want to generate a halton frame for.
+#' @param J The number of grid cells. A list of 2 values.
+#' @param bases Co-prime base for the Halton Sequence.
+#' @param i An integer to add to the J parameter to expand the Halton Frame in both directions.
+#' @param seeds A list of 2 seeds, u1 and u2.
+#' @param crs Coordinate reference system for the shapefile.
+#'
+#' @return A list containing the following variables:
+#' hf_
+#' sample
+#' pts.shp
+#' bb.new
+#' seeds
+#'
+getHaltonFrame <- function(shapefile, J, i, bases, seeds, crs){
+  #
+  hf_ <- uc511::HaltonFrameBase(J = base::c(J[1]+i, J[2]+i), bases = bases, seeds = seeds)
+
+  # process points returned.
+  pts <- hf_$halton_frame
+  pts <- base::cbind(base::seq(1, base::dim(pts)[1]), pts)
+
+  # save returned seeds in case they have changed (would only change if initially NULL).
+  seeds <- hf_$seeds
+
+  #
+  bb <- sf::st_as_sfc(sf::st_bbox(shapefile))
+  cntrd <- sf::st_centroid(bb)
+  bb.rot <- (bb - cntrd) * uc511::rot(0) + cntrd
+  bb.new <- sf::st_as_sfc(sf::st_bbox(bb.rot))
+
+  #
+  base::attr(bb.new, "rotation") <- 0
+  base::attr(bb.new, "centroid") <- sf::st_coordinates(cntrd)
+  pts.shp <- uc511::rotate.scale.coords(coords = pts, bb = bb.new)
+  # make sure our shapefile has a CRS (needed for plotting later on).
+  sf::st_crs(pts.shp) <- crs
+  # always return NULL when just generating a Halton Frame.
+  diff_ <- NULL
+
+  result <- base::list(hf_     = hf_,
+                       sample  = diff_,
+                       pts.shp = pts.shp,
+                       bb.new  = bb.new,
+                       seeds   = seeds)
+  return(result)
+}
+

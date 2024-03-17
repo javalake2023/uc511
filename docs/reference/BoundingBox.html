@@ -60,16 +60,12 @@ the first master sample point does indeed fall within the largest scale of the m
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">BoundingBox</span><span class="op">(</span><span class="va">shp</span>, d <span class="op">=</span> <span class="fl">2</span>, showOutput <span class="op">=</span> <span class="cn">TRUE</span>, rotate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">BoundingBox</span><span class="op">(</span><span class="va">shapefile</span>, d <span class="op">=</span> <span class="fl">2</span>, showOutput <span class="op">=</span> <span class="cn">TRUE</span>, rotate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>shp</dt>
-<dd><p>Spatial feature that defines the boundary of the area to define a bounding box over.</p></dd>
-
-
-<dt>d</dt>
+    <dl><dt>d</dt>
 <dd><p>Dimension of the new Master Sample, at this stage we only work with d=2.</p></dd>
 
 
@@ -79,6 +75,10 @@ the first master sample point does indeed fall within the largest scale of the m
 
 <dt>rotate</dt>
 <dd><p>Boolean of whether or not to randomly rotate the bounding box.</p></dd>
+
+
+<dt>shp</dt>
+<dd><p>Spatial feature that defines the boundary of the area to define a bounding box over.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -98,7 +98,7 @@ package BASMasterSample and later ported to this package, uc511.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">NS_bioregion</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># Vertically aligned master sample bounding box.</span></span></span>
-<span class="r-in"><span><span class="va">bb</span> <span class="op">&lt;-</span> <span class="fu">uc511</span><span class="fu">::</span><span class="fu">BoundingBox</span><span class="op">(</span>shp <span class="op">=</span> <span class="va">NS_bioregion</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">bb</span> <span class="op">&lt;-</span> <span class="fu">uc511</span><span class="fu">::</span><span class="fu">BoundingBox</span><span class="op">(</span>shapefile <span class="op">=</span> <span class="va">NS_bioregion</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># Actual bounding box.</span></span></span>
 <span class="r-in"><span><span class="va">bb.rot</span> <span class="op">&lt;-</span> <span class="fu">uc511</span><span class="fu">::</span><span class="fu"><a href="rotate.shp.html">rotate.shp</a></span><span class="op">(</span><span class="va">bb</span>, <span class="va">bb</span>, back <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_geometry</a></span><span class="op">(</span><span class="va">NS_bioregion</span><span class="op">)</span><span class="op">)</span></span></span>

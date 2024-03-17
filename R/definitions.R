@@ -25,7 +25,7 @@
 #' \dontrun{
 #' data(NS_bioregion)
 #' # Vertically aligned master sample bounding box.
-#' bb <- uc511::BoundingBox(shp = NS_bioregion)
+#' bb <- uc511::BoundingBox(shapefile = NS_bioregion)
 #' # Actual bounding box.
 #' bb.rot <- uc511::rotate.shp(bb, bb, back = TRUE)
 #' plot(sf::st_geometry(NS_bioregion))
@@ -33,7 +33,7 @@
 #' }
 #'
 #' @export
-BoundingBox <- function(shp, d = 2, showOutput = TRUE, rotate = FALSE)
+BoundingBox <- function(shapefile, d = 2, showOutput = TRUE, rotate = FALSE)
 {
   # generate 2 seed values.
   seed <- base::floor(stats::runif(d, 0, 10000))
@@ -47,21 +47,19 @@ BoundingBox <- function(shp, d = 2, showOutput = TRUE, rotate = FALSE)
   }
 
   # Just work with sf:
-  if (class(shp)[1] != "sf"){
-    shp <- sf::st_as_sf(shp)
+  if (class(shapefile)[1] != "sf"){
+    shp <- sf::st_as_sf(shapefile)
   }
 
   # Create a Random Rotation:
-  build.bb <- rotate.bb(shp, theta = theta)
-  sf::st_crs(build.bb) <- sf::st_crs(shp)
+  build.bb <- rotate.bb(shapefile, theta = theta)
+  sf::st_crs(build.bb) <- sf::st_crs(shapefile)
   base::attr(build.bb, "seed") <- seed
 
   if(showOutput){
-    #msg <- "uc511(BoundingBox) Seed: %s.\n"
-    #msgs <- base::sprintf(msg, seed)
-    #base::message(msgs)
-
-    base::cat("uc511(BoundingBox) Seed:", seed, ".", "\n")
+    msg <- "uc511(BoundingBox) Seed: %s.\n"
+    msgs <- base::sprintf(msg, seed)
+    base::message(msgs)
 
     msg <- "uc511(BoundingBox) Rotation: %s Radians.\n"
     msgs <- base::sprintf(msg, theta)
@@ -105,7 +103,7 @@ getProj <- function()
 #' @export
 getBB <- function()
 {
-  bb.df <- c("xmin" = 85148, "ymin" = 33745, "xmax" = 1280999, "ymax" = 1351981)
+  bb.df <- base::c("xmin" = 85148, "ymin" = 33745, "xmax" = 1280999, "ymax" = 1351981)
   bb <- sf::st_as_sfc(sf::st_bbox(bb.df))
 
   base::attr(bb, "rotation") <- 0

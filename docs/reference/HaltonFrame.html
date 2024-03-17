@@ -46,13 +46,12 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">HaltonFrame</span><span class="op">(</span></span>
-<span>  n <span class="op">=</span> <span class="op">(</span><span class="va">bases</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">^</span><span class="va">J</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="va">bases</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">^</span><span class="va">J</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>  N <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  J <span class="op">=</span> <span class="fu">base</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">2</span><span class="op">)</span>,</span>
 <span>  bases <span class="op">=</span> <span class="fu">base</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>,</span>
 <span>  shapefile <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  panels <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  panel_overlap <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  randomStart <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  seeds <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  stratum <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -60,7 +59,7 @@
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>n</dt>
+    <dl><dt>N</dt>
 <dd><p>The number of points in the frame to generate.</p></dd>
 
 
@@ -91,11 +90,6 @@ panel. Is only used when the panels parameter is not NULL. The default value for
 panel_overlap is NULL. The length of panel_overlap must be equal to the length
 of panels. The first value is always forced to zero as the first panel never
 overlaps any region.</p></dd>
-
-
-<dt>randomStart</dt>
-<dd><p>Whether a spatially balanced sample will be randomly drawn from
-the frame or not. Default value is FALSE.</p></dd>
 
 
 <dt>seeds</dt>

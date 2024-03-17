@@ -4,16 +4,16 @@
 \alias{BoundingBox}
 \title{Build a new Master Sample with a random rotation and seed.}
 \usage{
-BoundingBox(shp, d = 2, showOutput = TRUE, rotate = FALSE)
+BoundingBox(shapefile, d = 2, showOutput = TRUE, rotate = FALSE)
 }
 \arguments{
-\item{shp}{Spatial feature that defines the boundary of the area to define a bounding box over.}
-
 \item{d}{Dimension of the new Master Sample, at this stage we only work with d=2.}
 
 \item{showOutput}{Print the rotation and random seed when it is generated.}
 
 \item{rotate}{Boolean of whether or not to randomly rotate the bounding box.}
+
+\item{shp}{Spatial feature that defines the boundary of the area to define a bounding box over.}
 }
 \value{
 bounding box for a master sample.
@@ -34,7 +34,7 @@ package BASMasterSample and later ported to this package, uc511.
 \dontrun{
 data(NS_bioregion)
 # Vertically aligned master sample bounding box.
-bb <- uc511::BoundingBox(shp = NS_bioregion)
+bb <- uc511::BoundingBox(shapefile = NS_bioregion)
 # Actual bounding box.
 bb.rot <- uc511::rotate.shp(bb, bb, back = TRUE)
 plot(sf::st_geometry(NS_bioregion))

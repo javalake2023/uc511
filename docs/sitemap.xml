@@ -112,6 +112,9 @@
     <loc>/reference/getBB.html</loc>
   </url>
   <url>
+    <loc>/reference/getHaltonFrame.html</loc>
+  </url>
+  <url>
     <loc>/reference/getIndividualBoxIndices.html</loc>
   </url>
   <url>
@@ -125,6 +128,9 @@
   </url>
   <url>
     <loc>/reference/getRotation.html</loc>
+  </url>
+  <url>
+    <loc>/reference/getSample.html</loc>
   </url>
   <url>
     <loc>/reference/getSeed.html</loc>

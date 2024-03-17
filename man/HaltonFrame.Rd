@@ -5,19 +5,18 @@
 \title{Generate a Halton Frame.}
 \usage{
 HaltonFrame(
-  n = (bases[1]^J[1]) * (bases[2]^J[2]),
+  N = 1,
   J = base::c(3, 2),
   bases = base::c(2, 3),
   shapefile = NULL,
   panels = NULL,
   panel_overlap = NULL,
-  randomStart = FALSE,
   seeds = NULL,
   stratum = NULL
 )
 }
 \arguments{
-\item{n}{The number of points in the frame to generate.}
+\item{N}{The number of points in the frame to generate.}
 
 \item{J}{The number of grid cells. A list of 2 values. The default value is c(3, 2), we could also use c(5, 3).}
 
@@ -37,9 +36,6 @@ panel. Is only used when the panels parameter is not NULL. The default value for
 panel_overlap is NULL. The length of panel_overlap must be equal to the length
 of panels. The first value is always forced to zero as the first panel never
 overlaps any region.}
-
-\item{randomStart}{Whether a spatially balanced sample will be randomly drawn from
-the frame or not. Default value is FALSE.}
 
 \item{seeds}{A list of 2 seeds, u1 and u2. If not specified, default is NULL.}
 
