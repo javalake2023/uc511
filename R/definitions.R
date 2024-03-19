@@ -35,6 +35,22 @@
 #' @export
 BoundingBox <- function(shapefile, d = 2, showOutput = TRUE, rotate = FALSE)
 {
+  # validate the shapefile parameter.
+  bb_geometry <- sf::st_geometry_type(shapefile)
+  if (!base::all(bb_geometry %in% c("MULTIPOLYGON", "POINT", "POLYGON", "MULTIPOINT"))){
+    msg <- "uc511(BoundingBox) Unsupported geometry in shapefile, %s."
+    msgs <- base::sprintf(msg, bb_geometry)
+    stop(msgs)
+  }
+
+  # Just work with sf objects.
+  if (base::class(shapefile)[1] != "sf"){
+    msg <- "uc511(BoundingBox) Shapefile does not have class of sf, %s, converting to sf object."
+    msgs <- base::sprintf(msg, base::class(shapefile)[1])
+    base::message(msgs)
+    shp <- sf::st_as_sf(shapefile)
+  }
+
   # generate 2 seed values.
   seed <- base::floor(stats::runif(d, 0, 10000))
   # We always use base 2,3
@@ -44,11 +60,6 @@ BoundingBox <- function(shapefile, d = 2, showOutput = TRUE, rotate = FALSE)
     theta <- stats::runif(1, -base::pi, base::pi)
   }else{
     theta <- 0
-  }
-
-  # Just work with sf:
-  if (class(shapefile)[1] != "sf"){
-    shp <- sf::st_as_sf(shapefile)
   }
 
   # Create a Random Rotation:

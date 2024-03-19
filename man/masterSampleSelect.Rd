@@ -26,7 +26,7 @@ to shp.}
 \item{printJ}{Boolean if you want to see J, how many cuts of space are required to generate
 the sample efficiently.}
 
-\item{inclSeed}{A list of seeds, u1 and u2, specified by the user.}
+\item{inclSeed}{A vector of 2 seeds, u1 and u2, specified by the user.}
 }
 \value{
 Sample points.

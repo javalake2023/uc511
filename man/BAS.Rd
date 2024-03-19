@@ -45,7 +45,7 @@ to shp.}
 \item{quiet}{Boolean if you want to see any output printed to screen. Helpful if taking a
 long time.}
 
-\item{seeds}{A list of seeds, u1 and u2, specified by the user.}
+\item{seeds}{A vector of 2 seeds, u1 and u2. If not specified, the default is NULL.}
 }
 \value{
 A master sample.

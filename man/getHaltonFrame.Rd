@@ -2,7 +2,7 @@
 % Please edit documentation in R/HaltonFrames.R
 \name{getHaltonFrame}
 \alias{getHaltonFrame}
-\title{Generate a Halton Frame.}
+\title{Obtain a Halton Frame over a shapefile.}
 \usage{
 getHaltonFrame(shapefile, J, i, bases, seeds, crs)
 }
@@ -11,7 +11,9 @@ getHaltonFrame(shapefile, J, i, bases, seeds, crs)
 
 \item{J}{The number of grid cells. A list of 2 values.}
 
-\item{i}{An integer to add to the J parameter to expand the Halton Frame in both directions.}
+\item{i}{An integer to add to the J parameter elements to expand the Halton Frame in both
+directions if the required number of sample points cannot be found in the region of interest
+in the current Halton frame.}
 
 \item{bases}{Co-prime base for the Halton Sequence.}
 
@@ -20,15 +22,10 @@ getHaltonFrame(shapefile, J, i, bases, seeds, crs)
 \item{crs}{Coordinate reference system for the shapefile.}
 }
 \value{
-A list containing the following variables:
-hf_
-sample
-pts.shp
-bb.new
-seeds
+A list containing the following variables: hf_, sample, pts.shp, bb.new, seeds
 }
 \description{
-A description of this useful function.
+An internal only function.
 }
 \details{
 This function was written by Phil Davies.

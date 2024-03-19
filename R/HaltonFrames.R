@@ -21,7 +21,7 @@ validate_parameters <- function(parm, parm_value){
   if(!parm %in% base::c("n", "J", "bases", "shapefile", "panels", "panel_overlap",
                         "randomStart", "N",
                   "shp", "bb", "stratum", "nExtra", "quiet", "inclSeed",
-                  "seeds",
+                  "seeds", "boundingbox",
                   "seed", "total_rows", "sample_size",
                   "testparm",
                   "panelid",
@@ -83,7 +83,7 @@ validate_parameters <- function(parm, parm_value){
 #' panel_overlap is NULL. The length of panel_overlap must be equal to the length
 #' of panels. The first value is always forced to zero as the first panel never
 #' overlaps any region.
-#' @param seeds A list of 2 seeds, u1 and u2. If not specified, default is NULL.
+#' @param seeds A vector of 2 seeds, u1 and u2. If not specified, the default is NULL.
 #' @param stratum Name of column in shapefile that makes up the strata.
 #'
 #' @return A list containing the following variables:
@@ -92,8 +92,8 @@ validate_parameters <- function(parm, parm_value){
 #'         - Z
 #'         - halton_frame
 #'         - J
-#'         - sample
-#'         - pts.shp
+#'         - sample - Halton Frame, the intersection of the grid with the region.
+#'         - hg.pts.shp - Halton Grid.
 #'         - bb
 #'
 #' @examples
@@ -140,11 +140,17 @@ HaltonFrame <- function(N = 1, #(bases[1]^J[1]) * (bases[2]^J[2]),
   #  stop("uc511(HaltonFrame) Panel design and randomStart are mutually exclusive.")
   #}
 
-  if((is.null(N))|(N == 1)){
-    wantHaltonFrame <- TRUE
-    base::message("uc511(HaltonFrame) Request for a Halton Frame.")
-  } else {
+  # defaults, before we see what the user wants.
+  wantHaltonGrid <- FALSE
+  wantHaltonFrame <- FALSE
+  if(is.null(N)){
+    wantHaltonGrid <- TRUE
     wantHaltonFrame <- FALSE
+    base::message("uc511(HaltonFrame) Request for a Halton Grid.")
+  }
+  if(N >= 1){
+    wantHaltonGrid <- TRUE
+    wantHaltonFrame <- TRUE
     # state how many samples user is looking for.
     msg <- "uc511(HaltonFrame) Request for %s samples from a Halton Frame."
     msgs <- sprintf(msg, N)
@@ -173,8 +179,8 @@ HaltonFrame <- function(N = 1, #(bases[1]^J[1]) * (bases[2]^J[2]),
   # initialise
   i <- 0
 
-  if(wantHaltonFrame){
-    # go get halton frame.
+  if(wantHaltonGrid & !wantHaltonFrame){
+    # go get halton grid.
     result <- getHaltonFrame(shapefile, J, i, bases, seeds, crs)
     hf_ <- result$hf_
     diff_ <- result$sample
@@ -242,7 +248,7 @@ HaltonFrame <- function(N = 1, #(bases[1]^J[1]) * (bases[2]^J[2]),
       # return from function.
       result <- getHaltonFrame(shapefile, J, i, bases, seeds, crs)
       hf_ <- result$hf_
-      diff_ <- result$sample
+      diff_ <- result$sample     # will always be NULL here.
       pts.shp <- result$pts.shp
       bb.new <- result$bb.new
       seeds <- result$seeds
@@ -256,7 +262,7 @@ HaltonFrame <- function(N = 1, #(bases[1]^J[1]) * (bases[2]^J[2]),
       # find number of points within our shapefile.
       pts_in_intersection <- base::length(sf::st_cast(sf::st_union(diff_), "POINT"))
 
-      msg <- "uc511(HaltonFrame) points in intersection: %s."
+      msg <- "uc511(HaltonFrame) Points in intersection: %s."
       msgs <- sprintf(msg, pts_in_intersection)
       base::message(msgs)
 
@@ -265,7 +271,7 @@ HaltonFrame <- function(N = 1, #(bases[1]^J[1]) * (bases[2]^J[2]),
     }
   }
 
-  if(!wantHaltonFrame){
+  if(wantHaltonFrame){
     # display some statistics before returning results.
     msg <- "uc511(HaltonFrame) %s samples found in %s iterations, using J1=%s and J2=%s."
     msgs <- sprintf(msg, pts_in_intersection, i, J[1]+i-1, J[2]+i-1)
@@ -303,7 +309,7 @@ HaltonFrame <- function(N = 1, #(bases[1]^J[1]) * (bases[2]^J[2]),
   }
 
   # if we are not performing a randomStart or a panel_design
-  if (!panel_design & !wantHaltonFrame){
+  if (!panel_design & wantHaltonFrame){
     message("uc511(HaltonFrame) Return N sample points.")
     # turn our sample into points.
     diff_pts <- sf::st_cast(diff_, "POINT")
@@ -319,8 +325,8 @@ HaltonFrame <- function(N = 1, #(bases[1]^J[1]) * (bases[2]^J[2]),
                        Z              = hf_$Z,
                        halton_frame   = hf_$halton_frame,
                        J              = c(J[1]+i-1, J[2]+i-1),
-                       sample         = diff_,
-                       hf.pts.shp     = pts.shp,
+                       hf.pts.shp     = diff_,   # Halton Frame
+                       hg.pts.shp     = pts.shp, # Halton Grid
                        bb             = bb.new,
                        seeds          = seeds)
   return(result)
@@ -493,25 +499,22 @@ getSample <- function(shapefile, n, randomStart = FALSE){
 
 #' @name getHaltonFrame
 #'
-#' @title Generate a Halton Frame.
+#' @title Obtain a Halton Frame over a shapefile.
 #'
-#' @description A description of this useful function.
+#' @description An internal only function.
 #'
 #' @details This function was written by Phil Davies.
 #'
 #' @param shapefile A MULTIPOINT or POINT object that we want to generate a halton frame for.
 #' @param J The number of grid cells. A list of 2 values.
 #' @param bases Co-prime base for the Halton Sequence.
-#' @param i An integer to add to the J parameter to expand the Halton Frame in both directions.
+#' @param i An integer to add to the J parameter elements to expand the Halton Frame in both
+#' directions if the required number of sample points cannot be found in the region of interest
+#' in the current Halton frame.
 #' @param seeds A list of 2 seeds, u1 and u2.
 #' @param crs Coordinate reference system for the shapefile.
 #'
-#' @return A list containing the following variables:
-#' hf_
-#' sample
-#' pts.shp
-#' bb.new
-#' seeds
+#' @return A list containing the following variables: hf_, sample, pts.shp, bb.new, seeds
 #'
 getHaltonFrame <- function(shapefile, J, i, bases, seeds, crs){
   #

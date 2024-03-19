@@ -37,7 +37,7 @@ panel_overlap is NULL. The length of panel_overlap must be equal to the length
 of panels. The first value is always forced to zero as the first panel never
 overlaps any region.}
 
-\item{seeds}{A list of 2 seeds, u1 and u2. If not specified, default is NULL.}
+\item{seeds}{A vector of 2 seeds, u1 and u2. If not specified, the default is NULL.}
 
 \item{stratum}{Name of column in shapefile that makes up the strata.}
 }
@@ -48,8 +48,8 @@ A list containing the following variables:
 - Z
 - halton_frame
 - J
-- sample
-- pts.shp
+- sample - Halton Frame, the intersection of the grid with the region.
+- hg.pts.shp - Halton Grid.
 - bb
 }
 \description{

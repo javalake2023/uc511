@@ -24,7 +24,7 @@
 #' to shp.
 #' @param printJ Boolean if you want to see J, how many cuts of space are required to generate
 #' the sample efficiently.
-#' @param inclSeed A list of seeds, u1 and u2, specified by the user.
+#' @param inclSeed A vector of 2 seeds, u1 and u2, specified by the user.
 #'
 #' @returns Sample points.
 #'
@@ -225,7 +225,7 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
 #'  to shp.
 #' @param quiet Boolean if you want to see any output printed to screen. Helpful if taking a
 #' long time.
-#' @param seeds A list of seeds, u1 and u2, specified by the user.
+#' @param seeds A vector of 2 seeds, u1 and u2. If not specified, the default is NULL.
 #'
 #' @return A master sample.
 
