@@ -44,13 +44,16 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
 
   # Set up Western Canada Marine Master Sample as default, general for any.
   # bb now includes its rotation as well.
-  if(base::is.null(bb)){
-    bb <- uc511::getBB()
-    msproj <- uc511::getProj()
-    inclseed <- uc511::getSeed()
-  }else{
-    msproj <- sf::st_crs(bb)$proj4string
-  }
+  #if(base::is.null(bb)){
+  #  bb <- uc511::getBB()
+  #  msproj <- uc511::getProj()
+  #  inclseed <- uc511::getSeed()
+  #}else{
+  #  msproj <- sf::st_crs(bb)$proj4string
+  #}
+
+  #
+  msproj <- sf::st_crs(bb)$proj4string
 
   # if inclSeed NULL then generate new seed and add to BB, otherwise replace
   # seed in BB with user specified seed from inclSeed.
@@ -68,7 +71,7 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
   #msg <- "uc511(masterSampleSelect)(bb) inclSeed = %s.\n"
   #msgs <- base::sprintf(msg, inclSeed)
   #base::message(msgs)
-  base::cat("uc511(masterSampleSelect)(bb) inclSeed = ", inclSeed, ".", "\n")
+  base::cat("uc511(masterSampleSelect)(bb) seeds = ", inclSeed, ".", "\n")
 
   orig.crs <- NULL
   if(sf::st_crs(shp) != sf::st_crs(msproj)){
@@ -129,27 +132,22 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
     base::message(msgs)
   }
 
+  endPoint <- 0
+  k <- 0
+
   getSample <- function(k = 0, endPoint = 0){
     #seed <- c(seed, inclSeed)
     seed <- inclSeed
 
-    base::cat("uc511(masterSampleSelect)(getSample) seed = ", seed, ".", "\n")
-    #msg <- "uc511(masterSampleSelect)(getSample) seed = %s.\n"
-    #msgs <- base::sprintf(msg, seed)
-    #base::message(msgs)
-
-    if(k == 0){ seedshift <- seed
+    if(k == 0){
+      seedshift <- seed
     }else {
-      seedshift <- endPoint + seed
+      seedshift <- endPoint + seed + k
     }
-    base::cat("uc511(masterSampleSelect)(getSample) seedshift = ", seedshift, ".", "\n")
-    #msg <- "uc511(masterSampleSelect)(getSample) seedshift = %s.\n"
-    #msgs <- base::sprintf(msg, seedshift)
-    #base::message(msgs)
 
-    #pts <- uc511::cppRSHalton(n = draw, seeds = seedshift, bases = c(2, 3, 5), boxes = halt.rep, J = J)
+    #pts <- uc511::cppRSHalton(n = draw, seeds = seedshift, bases = c(2, 3), boxes = halt.rep, J = J)
     #pts <- pts[1:draw,]
-    res <- uc511::cppRSHalton_br(n = draw, seeds = seedshift, bases = base::c(2, 3, 5))
+    res <- uc511::cppRSHalton_br(n = draw, seeds = seedshift, bases = base::c(2, 3))
     pts <- res$pts
     siteid <- base::seq(from = 1, to = draw, by = 1)
     pts <- base::cbind(siteid, pts)
@@ -162,6 +160,7 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
       pts.coord <- sf::st_as_sf(data.frame(SiteID = pts[,1] + endPoint, xy), coords = c(2,3))
     }
     sf::st_crs(pts.coord) <- sf::st_crs(bb)
+    # find the intersection.
     pts.coord <- pts.coord[shp,]
     return(pts.coord)
   }
@@ -170,17 +169,27 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
   while(base::nrow(pts.sample) == 0){
     draw <- draw * 2
     pts.sample <- getSample()
-    base::cat("uc511(masterSampleSelect)(after getSample) nrow(pts.sample) = ", base::nrow(pts.sample), ".", "\n")
-    #msg <- "uc511(masterSampleSelect) after getSample %s.\n"
-    #msgs <- base::sprintf(msg, base::nrow(pts.sample))
-    #base::message(msgs)
+    #base::cat("uc511(masterSampleSelect)(after getSample) nrow(pts.sample) = ", base::nrow(pts.sample), ".", "\n")
+    msg <- "uc511(masterSampleSelect) after getSample %s. k = %s. endPoint = %s\n"
+    msgs <- base::sprintf(msg, base::nrow(pts.sample), k, endPoint)
+    base::message(msgs)
+    k <- k + 1
   }
 
   di <- 1
   while(base::nrow(pts.sample) < n){
     last.pt <- pts.sample$SiteID[base::nrow(pts.sample)]
     new.pts <- getSample(k = di, endPoint = last.pt)
-    if(base::nrow(new.pts) > 0) pts.sample <- base::rbind(pts.sample, new.pts)
+    if(base::nrow(new.pts) > 0){
+      pts.sample <- base::rbind(pts.sample, new.pts)
+      msg <- "uc511(masterSampleSelect) Samples in pts.sample = %s. di = %s. Wanting n = %s.\n"
+      msgs <- base::sprintf(msg, base::nrow(pts.sample), di, n)
+      base::message(msgs)
+    }
+    #endPointx <- last.pt
+    #msg <- "uc511(masterSampleSelect) in base::nrow(pts.sample) %s. di = %s. endPoint = %s. n = %s.\n"
+    #msgs <- base::sprintf(msg, base::nrow(new.pts), di, endPointx, n)
+    #base::message(msgs)
     di <- di + 1
   }
 
@@ -250,6 +259,22 @@ masterSampleSelect <- function(shp, n = 100, bb = NULL, nExtra = 0, printJ = FAL
 BAS <- function(shapefile, n = 100, boundingbox = NULL, panels = NULL, panel_overlap = NULL,
                 stratum = NULL, nExtra = 1000, quiet = FALSE, seeds = NULL)
 {
+  # validate shapefile and other BAS parameters.
+  # validate the shapefile parameter.
+  shp_geometry <- sf::st_geometry_type(shapefile)
+  if (!base::all(shp_geometry %in% c("MULTIPOLYGON", "POLYGON"))){
+    msg <- "uc511(BAS) Unsupported geometry in shapefile, %s."
+    msgs <- base::sprintf(msg, shp_geometry)
+    stop(msgs)
+  }
+
+  # A bounding box must be specified.
+  if(is.null(boundingbox)){
+    msg <- "uc511(BAS) A Bounding Box must be specified. Use uc511::BoundingBox first."
+    msgs <- base::sprintf(msg)
+    stop(msgs)
+  }
+
   # validate panel design if we are using one.
   res <- ValidatePanelDesign(panels, panel_overlap, n)
   panel_design  <- res$panel_design

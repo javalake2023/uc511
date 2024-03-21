@@ -148,13 +148,23 @@ HaltonFrame <- function(N = 1, #(bases[1]^J[1]) * (bases[2]^J[2]),
     wantHaltonFrame <- FALSE
     base::message("uc511(HaltonFrame) Request for a Halton Grid.")
   }
-  if(N >= 1){
-    wantHaltonGrid <- TRUE
-    wantHaltonFrame <- TRUE
-    # state how many samples user is looking for.
-    msg <- "uc511(HaltonFrame) Request for %s samples from a Halton Frame."
-    msgs <- sprintf(msg, N)
+
+  # if both not NULL then we want stratification.
+  if(!base::is.null(base::names(N)) & !base::is.null(stratum)){
+    hf_stratification <- TRUE
+    strata.levels <- base::names(N)
+    msg <- "uc511(HaltonFrame) Stratification request for the following strata: %s.\n"
+    msgs <- sprintf(msg, strata.levels)
     base::message(msgs)
+  } else {
+    if(N >= 1){
+      wantHaltonGrid <- TRUE
+      wantHaltonFrame <- TRUE
+      # state how many samples user is looking for.
+      msg <- "uc511(HaltonFrame) Request for %s samples from a Halton Frame."
+      msgs <- sprintf(msg, N)
+      base::message(msgs)
+    }
   }
 
   # ensure the shapefile (if specified) has an associated CRS.
@@ -213,6 +223,10 @@ HaltonFrame <- function(N = 1, #(bases[1]^J[1]) * (bases[2]^J[2]),
     #diff_ <- NULL
 
   } else {
+
+    # need to check hf_stratification before we run the while loop.
+    # run the while loop in new function so we can loop for each strata level for the desired N.
+    # save the returned points using rbind.
 
     while (pts_in_intersection <= N){
       # keep going until we have found the required number of points
