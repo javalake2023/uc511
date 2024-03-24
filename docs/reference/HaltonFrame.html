@@ -53,7 +53,8 @@
 <span>  panels <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  panel_overlap <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  seeds <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  stratum <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  stratum <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -64,7 +65,7 @@
 
 
 <dt>J</dt>
-<dd><p>The number of grid cells. A list of 2 values. The default value is c(3, 2), we could also use c(5, 3).</p></dd>
+<dd><p>The number of grid cells. A list of 2 values. The default value is c(3, 2).</p></dd>
 
 
 <dt>bases</dt>
@@ -93,7 +94,7 @@ overlaps any region.</p></dd>
 
 
 <dt>seeds</dt>
-<dd><p>A list of 2 seeds, u1 and u2. If not specified, default is NULL.</p></dd>
+<dd><p>A vector of 2 seeds, u1 and u2. If not specified, the default is NULL.</p></dd>
 
 
 <dt>stratum</dt>
@@ -104,16 +105,22 @@ overlaps any region.</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A list containing the following variables:
-- halton_seq
-- halton_seq_div
-- Z
-- halton_frame
-- J
-- sample - Halton Frame, the intersection of the grid with the region.
-- hg.pts.shp - Halton Grid.
-- bb</p>
-    </div>
+<p>A list containing five variables:</p>
+
+
+<ul><li><p><code>J</code></p></li>
+<li><p><code>hg.pts.shp</code> Halton grid over the bounding box and study area.</p></li>
+<li><p><code>hf.pts.shp</code> Halton frame, the sample points within the study area.</p></li>
+<li><p><code>bb</code> The bounding box.</p></li>
+<li><p><code>seeds</code> The u1 and u2 seeds used to generate the sample.</p></li>
+</ul><p>The sample points in <code>hf.pts.shp</code> are returned in the form of a simple feature
+collection of POINT objects. As well as having the features from the original shapefile
+a new attribute is also added:</p>
+
+
+<ul><li><p><code>uc511SeqID</code>: A unique identifier for every sample point.</p></li>
+<li><p><code>ID</code>: A unique identifier, the Halton frame point order.</p></li>
+</ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>This function was written by Phil Davies.</p>

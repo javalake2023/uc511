@@ -16,7 +16,10 @@ the frame or not. Default value is FALSE.}
 }
 \value{
 A list containing the following variable:
-sample - the sample from the shapefile POINTS.
+
+\itemize{
+\item \code{sample} The sample from the shapefile POINTS.
+}
 }
 \description{
 A description of this useful function.

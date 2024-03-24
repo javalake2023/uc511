@@ -12,13 +12,14 @@ HaltonFrame(
   panels = NULL,
   panel_overlap = NULL,
   seeds = NULL,
-  stratum = NULL
+  stratum = NULL,
+  verbose = FALSE
 )
 }
 \arguments{
 \item{N}{The number of points in the frame to generate.}
 
-\item{J}{The number of grid cells. A list of 2 values. The default value is c(3, 2), we could also use c(5, 3).}
+\item{J}{The number of grid cells. A list of 2 values. The default value is c(3, 2).}
 
 \item{bases}{Co-prime base for the Halton Sequence. The default value is c(2, 3).}
 
@@ -42,18 +43,30 @@ overlaps any region.}
 \item{stratum}{Name of column in shapefile that makes up the strata.}
 }
 \value{
-A list containing the following variables:
-- halton_seq
-- halton_seq_div
-- Z
-- halton_frame
-- J
-- sample - Halton Frame, the intersection of the grid with the region.
-- hg.pts.shp - Halton Grid.
-- bb
+A list containing five variables:
+
+\itemize{
+\item \code{J} The number of grid cells. A list of 2 values that were used to generate this
+Halton grid and frame.
+\item \code{hg.pts.shp} Halton grid over the bounding box and study area.
+\item \code{hf.pts.shp} Halton frame, the sample points within the study area.
+\item \code{bb} The bounding box.
+\item \code{seeds} The u1 and u2 seeds used to generate the sample.
+}
+
+The sample points in \code{hf.pts.shp} are returned in the form of a simple feature
+collection of POINT objects. As well as having the features from the original \code{shapefile},
+the following new attributes have been added:
+
+\itemize{
+\item \code{uc511SeqID}: A unique identifier for every sample point.
+\item \code{ID}: A unique identifier, the Halton frame point order.
+}
 }
 \description{
-A description of this useful function.
+Halton frames discretize an areal resource into a spatially ordered grid,
+where samples of consecutive frame points are spatially balanced. To generate Halton Frames,
+uc511 requires a study region \code{shapefile} and the region’s \code{bounding box}.
 }
 \details{
 This function was written by Phil Davies.

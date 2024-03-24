@@ -25,6 +25,9 @@
     <loc>/reference/BAS.html</loc>
   </url>
   <url>
+    <loc>/reference/BASMasterSample.html</loc>
+  </url>
+  <url>
     <loc>/reference/BASMastersample.html</loc>
   </url>
   <url>
@@ -107,6 +110,9 @@
   </url>
   <url>
     <loc>/reference/getBASMasterSample.html</loc>
+  </url>
+  <url>
+    <loc>/reference/getBASSampleDriver.html</loc>
   </url>
   <url>
     <loc>/reference/getBB.html</loc>
