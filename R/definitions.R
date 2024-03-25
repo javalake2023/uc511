@@ -72,9 +72,9 @@ BoundingBox <- function(shapefile, d = 2, showOutput = TRUE, rotate = FALSE)
     msgs <- base::sprintf(msg, seed)
     base::message(msgs)
 
-    msg <- "uc511(BoundingBox) Rotation: %s Radians.\n"
-    msgs <- base::sprintf(msg, theta)
-    base::message(msgs)
+    #msg <- "uc511(BoundingBox) Rotation: %s Radians.\n"
+    #msgs <- base::sprintf(msg, theta)
+    #base::message(msgs)
   }
   return(build.bb)
 }

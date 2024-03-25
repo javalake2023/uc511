@@ -2,7 +2,7 @@
 % Please edit documentation in R/BAS.R
 \name{getBASSampleDriver}
 \alias{getBASSampleDriver}
-\title{Select points from a polygon using a BAS Master Sample.}
+\title{Title.}
 \usage{
 getBASSampleDriver(shapefile, bb, n, seeds, verbose)
 }

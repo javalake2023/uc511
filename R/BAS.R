@@ -2,14 +2,15 @@
 
 #' @name BAS
 #'
-#' @title Select points from a polygon using a BAS Master Sample.
+#' @title Draw spatially balanced samples from areal resources.
 #'
-#' @description This is the main function for selecting sites using the BAS master
-#' sample. It assumes that you have already defined the master sample using the
-#' BoundingBox() function.
+#' @description BAS draws spatially balanced samples from areal resources. To draw BAS samples,
+#' uc511 requires a study region shapefile and the region’s bounding box. An initial sample size
+#' is also needed, which can be easily increased or decreased within uc511 for master sampling
+#' applications
 #'
 #' @details This function was first written by Paul van Dam-Bates for the
-#' package BASMasterSample.
+#' package BASMasterSample and later simplified by Phil Davies.
 #'
 #' @param shapefile Shape file as a polygon (sp or sf) to select sites for.
 #' @param n Number of sites to select. If using stratification it is a named vector containing
@@ -29,7 +30,7 @@
 #' @param stratum The name of a column in the data.frame attached to shapefile that defines
 #' the strata of interest.
 #' @param seeds A vector of 2 seeds, u1 and u2. If not specified, the default is NULL and will
-#' be defined randomly.
+#' be defined randomly using function \code{uc511::generateUVector}.
 #' @param verbose Boolean if you want to see any output printed to screen. Helpful if taking a
 #' long time. Default is FALSE i.e. no informational messages are displayed.
 #'
@@ -39,10 +40,12 @@
 #' The sample points are returned in the form of a simple feature collection of POINT objects.
 #' They have the following attributes:
 #' \itemize{
-#'   \item \code{SiteID}: A unique identifier for every sample point.  This
+#'   \item \code{SiteID} A unique identifier for every sample point.  This
 #'   encodes the BAS order.
-#'   \item \code{geometry}: The XY co-ordinates of the sample point in the CRS of the original
+#'   \item \code{geometry} The XY co-ordinates of the sample point in the CRS of the original
 #'   shapefile.
+#'   \item \code{uc511SeqID} A unique identifier for every sample point.  This
+#'   encodes the BAS sample order.
 #' }
 
 #' @examples
@@ -104,7 +107,7 @@ BAS <- function(shapefile,
 
   # stratification wanted?
   if(base::is.null(stratum)){
-    # no stratification, just a simple sample.
+    # no stratification, just a simple sample wanted.
     result <- uc511::getBASSampleDriver(shapefile = shapefile,
                                         n = n,
                                         bb = boundingbox,
@@ -166,7 +169,7 @@ BAS <- function(shapefile,
 
 #' @name getBASSampleDriver
 #'
-#' @title Select points from a polygon using a BAS Master Sample.
+#' @title Title.
 #'
 #' @description This function repeatedly calls function uc511::getBASSample to generate the BAS
 #' sample. Once the requested number of samples within the intersection of the shapefile and the
@@ -192,21 +195,22 @@ BAS <- function(shapefile,
 getBASSampleDriver <- function(shapefile, bb, n, seeds, verbose){
 
   if(is.null(seeds)){
-    seeds <- c(0, 0)
+    seeds <- uc511::generateUVector()
   }
   k <- 0
 
-  pts.sample <- uc511::getBASSample(shapefile = shapefile, bb = bb, n = n, seeds = seeds)
+  pts.sample <- uc511::getBASSample(shapefile = shapefile, bb = bb, n = 2 * n, seeds = seeds)
   ret_sample <- pts.sample$sample
+  seedshift <- pts.sample$seeds
   num_samples <- length(ret_sample$SiteID)
   # number of samples required.
-  draw <- n
-  seedshift <- seeds
+  draw <- n * 2
   while(num_samples < n){
     draw <- draw * 2
     last.pt <- num_samples
     endPoint <- last.pt
     pts.sample <- uc511::getBASSample(shapefile = shapefile, bb = bb , n = draw, seeds = seedshift, k = k, endPoint = last.pt)
+    #ret_sample <- rbind(ret_sample, pts.sample$sample)
     ret_sample <- pts.sample$sample
     n_samples <- length(ret_sample$SiteID)
     seedshift <- pts.sample$seeds
@@ -219,9 +223,11 @@ getBASSampleDriver <- function(shapefile, bb, n, seeds, verbose){
     num_samples <- n_samples
     k <- k + 1
   }
+  sorted_samp <- ret_sample[base::order(ret_sample$SiteID), ]
+  sorted_samp$uc511SeqID <- base::seq(1, base::length(sorted_samp$SiteID))
   # return sample and seeds to caller.
-  result <- base::list(sample = pts.sample$sample[1:n,],
-                       seeds  = seeds)
+  result <- base::list(sample = sorted_samp[1:n,],
+                       seeds  = seedshift)
   return(result)
 }
 
@@ -229,6 +235,7 @@ getBASSampleDriver <- function(shapefile, bb, n, seeds, verbose){
 #' @export
 getBASSample <- function(shapefile, bb, n, seeds, k = 0, endPoint = 0){
 
+  first_point_in_region <- FALSE
   seedshift <- seeds
 
   # Scale and shift Halton to fit into bounding box
@@ -236,23 +243,55 @@ getBASSample <- function(shapefile, bb, n, seeds, k = 0, endPoint = 0){
   scale.bas <- bb.bounds[3:4] - bb.bounds[1:2]
   shift.bas <- bb.bounds[1:2]
 
-  #pts <- uc511::cppRSHalton(n = draw, seeds = seedshift, bases = c(2, 3), boxes = halt.rep, J = J)
-  #pts <- pts[1:draw,]
-  res <- uc511::cppRSHalton_br(n = n, seeds = seedshift, bases = base::c(2, 3))
-  pts <- res$pts
-  siteid <- base::seq(from = 1, to = n, by = 1)
-  pts <- base::cbind(siteid, pts)
+  # count number times we have to try and find first BAS point in the study region.
+  attempts_to_find_first_point <- 0
 
-  xy <- base::cbind(pts[,2]*scale.bas[1] + shift.bas[1], pts[,3]*scale.bas[2] + shift.bas[2])
+  while(!first_point_in_region){
+    #pts <- uc511::cppRSHalton(n = draw, seeds = seedshift, bases = c(2, 3), boxes = halt.rep, J = J)
+    #pts <- pts[1:draw,]
+    res <- uc511::cppRSHalton_br(n = n, seeds = seedshift, bases = base::c(2, 3))
+    pts <- res$pts
+    siteid <- base::seq(from = 1, to = n, by = 1)
+    pts <- base::cbind(siteid, pts)
 
-  pts.coord <- sf::st_as_sf(base::data.frame(SiteID = pts[,1] + endPoint, xy), coords = c(2, 3))
+    xy <- base::cbind(pts[,2]*scale.bas[1] + shift.bas[1], pts[,3]*scale.bas[2] + shift.bas[2])
 
-  sf::st_crs(pts.coord) <- sf::st_crs(bb)
-  # find the intersection.
-  pts.coord <- pts.coord[shapefile,]
+    pts.coord <- sf::st_as_sf(base::data.frame(SiteID = pts[,1], xy), coords = c(2, 3))
 
-  result <- base::list(sample = pts.coord,
+    sf::st_crs(pts.coord) <- sf::st_crs(bb)
+    # find the intersection.
+    pts.intersect <- pts.coord[shapefile,]
+    if(length(pts.intersect$SiteID) == 0){
+      # no points in intersection, so keep trying...
+      attempts_to_find_first_point <- attempts_to_find_first_point + 1
+      seedshift <- uc511::generateUVector()
+      next
+    }
+    # is the first point of pts.coord in the shapefile?
+    if(pts.coord$SiteID[1] == pts.intersect$SiteID[1]){
+      first_point_in_region <- TRUE
+    } else{
+      attempts_to_find_first_point <- attempts_to_find_first_point + 1
+      seedshift <- uc511::generateUVector()
+    }
+  } # end while
+
+  if(attempts_to_find_first_point > 0){
+    msg <- "uc511() First point in study area found in %s attempts."
+    msgs <- base::sprintf(msg, attempts_to_find_first_point)
+    base::message(msgs)
+  }
+
+  result <- base::list(sample = pts.intersect,
                        seeds  = seedshift)
   return(result)
+}
+
+#' @export
+generateUVector <- function(){
+  u1 <- base::floor(stats::runif(1, 0, 2^11))
+  u2 <- base::floor(stats::runif(1, 0, 3^7))
+  seeds <- c(u1, u2)
+  return(seeds)
 }
 

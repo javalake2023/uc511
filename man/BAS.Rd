@@ -2,7 +2,7 @@
 % Please edit documentation in R/BAS.R
 \name{BAS}
 \alias{BAS}
-\title{Select points from a polygon using a BAS Master Sample.}
+\title{Draw spatially balanced samples from areal resources.}
 \usage{
 BAS(
   shapefile,
@@ -40,7 +40,7 @@ overlaps any region.}
 the strata of interest.}
 
 \item{seeds}{A vector of 2 seeds, u1 and u2. If not specified, the default is NULL and will
-be defined randomly.}
+be defined randomly using function \code{uc511::generateUVector}.}
 
 \item{verbose}{Boolean if you want to see any output printed to screen. Helpful if taking a
 long time. Default is FALSE i.e. no informational messages are displayed.}
@@ -52,20 +52,23 @@ in BAS order and \code{$seeds}, the u1 and u2 seeds used to generate the sample.
 The sample points are returned in the form of a simple feature collection of POINT objects.
 They have the following attributes:
 \itemize{
-\item \code{SiteID}: A unique identifier for every sample point.  This
+\item \code{SiteID} A unique identifier for every sample point.  This
 encodes the BAS order.
-\item \code{geometry}: The XY co-ordinates of the sample point in the CRS of the original
+\item \code{geometry} The XY co-ordinates of the sample point in the CRS of the original
 shapefile.
+\item \code{uc511SeqID} A unique identifier for every sample point.  This
+encodes the BAS sample order.
 }
 }
 \description{
-This is the main function for selecting sites using the BAS master
-sample. It assumes that you have already defined the master sample using the
-BoundingBox() function.
+BAS draws spatially balanced samples from areal resources. To draw BAS samples,
+uc511 requires a study region shapefile and the region’s bounding box. An initial sample size
+is also needed, which can be easily increased or decreased within uc511 for master sampling
+applications
 }
 \details{
 This function was first written by Paul van Dam-Bates for the
-package BASMasterSample.
+package BASMasterSample and later simplified by Phil Davies.
 }
 \examples{
 \dontrun{
