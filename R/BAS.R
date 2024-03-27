@@ -1,5 +1,10 @@
 # BAS.R
 
+#' @import raster
+#' @import sf
+#' @import Rcpp
+#' @useDynLib uc511, .registration = TRUE
+
 #' @name BAS
 #'
 #' @title Draw spatially balanced samples from areal resources.
@@ -179,10 +184,10 @@ BAS <- function(shapefile,
 #' from the BASMasterSample package.
 #'
 #' @param shapefile Shape file as a polygon (sp or sf) to select sites for.
+#' @param bb Bounding box which defines the area around the study area. A bounding box must be
+#' supplied.
 #' @param n Number of sites to select. If using stratification it is a named vector containing
 #' sample sizes of each group.
-#' @param boundingbox Bounding box which defines the Master Sample. A bounding box must be
-#' supplied.
 #' @param seeds A vector of 2 seeds, u1 and u2. If not specified, the default is NULL and will
 #' be defined randomly.
 #' @param verbose Boolean if you want to see any output printed to screen. Helpful if taking a
@@ -199,13 +204,30 @@ getBASSampleDriver <- function(shapefile, bb, n, seeds, verbose){
   }
   k <- 0
 
-  pts.sample <- uc511::getBASSample(shapefile = shapefile, bb = bb, n = 2 * n, seeds = seeds)
-  ret_sample <- pts.sample$sample
-  seedshift <- pts.sample$seeds
-  num_samples <- length(ret_sample$SiteID)
+  message("getBASSampleDriver seeds=", seeds)
+
+  # find the first point in the study region (picked at random)
+  first.pt <- findFirstStudyRegionPoint(shapefile = shapefile, seeds = seeds)
+  # first.pt$first.pt
+  # first.pt$seeds
+  k <- first.pt$k
+
+  seedshift <- base::c(first.pt$seeds[1] + k - 1, first.pt$seeds[2] + k - 1)
+
+  #pts.sample <- uc511::getBASSample(shapefile = shapefile, bb = bb, n = 2 * n, seeds = seeds)
+  #ret_sample <- pts.sample$sample
+  #seedshift <- pts.sample$seeds
+  #num_samples <- length(ret_sample$SiteID)
+
   # number of samples required.
   draw <- n * 2
+  # just the first point so far, need n.
+  num_samples <- 1
+  #needed_extra_points <- FALSE
+  #
+  #seedshift <- first.pt$seeds
   while(num_samples < n){
+    #needed_extra_points <- TRUE
     draw <- draw * 2
     last.pt <- num_samples
     endPoint <- last.pt
@@ -213,21 +235,31 @@ getBASSampleDriver <- function(shapefile, bb, n, seeds, verbose){
     #ret_sample <- rbind(ret_sample, pts.sample$sample)
     ret_sample <- pts.sample$sample
     n_samples <- length(ret_sample$SiteID)
-    seedshift <- pts.sample$seeds
+    #seedshift <- pts.sample$seeds
 
     if(verbose){
-      msg <- "uc511(getBASSampleDriver) after getSample %s. k = %s. endPoint = %s\n"
-      msgs <- base::sprintf(msg, num_samples, k, endPoint)
+      msg <- "uc511(getBASSampleDriver) after getBASSample n_samples = %s. k = %s. num_samples = %s\n"
+      msgs <- base::sprintf(msg, n_samples, k, endPoint)
       base::message(msgs)
     }
-    num_samples <- n_samples
-    k <- k + 1
+    num_samples <- n_samples #num_samples + n_samples
+    #k <- k + 1
   }
-  sorted_samp <- ret_sample[base::order(ret_sample$SiteID), ]
+
+  f.pt <- sf::st_cast(first.pt$first.pt, "POINT")
+  f.pt <- sf::st_as_sf(f.pt)
+  zzz <- sf::st_as_sf(base::data.frame(SiteID = f.pt$ID, f.pt$x))
+  ret_sample <- rbind(zzz, ret_sample)
+  #sorted_samp <- ret_sample[base::order(ret_sample$SiteID), ]
+  sorted_samp <- ret_sample
   sorted_samp$uc511SeqID <- base::seq(1, base::length(sorted_samp$SiteID))
+
+  # return original seeds.
+  seeds <- first.pt$seeds
+
   # return sample and seeds to caller.
   result <- base::list(sample = sorted_samp[1:n,],
-                       seeds  = seedshift)
+                       seeds  = seeds)
   return(result)
 }
 
@@ -246,7 +278,7 @@ getBASSample <- function(shapefile, bb, n, seeds, k = 0, endPoint = 0){
   # count number times we have to try and find first BAS point in the study region.
   attempts_to_find_first_point <- 0
 
-  while(!first_point_in_region){
+  #while(!first_point_in_region){
     #pts <- uc511::cppRSHalton(n = draw, seeds = seedshift, bases = c(2, 3), boxes = halt.rep, J = J)
     #pts <- pts[1:draw,]
     res <- uc511::cppRSHalton_br(n = n, seeds = seedshift, bases = base::c(2, 3))
@@ -261,31 +293,32 @@ getBASSample <- function(shapefile, bb, n, seeds, k = 0, endPoint = 0){
     sf::st_crs(pts.coord) <- sf::st_crs(bb)
     # find the intersection.
     pts.intersect <- pts.coord[shapefile,]
-    if(length(pts.intersect$SiteID) == 0){
+    #if(length(pts.intersect$SiteID) == 0){
       # no points in intersection, so keep trying...
-      attempts_to_find_first_point <- attempts_to_find_first_point + 1
-      seedshift <- uc511::generateUVector()
-      next
-    }
+    #  attempts_to_find_first_point <- attempts_to_find_first_point + 1
+    #  seedshift <- uc511::generateUVector()
+    #  next
+    #}
     # is the first point of pts.coord in the shapefile?
-    if(pts.coord$SiteID[1] == pts.intersect$SiteID[1]){
-      first_point_in_region <- TRUE
-    } else{
-      attempts_to_find_first_point <- attempts_to_find_first_point + 1
-      seedshift <- uc511::generateUVector()
-    }
-  } # end while
+    #if(pts.coord$SiteID[1] == pts.intersect$SiteID[1]){
+    #  first_point_in_region <- TRUE
+    #} else{
+    #  attempts_to_find_first_point <- attempts_to_find_first_point + 1
+    #  seedshift <- uc511::generateUVector()
+    #}
+  #} # end while
 
-  if(attempts_to_find_first_point > 0){
-    msg <- "uc511() First point in study area found in %s attempts."
-    msgs <- base::sprintf(msg, attempts_to_find_first_point)
-    base::message(msgs)
-  }
+  #if(attempts_to_find_first_point > 0){
+  #  msg <- "uc511() First point in study area found in %s attempts."
+  #  msgs <- base::sprintf(msg, attempts_to_find_first_point)
+  #  base::message(msgs)
+  #}
 
   result <- base::list(sample = pts.intersect,
                        seeds  = seedshift)
   return(result)
 }
+
 
 #' @export
 generateUVector <- function(){
@@ -293,5 +326,72 @@ generateUVector <- function(){
   u2 <- base::floor(stats::runif(1, 0, 3^7))
   seeds <- c(u1, u2)
   return(seeds)
+}
+
+
+# 1. Set J1 = 4 and J2 = 3.
+# 2. Generate B = 2^J1 x 3^J2 points from a random-start Halton sequence H
+#    with a random seed (u1, u2).
+# 3. Find points from H in the study area. Call this set S. If S is empty,
+#    increment J1 and J2 and go to step 2.
+# 4. Randomly choose a point from S. Let xk be this point where k is the 'site index'
+#    (I think that's what we call it).
+# 5. Set the seed to (u1 + k - 1, u2 + k -1).
+
+# For example, let (u1, u2) = (1, 5) and S = {x2, x6, x7}.
+# If x6 is randomly chosen, then the new seed is (1 + 6 - 1, 5 + 6 - 1) = (6, 10)
+# (the sixth point in H).
+
+# The only difference is that the random-start Halton sequence must be length B.
+
+#' @export
+findFirstStudyRegionPoint <- function(shapefile, seeds){
+  n <- (2^4) * (3^3)
+
+  if(is.null(seeds)){
+    seeds <- uc511::generateUVector()
+  }
+
+  J <- base::c(4, 3)
+  i <- 0
+  bases <- base::c(2, 3)
+  crs <- sf::st_crs(shapefile)
+
+  result <- getHaltonFrame(shapefile, J, i, bases, seeds, crs)
+  hf_ <- result$hf_
+  diff_ <- result$sample     # will always be NULL here.
+  pts.shp <- result$pts.shp
+  bb.new <- result$bb.new
+  seeds <- result$seeds
+
+  pts <- hf_$halton_frame
+  tmp <- sf::st_cast(pts.shp, "POINT")
+  tmp <- sf::st_as_sf(tmp)
+  tmp$ID <- base::seq(1, base::dim(pts)[1])
+  diff_ <- sf::st_intersection(tmp, shapefile)
+
+  # find number of points within our shapefile.
+  pts_in_intersection <- base::length(sf::st_cast(sf::st_union(diff_), "POINT"))
+
+  # will need code here to detect 0 points in intersection and redrive.
+
+  msg <- "uc511(findFirstStudyRegionPoint) Points in intersection: %s."
+  msgs <- sprintf(msg, pts_in_intersection)
+  base::message(msgs)
+
+  s <- diff_
+
+  base::set.seed(seeds[1] + seeds[2])
+  k <- base::sample(pts_in_intersection, 1)
+  message("findFirstStudyRegionPoint k=", k)
+
+  first.pt <- s[k,]
+  # Set the seed to (u1 + k - 1, u2 + k -1)
+  #seeds <- base::c(seeds[1] + k - 1, seeds[2] + k - 1)
+
+  result <- base::list(first.pt = first.pt,
+                       seeds    = seeds,       # original seeds here!
+                       k        = k)
+  return(result)
 }
 

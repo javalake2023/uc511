@@ -2,7 +2,7 @@
 
 #' @name BoundingBox
 #'
-#' @title Build a new Master Sample with a random rotation and seed.
+#' @title Build a new bounding box with u1 and u2 seeds.
 #'
 #' @description Randomly generate a seed from 10,000 possible values in right now 2 dimensions.
 #' Note that in van Dam-Bates et al. (2018) we required that the random seed falls into main
@@ -14,12 +14,14 @@
 #' @details This function was first written by Paul van Dam-Bates for the
 #' package BASMasterSample and later ported to this package, uc511.
 #'
-#' @param shp Spatial feature that defines the boundary of the area to define a bounding box over.
+#' @param shapefile Spatial feature that defines the boundary of the area to define a bounding
+#' box over.
 #' @param d Dimension of the new Master Sample, at this stage we only work with d=2.
 #' @param showOutput Print the rotation and random seed when it is generated.
-#' @param rotate Boolean of whether or not to randomly rotate the bounding box.
+#' @param rotate Boolean of whether or not to randomly rotate the bounding box. This parameter
+#' is not supported at this time.
 #'
-#' @return bounding box for a master sample.
+#' @return bounding box for a study area.
 #'
 #' @examples
 #' \dontrun{
@@ -33,11 +35,10 @@
 #' }
 #'
 #' @export
-BoundingBox <- function(shapefile, d = 2, showOutput = TRUE, rotate = FALSE)
-{
+BoundingBox <- function(shapefile, d = 2, showOutput = FALSE, rotate = FALSE){
   # validate the shapefile parameter.
   bb_geometry <- sf::st_geometry_type(shapefile)
-  if (!base::all(bb_geometry %in% c("MULTIPOLYGON", "POINT", "POLYGON", "MULTIPOINT"))){
+  if (!base::all(bb_geometry %in% base::c("MULTIPOLYGON", "POINT", "POLYGON", "MULTIPOINT"))){
     msg <- "uc511(BoundingBox) Unsupported geometry in shapefile, %s."
     msgs <- base::sprintf(msg, bb_geometry)
     stop(msgs)
@@ -52,10 +53,11 @@ BoundingBox <- function(shapefile, d = 2, showOutput = TRUE, rotate = FALSE)
   }
 
   # generate 2 seed values.
-  seed <- base::floor(stats::runif(d, 0, 10000))
+  seed <- uc511::generateUVector()
   # We always use base 2,3
   base <- c(2, 3, 5)[1:d]
 
+  # rotate is not supported at this time, will always set theta to 0.
   if(rotate) {
     theta <- stats::runif(1, -base::pi, base::pi)
   }else{
@@ -72,9 +74,9 @@ BoundingBox <- function(shapefile, d = 2, showOutput = TRUE, rotate = FALSE)
     msgs <- base::sprintf(msg, seed)
     base::message(msgs)
 
-    #msg <- "uc511(BoundingBox) Rotation: %s Radians.\n"
-    #msgs <- base::sprintf(msg, theta)
-    #base::message(msgs)
+    msg <- "uc511(BoundingBox) Rotation: %s Radians.\n"
+    msgs <- base::sprintf(msg, theta)
+    base::message(msgs)
   }
   return(build.bb)
 }

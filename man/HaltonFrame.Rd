@@ -41,6 +41,9 @@ overlaps any region.}
 \item{seeds}{A vector of 2 seeds, u1 and u2. If not specified, the default is NULL.}
 
 \item{stratum}{Name of column in shapefile that makes up the strata.}
+
+\item{verbose}{Boolean if you want to see any output printed to screen. Helpful if taking a
+long time. Default is FALSE i.e. no informational messages are displayed.}
 }
 \value{
 A list containing five variables:

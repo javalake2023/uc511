@@ -9,6 +9,9 @@ getBASSampleDriver(shapefile, bb, n, seeds, verbose)
 \arguments{
 \item{shapefile}{Shape file as a polygon (sp or sf) to select sites for.}
 
+\item{bb}{Bounding box which defines the area around the study area. A bounding box must be
+supplied.}
+
 \item{n}{Number of sites to select. If using stratification it is a named vector containing
 sample sizes of each group.}
 
@@ -17,9 +20,6 @@ be defined randomly.}
 
 \item{verbose}{Boolean if you want to see any output printed to screen. Helpful if taking a
 long time. Default is FALSE i.e. no informational messages are displayed.}
-
-\item{boundingbox}{Bounding box which defines the Master Sample. A bounding box must be
-supplied.}
 }
 \value{
 A list containing two variables, \code{$sample} containing locations in the BAS sample,

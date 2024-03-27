@@ -2,21 +2,23 @@
 % Please edit documentation in R/definitions.R
 \name{BoundingBox}
 \alias{BoundingBox}
-\title{Build a new Master Sample with a random rotation and seed.}
+\title{Build a new bounding box with u1 and u2 seeds.}
 \usage{
-BoundingBox(shapefile, d = 2, showOutput = TRUE, rotate = FALSE)
+BoundingBox(shapefile, d = 2, showOutput = FALSE, rotate = FALSE)
 }
 \arguments{
+\item{shapefile}{Spatial feature that defines the boundary of the area to define a bounding
+box over.}
+
 \item{d}{Dimension of the new Master Sample, at this stage we only work with d=2.}
 
 \item{showOutput}{Print the rotation and random seed when it is generated.}
 
-\item{rotate}{Boolean of whether or not to randomly rotate the bounding box.}
-
-\item{shp}{Spatial feature that defines the boundary of the area to define a bounding box over.}
+\item{rotate}{Boolean of whether or not to randomly rotate the bounding box. This parameter
+is not supported at this time.}
 }
 \value{
-bounding box for a master sample.
+bounding box for a study area.
 }
 \description{
 Randomly generate a seed from 10,000 possible values in right now 2 dimensions.

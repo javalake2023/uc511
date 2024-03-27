@@ -87,6 +87,8 @@ validate_parameters <- function(parm, parm_value){
 #' overlaps any region.
 #' @param seeds A vector of 2 seeds, u1 and u2. If not specified, the default is NULL.
 #' @param stratum Name of column in shapefile that makes up the strata.
+#' @param verbose Boolean if you want to see any output printed to screen. Helpful if taking a
+#' long time. Default is FALSE i.e. no informational messages are displayed.
 #'
 #' @return A list containing five variables:
 #'
@@ -146,7 +148,7 @@ HaltonFrame <- function(N = 1,
   if (!is.null(seeds)){
     uc511::validate_parameters("seeds", seeds)
   } else {
-    seeds <- base::floor(stats::runif(2, 0, 62208))
+    seeds <- uc511::generateUVector()
   }
 
   # validate panel design if we are using one.
@@ -418,6 +420,7 @@ HaltonFrameBase <- function(n = (bases[1]^J[1]) * (bases[2]^J[2]),
   if(is.null(seeds)){
     cpprshs <- uc511::cppBASpts(n = B2, bases = bases)
   } else {
+    message("HaltonFrameBase seeds=", seeds)
     cpprshs <- uc511::cppBASpts(n = B2, bases = bases, seeds = seeds)
   }
   #
