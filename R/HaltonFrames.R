@@ -1,65 +1,5 @@
 # HaltonFrames.R
 
-#' @name validate_parameters
-#'
-#' @title Validate uc511 function parameters.
-#'
-#' @description This function is used to validate parameters passed to
-#' all available uc511 functions.
-#'
-#' @details This function was written by Phil Davies.
-#'
-#' @param parm The parameter to be validated.
-#' @param parm_value The value of the parameter to be validated. Must be defined as a list.
-#'
-#' @return Always returns TRUE indicating that the parameter was parsed successfully. If
-#' a parameter fails validation further execution is terminated using the STOP function.
-#'
-#' @export
-validate_parameters <- function(parm, parm_value){
-  # validate the parm being validated i.e. is it a supported uc511 function parameter.
-  if(!parm %in% base::c("n", "J", "bases", "shapefile", "panels", "panel_overlap",
-                        "randomStart", "N",
-                  "shp", "bb", "stratum", "nExtra", "quiet", "inclSeed",
-                  "seeds", "boundingbox",
-                  "seed", "total_rows", "sample_size",
-                  "testparm",
-                  "panelid",
-                  "hipPopulation", "hipN", "hipIterations")){
-    stop(base::c("uc511(validate_parameters) specified parameter ", parm, " is not currently supported."))
-  }
-
-  # make sure parameter is a list (or vector)
-  if(!is.vector(parm_value)){
-    stop(base::c("uc511(validate_parameters) Parameter ", parm, " must be a list or vector."))
-  }
-  # check if all values in the list are numeric
-  if(!all(sapply(parm_value, is.numeric))){
-    stop(base::c("uc511(validate_parameters) Parameter ", parm, " must contain all numeric values."))
-  }
-  # check if list is of length 2
-  if(parm == "J" & length(parm_value) != 2){
-    stop("uc511(validate_parameters) Parameter J must be a list of length 2.")
-  }
-  # check if values for SRS parameters are greater than zero. check if panelid is greaer than zero.
-  if(parm %in% base::c("seed", "total_rows", "sample_size", "panelid")) {
-    if (parm_value <= 0){
-      stop(base::c("uc511(validate_parameters) Parameter ", parm, " must have a value greater than zero."))
-    }
-  }
-  # validate HIP parameters
-  if(parm == "hipIterations"){
-    if(parm_value < 2){
-      stop(base::c("uc511(validate_parameters) Parameter ", parm, " values less than two are not supported."))
-    }
-    if(parm_value > 13){
-      stop(base::c("uc511(validate_parameters) Parameter ", parm, " values greater than 13 are not supported."))
-    }
-  }
-  return(TRUE)
-}
-
-
 #' @name HaltonFrame
 #'
 #' @title Generate a Halton Frame.
@@ -130,6 +70,8 @@ HaltonFrame <- function(N = 1,
   # defaults, before we see what the user wants.
   wantHaltonGrid <- FALSE
   wantHaltonFrame <- FALSE
+  hf_stratification <- FALSE
+
   if(is.null(N)){
     wantHaltonGrid <- TRUE
     wantHaltonFrame <- FALSE
@@ -145,10 +87,10 @@ HaltonFrame <- function(N = 1,
     uc511::validate_parameters("N", base::c(N))
   }
 
-  if (!is.null(seeds)){
-    uc511::validate_parameters("seeds", seeds)
-  } else {
+  if (is.null(seeds)){
     seeds <- uc511::generateUVector()
+  } else {
+    uc511::validate_parameters("seeds", seeds)
   }
 
   # validate panel design if we are using one.
@@ -161,6 +103,7 @@ HaltonFrame <- function(N = 1,
   # if both not NULL then we want stratification.
   if(!base::is.null(base::names(N)) & !base::is.null(stratum)){
     hf_stratification <- TRUE
+    wantHaltonFrame <- TRUE
     strata.levels <- base::names(N)
     if(verbose){
       msg <- "uc511(HaltonFrame) Stratification request for the following strata: %s.\n"
@@ -213,120 +156,91 @@ HaltonFrame <- function(N = 1,
     bb.new <- result$bb.new
     seeds <- result$seeds
 
-    #hf_ <- uc511::HaltonFrameBase(J = base::c(J[1]+i, J[2]+i), bases = bases, seeds = seeds)
-
-    # process points returned.
-    #pts <- hf_$halton_frame
-    #pts <- base::cbind(base::seq(1, base::dim(pts)[1]), pts)
-
-    # save returned seeds in case they have changed (would only change if initially NULL).
-    #seeds <- hf_$seeds
-
-    #
-    #bb <- sf::st_as_sfc(sf::st_bbox(shapefile))
-    #cntrd <- sf::st_centroid(bb)
-    #bb.rot <- (bb - cntrd) * uc511::rot(0) + cntrd
-    #bb.new <- sf::st_as_sfc(sf::st_bbox(bb.rot))
-
-    #
-    #base::attr(bb.new, "rotation") <- 0
-    #base::attr(bb.new, "centroid") <- sf::st_coordinates(cntrd)
-    #pts.shp <- uc511::rotate.scale.coords(coords = pts, bb = bb.new)
-    # make sure our shapefile has a CRS (needed for plotting later on).
-    #sf::st_crs(pts.shp) <- crs
-    # always return NULL when just generating a Halton Frame.
-    #diff_ <- NULL
-
   } else {
 
     # need to check hf_stratification before we run the while loop.
     # run the while loop in new function so we can loop for each strata level for the desired N.
     # save the returned points using rbind.
+    if(hf_stratification){
+      # perform stratification
+      smp <- NULL
 
-    while (pts_in_intersection <= N){
-      # keep going until we have found the required number of points
+      for(h in 1:base::length(N)){
+        if(verbose){
+          msg <- "uc511(BAS) Stratum: %s."
+          msgs <- base::sprintf(msg, strata.levels[h])
+          base::message(msgs)
+        }
 
-      # create halton frame
-      #hf_ <- uc511::HaltonFrameBase(J = base::c(J[1]+i, J[2]+i), bases = bases, seeds = seeds)
+        h.indx <- base::which(shapefile[, stratum, drop = TRUE] == strata.levels[h])
+        shp.stratum <- shapefile[h.indx,]
 
-      # process points returned.
-      #pts <- hf_$halton_frame
-      #pts <- base::cbind(base::seq(1, base::dim(pts)[1]), pts)
+        # find the first point in the study region (picked at random)
+        first.pt <- uc511::findFirstStudyRegionPoint(shapefile = shp.stratum, seeds = seeds)
+        #
+        k <- first.pt$k
+        # generate seeds for the remaining points we need.
+        seedshift <- base::c(first.pt$seeds[1] + k - 1, first.pt$seeds[2] + k - 1)
 
-      # save returned seeds in case they have changed (would only change if initially NULL).
-      #seeds <- hf_$seeds
+        result <- uc511::getHaltonPointsFromExpandableGrid(shapefile = shp.stratum,
+                                                           N = N[h],
+                                                           J = J,
+                                                           bases = bases,
+                                                           seeds = seedshift,
+                                                           crs = crs,
+                                                           verbose = verbose)
 
-      #
-      #bb <- sf::st_as_sfc(sf::st_bbox(shapefile))
-      #cntrd <- sf::st_centroid(bb)
-      #bb.rot <- (bb - cntrd) * uc511::rot(0) + cntrd
-      #bb.new <- sf::st_as_sfc(sf::st_bbox(bb.rot))
+        seedshift <- result$seed
+        diff_pts <- result$diff_
+        df_sorted <- diff_pts[base::order(diff_pts$ID), ]
+        #
+        ret_sample <- rbind(first.pt$first.pt, df_sorted)
+        sorted_samp <- ret_sample
+        sorted_samp$uc511SeqID <- base::seq(1, base::length(sorted_samp$ID))
+        diff_ <- sorted_samp[1:N[h],]
+        # return original seeds.
+        seeds <- first.pt$seeds
+        #
+        #df_sorted$uc511SeqID <- base::seq(1, base::length(df_sorted$ID))
+        # return N[h] from the intersection for current stratum.
+        #diff_ <- df_sorted[1:N[h],]
+        smp <- base::rbind(smp, diff_)
 
-      #
-      #base::attr(bb.new, "rotation") <- 0
-      #base::attr(bb.new, "centroid") <- sf::st_coordinates(cntrd)
-      #pts.shp <- uc511::rotate.scale.coords(coords = pts, bb = bb.new)
-
-      # replace the CRS (or set), st_intersection needs both objects with the same CRS.
-      #sf::st_crs(shapefile) <- crs
-      #sf::st_crs(pts.shp) <- crs
-      # make the assumption (that the attribute is constant throughout the geometry) explicit# make the assumption (that the attribute is constant throughout the geometry)
-      ##sf::st_agr(shp.ashb) <- "constant"
-      ##sf::st_agr(pts.shp) <- "constant"
-
-      # return from function.
-      result <- getHaltonFrame(shapefile, J, i, bases, seeds, crs)
-      hf_ <- result$hf_
-      diff_ <- result$sample     # will always be NULL here.
+      } # end for h
+      # load variables for return to caller.
+      i <- result$i
+      diff_ <- smp
       pts.shp <- result$pts.shp
       bb.new <- result$bb.new
-      seeds <- result$seeds
+      #seeds <- result$seeds
+      seeds <- first.pt$seeds
 
-      pts <- hf_$halton_frame
-      tmp <- sf::st_cast(pts.shp, "POINT")
-      tmp <- sf::st_as_sf(tmp)
-      tmp$ID <- base::seq(1, base::dim(pts)[1])
-      diff_ <- sf::st_intersection(tmp, shapefile)
+    } else {
+      # stratification not required - use entire study area.
 
-      # find number of points within our shapefile.
-      pts_in_intersection <- base::length(sf::st_cast(sf::st_union(diff_), "POINT"))
-
-      if(verbose){
-        msg <- "uc511(HaltonFrame) Points in intersection: %s."
-        msgs <- sprintf(msg, pts_in_intersection)
-        base::message(msgs)
-      }
-
-      # expand the Halton frame.
-      i <- i + 1
+      # find the first point in the study region (picked at random)
+      first.pt <- uc511::findFirstStudyRegionPoint(shapefile = shapefile, seeds = seeds)
+      #
+      k <- first.pt$k
+      # generate seeds for the remaining points we need.
+      seedshift <- base::c(first.pt$seeds[1] + k - 1, first.pt$seeds[2] + k - 1)
+      # go get the Halton points.
+      result <- uc511::getHaltonPointsFromExpandableGrid(shapefile = shapefile,
+                                                         N = N,
+                                                         J = J,
+                                                         bases = bases,
+                                                         seeds = seedshift,
+                                                         crs = crs,
+                                                         verbose = verbose)
+      i         <- result$i
+      diff_     <- result$diff_
+      pts.shp   <- result$pts.shp
+      bb.new    <- result$bb.new
+      seedshift <- result$seeds         # was seeds until first.pt code was added.
+      #pts_in_intersection <- result$pts_in_intersection
     }
-  }
 
-  if(wantHaltonFrame & verbose){
-    # display some statistics before returning results.
-    msg <- "uc511(HaltonFrame) %s samples found in %s iterations, using J1=%s and J2=%s."
-    msgs <- sprintf(msg, pts_in_intersection, i, J[1]+i-1, J[2]+i-1)
-    base::message(msgs)
-  }
-
-  # are we performing a randomStart?
-  #if (randomStart){
-  #  # need to select n samples from diff_ (rename this to sample).
-  #  # and then replicate; generate random number and take new sample.
-  #  message("uc511(HaltonFrame) randomStart.")
-  #  diff_pts <- sf::st_cast(diff_, "POINT")
-  #  df_sorted <- diff_pts[order(diff_pts$ID),]
-  #  df_sorted <- sf::st_as_sf(df_sorted)
-  #  #df_sorted$uc511SeqID <- seq(1, length(df_sorted$ID))
-  #  duplicated_pts <- base::rbind(df_sorted, df_sorted)
-  #  random_start_point <- base::sample(1:length(duplicated_pts$ID), 1)
-  #  sample_indices <- base::seq(random_start_point, (random_start_point + n) - 1, 1)
-  #  random_start_sample <- duplicated_pts[sample_indices,]
-  #  diff_ <- random_start_sample
-  #  diff_$uc511SeqID <- seq(1, length(diff_$ID))
-  #  # randomStart mutually exclusive with panel_design.
-  #  panel_design <- FALSE
-  #}
+  } # end if (wantHaltonGrid & !wantHaltonFrame
 
   # are we performing a panel_design? yes then go assign panelid's.
   if(panel_design){
@@ -341,24 +255,33 @@ HaltonFrame <- function(N = 1,
     diff_ <- res$sample
   }
 
-  # if we are not performing a randomStart or a panel_design
-  if (!panel_design & wantHaltonFrame){
+  # if we are not performing a randomStart or a panel_design or stratification
+  if (!panel_design & wantHaltonFrame & !hf_stratification){
     if(verbose){
       message("uc511(HaltonFrame) Return N sample points.")
     }
     # turn our sample into points.
     diff_pts <- sf::st_cast(diff_, "POINT")
     df_sorted <- diff_pts[base::order(diff_pts$ID), ]
-    df_sorted$uc511SeqID <- base::seq(1, base::length(df_sorted$ID))
+    #df_sorted$uc511SeqID <- base::seq(1, base::length(df_sorted$ID))   # move this down to after the rbind.
     # return everything from the intersection.
     diff_ <- df_sorted #[1:n,]
+
+    #browser()
+    # handle first.pt
+    #f.pt <- sf::st_cast(first.pt$first.pt, "POINT")
+    #f.pt <- sf::st_as_sf(f.pt)
+    #zzz <- sf::st_as_sf(base::data.frame(SiteID = f.pt$ID, f.pt$x))
+    ret_sample <- rbind(first.pt$first.pt, diff_)
+    #sorted_samp <- ret_sample[base::order(ret_sample$SiteID), ]
+    sorted_samp <- ret_sample
+    sorted_samp$uc511SeqID <- base::seq(1, base::length(sorted_samp$ID))
+    diff_ <- sorted_samp[1:n,]
+    # return original seeds.
+    seeds <- first.pt$seeds
   }
 
   # Need to return cpprshs$pts, cpprshs$xklist, z and hf
-  #result <- base::list(halton_seq     = hf_$halton_seq,
-  #                     halton_seq_div = hf_$halton_seq_div,
-  #                     Z              = hf_$Z,
-  #                     halton_frame   = hf_$halton_frame,
   result <- base::list(J              = c(J[1]+i-1, J[2]+i-1),
                        hf.pts.shp     = diff_,   # Halton Frame
                        hg.pts.shp     = pts.shp, # Halton Grid

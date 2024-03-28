@@ -220,11 +220,11 @@ getBASSampleDriver <- function(shapefile, bb, n, seeds, verbose){
   #num_samples <- length(ret_sample$SiteID)
 
   # number of samples required.
-  draw <- n * 2
+  draw <- n * 4
   # just the first point so far, need n.
   num_samples <- 1
-  #needed_extra_points <- FALSE
   #
+  call.getBASSample.cnt <- 0
   #seedshift <- first.pt$seeds
   while(num_samples < n){
     #needed_extra_points <- TRUE
@@ -238,14 +238,22 @@ getBASSampleDriver <- function(shapefile, bb, n, seeds, verbose){
     #seedshift <- pts.sample$seeds
 
     if(verbose){
-      msg <- "uc511(getBASSampleDriver) after getBASSample n_samples = %s. k = %s. num_samples = %s\n"
+      msg <- "uc511(getBASSampleDriver) after getBASSample n_samples = %s. k = %s. num_samples = %s"
       msgs <- base::sprintf(msg, n_samples, k, endPoint)
       base::message(msgs)
     }
     num_samples <- n_samples #num_samples + n_samples
     #k <- k + 1
+    call.getBASSample.cnt <- call.getBASSample.cnt + 1
   }
 
+  if(verbose){
+    msg <- "uc511(getBASSampleDriver) Needed %s call(s) to obtain %s samples."
+    msgs <- base::sprintf(msg, call.getBASSample.cnt, n)
+    base::message(msgs)
+  }
+
+  #
   f.pt <- sf::st_cast(first.pt$first.pt, "POINT")
   f.pt <- sf::st_as_sf(f.pt)
   zzz <- sf::st_as_sf(base::data.frame(SiteID = f.pt$ID, f.pt$x))
@@ -324,7 +332,7 @@ getBASSample <- function(shapefile, bb, n, seeds, k = 0, endPoint = 0){
 generateUVector <- function(){
   u1 <- base::floor(stats::runif(1, 0, 2^11))
   u2 <- base::floor(stats::runif(1, 0, 3^7))
-  seeds <- c(u1, u2)
+  seeds <- base::c(u1, u2)
   return(seeds)
 }
 
